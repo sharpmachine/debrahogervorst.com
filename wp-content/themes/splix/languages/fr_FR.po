@@ -1,0 +1,654 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: splix\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-04-07 15:33+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: wolforg <contact@wolforg.eu>\n"
+"Language-Team: Wolforg <contact@wolforg.eu>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: French\n"
+"X-Poedit-Country: FRANCE\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=2;plural=n>2\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: 404.php:5
+msgid "Error 404 - Page not found"
+msgstr "Erreur 404 - Page non Trouvée"
+
+#: 404.php:7
+msgid "Sorry but the page you are trying to view does not exist. As a solution to this problem, you can try these tips:"
+msgstr "Désolé, mais la page que vous recherchez n'existe pas. Pour résoudre ce problème, vous pouvez essayer ceci : "
+
+#: 404.php:9
+msgid "refresh this page in a few seconds"
+msgstr "actualiser cette page dans quelques secondes"
+
+#: 404.php:10
+msgid "check if the URL address is correct"
+msgstr "vérifier si l'URL est correcte"
+
+#: 404.php:11
+msgid "use the field in the sidebar to perform a quick search in this weblog"
+msgstr "utiliser le champ dans la barre latérale pour effectuer une recherche rapide"
+
+#: 404.php:12
+msgid "return to the homepage"
+msgstr "retourner à l'accueil"
+
+#: 404.php:14
+msgid "Otherwise you can visit the last posts:"
+msgstr "Sinon vous pouvez parcourir les derniers articles :"
+
+#: archive.php:9
+#: archive.php:85
+#: index.php:60
+#: search.php:56
+msgid "Next posts"
+msgstr "Articles Suivants"
+
+#: archive.php:10
+#: archive.php:86
+#: index.php:61
+#: search.php:57
+msgid "Previous posts"
+msgstr "Articles Précédents"
+
+#: archive.php:17
+#, php-format
+msgid "Archive for the <b>%1$s</b> category"
+msgstr "Archives de la catégorie <b>%1$s</b>"
+
+#: archive.php:19
+#, php-format
+msgid "Posts Tagged <b>%1$s</b>"
+msgstr "Articles avec le mot-clé <b>%1$s</b>"
+
+#: archive.php:21
+#: archive.php:23
+#: archive.php:25
+msgid "Archive for"
+msgstr "Archives pour"
+
+# date format (day)
+#: archive.php:21
+#: comments.php:32
+#: comments.php:65
+#: page.php:48
+#: reversecomments.php:32
+#: reversecomments.php:65
+#: single.php:66
+#: template_archives.php:55
+msgid "F jS, Y"
+msgstr "l j F Y"
+
+# date format  (month)
+#: archive.php:23
+msgid "F, Y"
+msgstr "F, Y"
+
+# date format (year)
+#: archive.php:25
+#: footer.php:23
+#: footer.php:25
+msgid "Y"
+msgstr "Y"
+
+#: archive.php:27
+msgid "Author Archive"
+msgstr "Archives Auteur"
+
+#: archive.php:29
+msgid "Blog Archives"
+msgstr "Archives"
+
+#: archive.php:37
+#: index.php:16
+#: page.php:13
+#: search.php:16
+#: single.php:20
+#: template_archives.php:19
+msgid "Permanent Link to"
+msgstr "Lien Permanent pour"
+
+# date format (only month)
+#: archive.php:45
+#: index.php:25
+#: page.php:22
+#: search.php:24
+#: single.php:29
+#: template_archives.php:28
+msgid "M"
+msgstr "M"
+
+# date format (only day)
+#: archive.php:46
+#: index.php:26
+#: page.php:23
+#: search.php:25
+#: single.php:30
+#: template_archives.php:29
+msgid "jS"
+msgstr "j"
+
+#: archive.php:51
+#: comments.php:22
+#: index.php:35
+#: reversecomments.php:22
+#: search.php:30
+msgid "No comments"
+msgstr "0 commentaires"
+
+#: archive.php:51
+#: comments.php:22
+#: index.php:35
+#: reversecomments.php:22
+#: search.php:30
+msgid "1 comment"
+msgstr "1 commentaire"
+
+#: archive.php:51
+#: comments.php:22
+#: index.php:35
+#: reversecomments.php:22
+#: search.php:30
+#, php-format
+msgid "% comments"
+msgstr "% commentaires"
+
+#: archive.php:53
+#: comments.php:34
+#: comments.php:70
+#: index.php:37
+#: page.php:35
+#: reversecomments.php:34
+#: reversecomments.php:70
+#: search.php:32
+#: single.php:42
+#: template_archives.php:41
+msgid "Edit"
+msgstr "Modifier"
+
+#: archive.php:58
+#: index.php:42
+#: page.php:39
+#: search.php:37
+#: single.php:47
+msgid "Read more..."
+msgstr "Lire plus..."
+
+#: archive.php:78
+#: index.php:66
+#: search.php:62
+msgid "Not found"
+msgstr "Non trouvé"
+
+#: archive.php:79
+#: index.php:67
+#: search.php:63
+msgid "Sorry, no posts matched your criteria. Please, try again."
+msgstr "Désolé, aucune publication correspondante. Essayez encore, svp."
+
+# Time format
+#: comments.php:33
+#: comments.php:66
+#: page.php:51
+#: reversecomments.php:33
+#: reversecomments.php:66
+#: single.php:69
+#: template_archives.php:58
+msgid "g:i a"
+msgstr "g:i"
+
+# Leave the <br/>.
+# Max three words.
+#: comments.php:37
+#: comments.php:73
+#: reversecomments.php:37
+#: reversecomments.php:73
+msgid "Not<br/>approved<br/>yet"
+msgstr "Pas <br />encore<br />validé"
+
+#: comments.php:68
+#: reversecomments.php:68
+msgid "Reply"
+msgstr "Répondre"
+
+#: comments.php:101
+#: reversecomments.php:101
+msgid "No comments yet."
+msgstr "Pas encore de commentaires."
+
+#: comments.php:104
+#: reversecomments.php:104
+msgid "Comments are closed."
+msgstr "Commentaires clos."
+
+#: comments.php:112
+#: page.php:33
+#: page.php:54
+#: reversecomments.php:112
+#: single.php:40
+#: single.php:72
+#: template_archives.php:39
+#: template_archives.php:61
+msgid "Leave a comment"
+msgstr "Laisser un commentaire"
+
+#: comments.php:115
+#: reversecomments.php:115
+msgid "You must be"
+msgstr "Vous devez être"
+
+#: comments.php:115
+#: reversecomments.php:115
+msgid "logged in"
+msgstr "connecté"
+
+#: comments.php:115
+#: reversecomments.php:115
+msgid "to post a comment."
+msgstr "pour poster un commentaire."
+
+#: comments.php:120
+#: reversecomments.php:120
+msgid "Logged in as"
+msgstr "Connecté en tant que"
+
+#: comments.php:120
+#: header.php:151
+#: reversecomments.php:120
+#: sidebar.php:30
+msgid "Logout"
+msgstr "Déconnexion"
+
+#: comments.php:123
+#: reversecomments.php:123
+msgid "Name"
+msgstr "Nom"
+
+#: comments.php:123
+#: comments.php:126
+#: reversecomments.php:123
+#: reversecomments.php:126
+msgid "(required)"
+msgstr "(requis)"
+
+#: comments.php:126
+#: reversecomments.php:126
+msgid "Mail (will not be published)"
+msgstr "Email (ne sera pas publié)"
+
+#: comments.php:129
+#: reversecomments.php:129
+msgid "Website"
+msgstr "Site web"
+
+#: comments.php:137
+#: functions.php:468
+#: reversecomments.php:137
+msgid "HTML enabled"
+msgstr "HTML activé"
+
+#: comments.php:142
+#: reversecomments.php:142
+msgid "Send"
+msgstr "Envoyer"
+
+#: footer.php:23
+#: footer.php:25
+msgid "Copyright &copy;"
+msgstr "&copy;"
+
+#: footer.php:27
+msgid "Powered by"
+msgstr "Propulsé par"
+
+#: footer.php:27
+msgid "Template by"
+msgstr "Traduit par <a href=\"http://www.wolforg.eu\">Wolforg</a>. Design par"
+
+#: footer.php:30
+msgid "Rss 2.0"
+msgstr "RSS 2.0"
+
+#: footer.php:33
+msgid "Sitemap"
+msgstr "Plan du site"
+
+#: footer.php:41
+msgid "en_UK"
+msgstr "en_UK"
+
+#: functions.php:235
+#: functions.php:243
+msgid "Theme Options"
+msgstr "Options du Thème"
+
+#: functions.php:244
+msgid "Before you start blogging with Splix is recommended to set up the options listed below. If you like this theme and want to help its developing, you can do a little donation with Paypal. Thanks."
+msgstr "Avant de commencer à utiliser Splix, il est recommandé de paramétrer les options ci-dessous. Si vous appréciez ce thème et désirez aider à son développement, vous pouvez faire une petite donation via Paypal. Merci. Traduit par <a href=\"http://www.wolforg.eu\">Wolforg</a>."
+
+#: functions.php:255
+#: functions.php:577
+msgid "Save"
+msgstr "Enregistrer"
+
+#: functions.php:261
+msgid "Userbar"
+msgstr "Barre utilisateur"
+
+#: functions.php:265
+msgid "Show userbar."
+msgstr "Afficher la barre utilisateur."
+
+#: functions.php:275
+msgid "Menubar"
+msgstr "Barre de menu"
+
+#: functions.php:279
+msgid "Show pages in the menu."
+msgstr "Afficher les pages dans le menu."
+
+#: functions.php:283
+msgid "Show categories in the menu."
+msgstr "Afficher les catégories dans le menu."
+
+#: functions.php:288
+msgid "Show the homepage link in the menu (it will be the first page)."
+msgstr "Afficher le lien vers l'accueil dans le menu (ce sera la première page)."
+
+#: functions.php:293
+msgid "Activate the jQuery library in the header."
+msgstr "Activer la libraire JQuery dans le menu horizontal."
+
+#: functions.php:303
+msgid "Title"
+msgstr "Titre"
+
+#: functions.php:307
+msgid "Show the blog title."
+msgstr "Afficher le titre du site."
+
+#: functions.php:311
+msgid "Show the blog description."
+msgstr "Afficher la description du site."
+
+#: functions.php:321
+msgid "Colors"
+msgstr "Couleurs"
+
+#: functions.php:325
+msgid "default"
+msgstr "défaut"
+
+#: functions.php:333
+msgid "Title text"
+msgstr "Texte de titre"
+
+#: functions.php:339
+msgid "Description text"
+msgstr "Texte de description"
+
+#: functions.php:346
+msgid "Title background gradient (TOP)"
+msgstr "Dégradé de fond de titre (HAUT)"
+
+#: functions.php:352
+msgid "Title background gradient (BOTTOM)"
+msgstr "Dégradé de fond de titre (BAS)"
+
+#: functions.php:359
+msgid "Userbar background"
+msgstr "Fond de barre utilisateur"
+
+#: functions.php:365
+msgid "Userbar border"
+msgstr "Bordure de barre utilisateur"
+
+#: functions.php:371
+msgid "Userbar text"
+msgstr "Texte de barre utilisateur"
+
+#: functions.php:378
+msgid "Pages menu background"
+msgstr "Fond du menu des pages"
+
+#: functions.php:384
+msgid "Pages menu text"
+msgstr "Texte du menu des pages"
+
+#: functions.php:391
+msgid "Categories menu background"
+msgstr "Fond du menu de catégories"
+
+#: functions.php:397
+msgid "Categories menu text"
+msgstr "Texte du menu des catégories"
+
+#: functions.php:404
+msgid "Background gradient (TOP)"
+msgstr "Dégradé de fond (HAUT)"
+
+#: functions.php:410
+msgid "Background gradient (BOTTOM)"
+msgstr "Dégradé de fond (BAS)"
+
+#: functions.php:416
+msgid "Buttons | Highlighting | Anchored text"
+msgstr "Boutons | Mise en valeur | Texte de lien"
+
+#: functions.php:423
+msgid "Content background"
+msgstr "Fonde de contenu"
+
+#: functions.php:429
+msgid "Content box background"
+msgstr "Fond de boîte de contenu"
+
+#: functions.php:435
+msgid "Content text"
+msgstr "Texte de contenu"
+
+#: functions.php:446
+msgid "Title Foreground"
+msgstr "Premier plan de titre"
+
+#: functions.php:450
+msgid "Define a personal foreground (write the absolute url of this).<br />The max size that will be displayed is 930x85."
+msgstr "Définir une image de premier plan (entrez son URL absolue). <br />La taille maximum affichée sera de 930x85."
+
+#: functions.php:455
+msgid "Define the css 'background' values."
+msgstr "Définir la valeur css de fond."
+
+#: functions.php:466
+msgid "Info"
+msgstr "Info"
+
+#: functions.php:474
+msgid "This info message will be displayed at the top of posts (only in the homepage)."
+msgstr "Ce message sera affiché en haut des articles (uniquement sur l'accueil)."
+
+#: functions.php:489
+msgid "Posts: Categories, Tags, Feed, Date & Time"
+msgstr "Articles : Catégories, Mots-clés, Flux, Date & Heure"
+
+#: functions.php:493
+msgid "Show categories on posts."
+msgstr "Afficher les catégories dans les articles."
+
+#: functions.php:497
+msgid "Show tags on posts."
+msgstr "Afficher les mots-clés dans les articles."
+
+#: functions.php:501
+msgid "Show feed on posts."
+msgstr "Afficher le flux dans les articles."
+
+#: functions.php:505
+msgid "Show date on posts."
+msgstr "Afficher la date dans les articles."
+
+#: functions.php:509
+msgid "Show time on posts."
+msgstr "Afficher l'heure dans les articles."
+
+#: functions.php:513
+msgid "Show path on posts."
+msgstr "Afficher le chemin dans les articles."
+
+#: functions.php:523
+msgid "Pages: Feed, Date & Time"
+msgstr "Pages : Flux, Date & Heure"
+
+#: functions.php:527
+msgid "Show feed on pages."
+msgstr "Afficher le flux dans les pages."
+
+#: functions.php:531
+msgid "Show date on pages."
+msgstr "Afficher la date dans les pages."
+
+#: functions.php:535
+msgid "Show time on pages."
+msgstr "Afficher l'heure dans les pages."
+
+#: functions.php:545
+msgid "Footer"
+msgstr "Pied de page"
+
+#: functions.php:549
+msgid "Set a first year for copyright (leave empty if you don't want to display it)."
+msgstr "Paramétrer une année de début pour le copyright (laissez vide si vous ne voulez pas l'afficher)."
+
+#: functions.php:554
+msgid "Show sitemap."
+msgstr "Afficher le plan du site."
+
+#: functions.php:559
+msgid "Sitemap url."
+msgstr "URL du plan de site."
+
+#: functions.php:564
+msgid "Show rss."
+msgstr "Afficher rss."
+
+#: functions.php:569
+msgid "Custom rss url. (leave empty if you want use the default url)"
+msgstr "URL personnalisée du rss. (laisser vide si vous utilisez l'URL par défaut)"
+
+#: header.php:67
+msgid "Remember me"
+msgstr "Me rappeler"
+
+#: header.php:69
+#: sidebar.php:45
+msgid "Sign in"
+msgstr "S'enregistrer"
+
+#: header.php:77
+msgid "Private message"
+msgstr "Message privé"
+
+#: header.php:80
+msgid "No new messages"
+msgstr "Aucun nouveau message"
+
+#: header.php:81
+msgid "new message"
+msgstr "nouveau message"
+
+#: header.php:82
+msgid "new messages"
+msgstr "nouveaux messages"
+
+#: header.php:89
+msgid "Add New Post"
+msgstr "Nouvel article"
+
+#: header.php:93
+#: header.php:98
+#: header.php:100
+msgid "drafts"
+msgstr "brouillons"
+
+#: header.php:95
+msgid "draft"
+msgstr "brouillon"
+
+#: header.php:106
+msgid "Add New Link"
+msgstr "Nouveau lien"
+
+#: header.php:112
+msgid "Add New File"
+msgstr "Nouveau fichier"
+
+#: header.php:118
+msgid "Layout"
+msgstr "Thèmes"
+
+#: header.php:124
+msgid "Plugins"
+msgstr "Extensions"
+
+#: header.php:131
+msgid "Users Online"
+msgstr "Utilisateurs en ligne"
+
+#: header.php:175
+#: single.php:14
+msgid "Homepage"
+msgstr "Accueil"
+
+#: page.php:32
+#: single.php:39
+#: template_archives.php:38
+msgid "Go to comments"
+msgstr "Aller aux commentaires"
+
+#: page.php:57
+#: single.php:75
+#: template_archives.php:64
+msgid "Trackback"
+msgstr "Trackback"
+
+#: page.php:60
+#: template_archives.php:67
+msgid "Follow this page"
+msgstr "Suivre cette page"
+
+#: search.php:9
+msgid "Search results for:"
+msgstr "Résultats de recherche pour :"
+
+#: sidebar.php:9
+msgid "Follow this weblog"
+msgstr "Suivre ce Site"
+
+#: sidebar.php:38
+msgid "Login"
+msgstr "Connexion"
+
+#: single.php:50
+msgid "Pages:"
+msgstr "Pages :"
+
+#: single.php:78
+msgid "Follow this post"
+msgstr "Suivre cet article"
+
+#: template_archives.php:45
+msgid "Archives by Month:"
+msgstr "Archives Mensuelles :"
+
+#: template_archives.php:46
+msgid "Archives by Year:"
+msgstr "Archives Annuelles :"
+

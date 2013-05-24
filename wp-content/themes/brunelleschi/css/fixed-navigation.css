@@ -1,0 +1,28 @@
+#access {
+	position: fixed !important;
+	width: 100%;
+	top: 0px;
+	left: 0;
+	background: #f9f9f9;
+	border-bottom: #ddd !important;
+	box-shadow: 1px 1px 1px #ddd;
+	text-shadow: 1px 1px 1px #fcfcfc;
+}
+
+.logged-in #access{
+	top: 28px;
+}
+#access a:hover, #access ul:hover {
+	text-shadow: none !important;
+}
+body { margin-top: 60px !important;}
+
+@media handheld, only screen and (max-width: 767px) {
+	#access {
+		position: relative !important;
+		border-top: 1px solid #ddd !important;
+	}
+	body {
+		margin-top: 0 !important;
+	}
+}

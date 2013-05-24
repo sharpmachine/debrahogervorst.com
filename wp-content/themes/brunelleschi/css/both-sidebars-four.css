@@ -1,0 +1,7 @@
+#sidebar-two.left { margin-left: -68.6%; }
+#main { margin-left: 34.8%;}
+
+@media handheld, only screen and (max-width: 767px) {
+	#main { margin-left: 0;}
+	#sidebar-two.left { margin-left: 0}
+}

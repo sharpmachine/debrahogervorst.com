@@ -1,0 +1,660 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Brunelleschi_PL\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-02-11 11:15+0100\n"
+"PO-Revision-Date: 2012-02-11 19:54+0100\n"
+"Last-Translator: WebWorm.pl <admin@webworm.pl>\n"
+"Language-Team: WebWorm.pl <admin@webworm.pl>\n"
+"Language: Polish\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-Language: Polish\n"
+"X-Poedit-Country: POLAND\n"
+"X-Poedit-SearchPath-0: ..\n"
+"X-Poedit-SearchPath-1: .\n"
+
+#: ../loop-page.php:14
+#: ../loop.php:109
+msgid "Pages:"
+msgstr "Strony:"
+
+#: ../loop-page.php:15
+#: ../functions.php:149
+#: ../loop.php:67
+#: ../loop.php:88
+msgid "Edit"
+msgstr "Edytuj"
+
+#: ../functions.php:47
+msgid "Primary Navigation"
+msgstr "Główna nawigacja"
+
+#: ../functions.php:108
+#, php-format
+msgid "Page %s"
+msgstr "Strona %s"
+
+#: ../functions.php:117
+#, php-format
+msgid "This entry was posted in %1$s and tagged %2$s. Bookmark the <a href=\"%3$s\" title=\"Permalink to %4$s\" rel=\"bookmark\">permalink</a>."
+msgstr "Ten wpis opublikowano w kategoriach: %1$s z tagami: %2$s. Dodaj do zakładek ten <a href=\"%3$s\" title=\"%4$s\" rel=\"bookmark\">link</a>."
+
+#: ../functions.php:119
+#, php-format
+msgid "This entry was posted in %1$s. Bookmark the <a href=\"%3$s\" title=\"Permalink to %4$s\" rel=\"bookmark\">permalink</a>."
+msgstr "Ten wpis opublikowano w kategoriach: %1$s. Dodaj do zakładek ten <a href=\"%3$s\" title=\"%4$s\" rel=\"bookmark\">link</a>."
+
+#: ../functions.php:121
+#, php-format
+msgid "Bookmark the <a href=\"%3$s\" title=\"Permalink to %4$s\" rel=\"bookmark\">permalink</a>."
+msgstr "Dodaj do zakładek ten <a href=\"%3$s\" title=\"%4$s\" rel=\"bookmark\">link</a>."
+
+#: ../functions.php:136
+#, php-format
+msgid "<span class=\"meta-sep\">by</span> %3$s <span class=\"%1$s\">Posted on</span> %2$s"
+msgstr "<span class=\"meta-sep\">dodano przez</span> %3$s <span class=\"%1$s\">dnia</span> %2$s"
+
+#: ../functions.php:165
+#, php-format
+msgid "%s <span class=\"says\">says:</span>"
+msgstr "%s <span class=\"says\">powiedział:</span>"
+
+#: ../functions.php:168
+msgid "Your comment is awaiting moderation."
+msgstr "Twój komentarz czeka na zatwierdzenie."
+
+#: ../functions.php:174
+#, php-format
+msgid "%1$s at %2$s"
+msgstr "%1$s o %2$s"
+
+#: ../functions.php:174
+#: ../functions.php:191
+msgid "(Edit)"
+msgstr "(Edytuj)"
+
+#: ../functions.php:191
+msgid "Pingback:"
+msgstr "Daj znać:"
+
+#: ../functions.php:249
+#: ../loop.php:80
+#: ../loop.php:108
+msgid "Continue reading <span class=\"meta-nav\">&rarr;</span>"
+msgstr "Czytaj dalej <span class=\"meta-nav\">&rarr;</span>"
+
+#: ../functions.php:324
+msgid "Beach"
+msgstr "Plaża"
+
+#: ../functions.php:329
+msgid "Fog"
+msgstr "Mgła"
+
+#: ../functions.php:334
+msgid "Grass"
+msgstr "Trawa"
+
+#: ../functions.php:373
+msgid "Primary Widget Area"
+msgstr "Pierwszy obszar widgetów"
+
+#: ../functions.php:375
+msgid "The first widget area"
+msgstr "Pierwszy obszar widgetów"
+
+#: ../functions.php:384
+msgid "Secondary Widget Area"
+msgstr "Drugi obszar widgetów"
+
+#: ../functions.php:386
+msgid "The second widget area"
+msgstr "Drugi obszar widgetów"
+
+#: ../functions.php:400
+msgid "Ternary Widget Area"
+msgstr "Trzeci obszar widgetów"
+
+#: ../functions.php:402
+msgid "The third widget area"
+msgstr "Trzeci obszar widgetów"
+
+#: ../functions.php:411
+msgid "Quaternary Widget Area"
+msgstr "Czwarty obszar widgetów"
+
+#: ../functions.php:413
+msgid "The fourth widget area"
+msgstr "Czwarty obszar widgetów"
+
+#: ../functions.php:423
+msgid "First Footer Widget Area"
+msgstr "Pierwszy obszar widgetów"
+
+#: ../functions.php:425
+msgid "The first footer widget area"
+msgstr "Pierwszy obszar widgetów w stopce"
+
+#: ../functions.php:434
+msgid "Second Footer Widget Area"
+msgstr "Drugi obszar widgetów"
+
+#: ../functions.php:436
+msgid "The second footer widget area"
+msgstr "Drugi obszar widgetów w stopce"
+
+#: ../functions.php:445
+msgid "Third Footer Widget Area"
+msgstr "Trzeci obszar widgetów"
+
+#: ../functions.php:447
+msgid "The third footer widget area"
+msgstr "Trzeci obszar widgetów w stopce"
+
+#: ../functions.php:456
+msgid "Fourth Footer Widget Area"
+msgstr "Czwarty obszar widgetów"
+
+#: ../functions.php:458
+msgid "The fourth footer widget area"
+msgstr "Czwarty obszar widgetów w stopce"
+
+#: ../functions.php:475
+msgid "two"
+msgstr ""
+
+#: ../functions.php:483
+msgid "three"
+msgstr ""
+
+#: ../functions.php:491
+msgid "four"
+msgstr ""
+
+#: ../functions.php:663
+msgid "Featured Content"
+msgstr "Wyróżniony wpis"
+
+#: ../functions.php:668
+msgid "Add to Featured Content?"
+msgstr "Dodać do wyróżnionych wpisów?"
+
+#: ../functions.php:673
+msgid "Image Only"
+msgstr "Tylko obraz"
+
+#: ../functions.php:678
+msgid "Display Text on Right or Left?"
+msgstr "Tekst wyświetlić po prawej czy po lewej?"
+
+#: ../functions.php:682
+#: ../functions.php:685
+msgid "left"
+msgstr ""
+
+#: ../functions.php:683
+msgid "right"
+msgstr ""
+
+#: ../functions.php:688
+msgid "Text Display Width?"
+msgstr "Szerokość wyświetlania tekstu"
+
+#: ../functions.php:692
+#: ../functions.php:697
+msgid "1/4 Width"
+msgstr ""
+
+#: ../functions.php:693
+msgid "1/3 Width"
+msgstr ""
+
+#: ../functions.php:694
+msgid "1/2 Width"
+msgstr ""
+
+#: ../functions.php:695
+msgid "Full Width"
+msgstr ""
+
+#: ../functions.php:700
+msgid "Feature Description:"
+msgstr "Streszczenie wpisu:"
+
+#: ../functions.php:701
+msgid "Add summary for the Feature Slider"
+msgstr "Dodaj streszczenie do panelu wyróżnień"
+
+#: ../archive.php:11
+#, php-format
+msgid "Daily Archives: <span>%s</span>"
+msgstr "Archiwum dzienne: <span>%s</span>"
+
+#: ../archive.php:13
+#, php-format
+msgid "Monthly Archives: <span>%s</span>"
+msgstr "Archiwum miesięczne: <span>%s</span>"
+
+#: ../archive.php:15
+#, php-format
+msgid "Yearly Archives: <span>%s</span>"
+msgstr "Archiwum roczne: <span>%s</span>"
+
+#: ../archive.php:17
+msgid "Blog Archives"
+msgstr "Archiwum bloga"
+
+#: ../tag.php:6
+#, php-format
+msgid "Tag Archives: %s"
+msgstr "Archiwum tagów: %s"
+
+#: ../sidebar.php:12
+msgid "Archives"
+msgstr "Archiwum"
+
+#: ../sidebar.php:19
+msgid "Meta"
+msgstr ""
+
+#: ../loop.php:3
+#: ../loop.php:146
+msgid "<span class=\"meta-nav\">&larr;</span> Older posts"
+msgstr "<span class=\"meta-nav\">&larr;</span> Starsze wpisy"
+
+#: ../loop.php:4
+#: ../loop.php:147
+msgid "Newer posts <span class=\"meta-nav\">&rarr;</span>"
+msgstr "Nowsze posty <span class=\"meta-nav\">&rarr;</span>"
+
+#: ../loop.php:10
+#: ../404.php:4
+msgid "Not Found"
+msgstr "Nie odnaleziono"
+
+#: ../loop.php:12
+msgid "Apologies, but no results were found for the requested archive. Perhaps searching will help find a related post."
+msgstr "Przepraszamy, ale brak wpisów spełniających kryteria. Może wyszukiwanie pomoże znaleźć to czego szukasz."
+
+#: ../loop.php:60
+#: ../loop.php:63
+msgid "More Galleries"
+msgstr "Więcej galerii"
+
+#: ../loop.php:66
+#: ../loop.php:87
+#: ../loop.php:134
+msgid "Leave a comment"
+msgstr "Zostaw komentarz"
+
+#: ../loop.php:66
+#: ../loop.php:87
+#: ../loop.php:134
+msgid "1 Comment"
+msgstr "Komentarzy: 1"
+
+#: ../loop.php:66
+#: ../loop.php:87
+#: ../loop.php:134
+msgid "% Comments"
+msgstr "Komentarzy: %"
+
+#: ../loop.php:121
+#, php-format
+msgid "<span class=\"%1$s\">Posted in</span> %2$s"
+msgstr "<span class=\"%1$s\">Kategorie</span> %2$s"
+
+#: ../loop.php:130
+#, php-format
+msgid "<span class=\"%1$s\">Tagged</span> %2$s"
+msgstr "<span class=\"%1$s\">Tagi</span> %2$s"
+
+#: ../404.php:6
+msgid "Apologies, but the page you requested could not be found. Perhaps searching will help."
+msgstr "Przepraszamy, ale strona, którą próbujesz odwiedzić nie istnieje. Może wyszukiwanie pomoże znaleźć to czego szukasz."
+
+#: ../header.php:21
+msgid "Modern"
+msgstr "Nowoczesna"
+
+#: ../header.php:64
+msgid "Nouveau"
+msgstr "Secesyjna"
+
+#: ../header.php:185
+#: ../header.php:226
+msgid "Skip to content"
+msgstr "Przeskocz do treści"
+
+#: ../comments.php:3
+msgid "This post is password protected. Enter the password to view any comments."
+msgstr "Ten wpis jest chroniony hasłem. Wprowadź hasło żeby zobaczyć komentarze."
+
+#: ../comments.php:33
+msgid "Comments are closed."
+msgstr "Komentowanie wyłączono."
+
+#: ../author.php:13
+#, php-format
+msgid "Author Archives: %s"
+msgstr "Archiwum autora: %s"
+
+#: ../author.php:22
+#, php-format
+msgid "About %s"
+msgstr "O %s"
+
+#: ../search.php:6
+#, php-format
+msgid "Search Results for: %s"
+msgstr "Rezultaty wyszukiwania dla: %s"
+
+#: ../search.php:10
+msgid "Nothing Found"
+msgstr "Nic nie znaleziono"
+
+#: ../search.php:12
+msgid "Sorry, but nothing matched your search criteria. Please try again with some different keywords."
+msgstr "Przepraszamy, ale nie znaleziono żadnych wpisów spełniających podane kryteria. Spróbuj ponownie używając innych słów kluczowych."
+
+#: ../footer.php:14
+msgid "http://wordpress.org/"
+msgstr "http://wordpress.org/"
+
+#: ../footer.php:14
+#, php-format
+msgid "Proudly powered by %s."
+msgstr "Silnik: %s"
+
+#: ../category.php:5
+#, php-format
+msgid "Category Archives: %s"
+msgstr "Archiwum kategorii: %s"
+
+#: ../loop-attachment.php:4
+#, php-format
+msgid "Return to %s"
+msgstr "Powróć do %s"
+
+#: ../loop-attachment.php:5
+#, php-format
+msgid "<span class=\"meta-nav\">&larr;</span> %s"
+msgstr ""
+
+#: ../loop-attachment.php:15
+#, php-format
+msgid "<span class=\"%1$s\">By</span> %2$s"
+msgstr "<span class=\"%1$s\">Przez</span> %2$s"
+
+#: ../loop-attachment.php:26
+#, php-format
+msgid "<span class=\"%1$s\">Published</span> %2$s"
+msgstr "<span class=\"%1$s\">Opublikowano</span> %2$s"
+
+#: ../loop-attachment.php:36
+#, php-format
+msgid "Full size is %s pixels"
+msgstr "Pełen rozmiar to %s px"
+
+#: ../loop-attachment.php:39
+msgid "Link to full-size image"
+msgstr "Link do pełnego rozmiaru"
+
+#: ../loop-single.php:32
+#, php-format
+msgid "View all posts by %s <span class=\"meta-nav\">&rarr;</span>"
+msgstr "Wyświetl wszystkie wpisy autorstwa %s <span class=\"meta-nav\">&rarr;</span>"
+
+#: ../inc/theme-options.php:25
+msgid "Brunelleschi Options"
+msgstr "Opcje Brunelleschi"
+
+#: ../inc/theme-options.php:41
+msgid "Brunelleschi Theme Settings"
+msgstr "Ustawienia tematu Brunelleschi"
+
+#: ../inc/theme-options.php:48
+msgid "Display Settings"
+msgstr "Ustawienia wyświetlania"
+
+#: ../inc/theme-options.php:53
+msgid "Use Alternative Fonts?"
+msgstr "Jaka czcionka ma być używana?"
+
+#: ../inc/theme-options.php:54
+msgid "Choose a Font Set"
+msgstr "Wybierz czcionkę"
+
+#: ../inc/theme-options.php:56
+#: ../inc/theme-options.php:60
+#: ../inc/theme-options.php:414
+#: ../inc/theme-options.php:435
+msgid "Classic"
+msgstr "Klasyczna"
+
+#: ../inc/theme-options.php:65
+msgid "Hide Site Title?"
+msgstr "Ukryć tytuł strony?"
+
+#: ../inc/theme-options.php:66
+msgid "Check to hide the Site Title."
+msgstr "Zaznacz żeby ukryć tytuł strony."
+
+#: ../inc/theme-options.php:72
+msgid "Hide Site Description?"
+msgstr "Ukryć opis strony?"
+
+#: ../inc/theme-options.php:73
+msgid "Check to hide the Site Description."
+msgstr "Zaznacz żeby ukryć opis strony."
+
+#: ../inc/theme-options.php:79
+msgid "Use Left Aligned Header Text?"
+msgstr "Użyć wyrównania do lewej w tekście nagłówka?"
+
+#: ../inc/theme-options.php:80
+msgid "Check to left align header text."
+msgstr "Zaznacz żeby użyć wyrównania do lewej w tekście nagłówka."
+
+#: ../inc/theme-options.php:86
+msgid "Enable Header Image?"
+msgstr "Włączyć obraz w nagłówku?"
+
+#: ../inc/theme-options.php:87
+msgid "Check to include a Header Image."
+msgstr "Zaznacz żeby dodać obraz w nagłówku."
+
+#: ../inc/theme-options.php:93
+msgid "Remove Header Image Border?"
+msgstr "Usunąć obramowanie w obrazie nagłówka?"
+
+#: ../inc/theme-options.php:94
+msgid "Check to Remove Header Image Border."
+msgstr "Zaznacz żeby usunąć obramowanie w obrazie nagłówka."
+
+#: ../inc/theme-options.php:100
+msgid "Use a Featured Content Slider?"
+msgstr "Użyć panelu wyróżnionych treści?"
+
+#: ../inc/theme-options.php:101
+msgid "Featured content slider overrides the header image"
+msgstr "Panel wyróżnionych wpisów nadpisuje obraz nagłówka."
+
+#: ../inc/theme-options.php:107
+msgid "Header Text or Banner Image on Top?"
+msgstr "Położenie wzajemne elementów nagłówka"
+
+#: ../inc/theme-options.php:108
+msgid "Choose the order you want the header to display."
+msgstr "Określ położenie wzajemne elementów nagłówka."
+
+#: ../inc/theme-options.php:110
+#: ../inc/theme-options.php:115
+#: ../inc/theme-options.php:421
+#: ../inc/theme-options.php:442
+msgid "Text on Top"
+msgstr ""
+
+#: ../inc/theme-options.php:111
+#: ../inc/theme-options.php:442
+msgid "Text on the Left"
+msgstr ""
+
+#: ../inc/theme-options.php:112
+#: ../inc/theme-options.php:442
+msgid "Text on the Right"
+msgstr ""
+
+#: ../inc/theme-options.php:113
+#: ../inc/theme-options.php:442
+msgid "Text on the Bottom"
+msgstr ""
+
+#: ../inc/theme-options.php:120
+msgid "Hide Navigation?"
+msgstr "Ukryć nawigację?"
+
+#: ../inc/theme-options.php:121
+msgid "Check to add a hide the primary navigation"
+msgstr "Zaznacz żeby ukryć główną nawigację."
+
+#: ../inc/theme-options.php:127
+msgid "Center Navigation?"
+msgstr "Wyśrodkować nawigację?"
+
+#: ../inc/theme-options.php:128
+msgid "Check to center the primary navigation"
+msgstr "Zaznacz żeby wyśrodkować główną nawigację."
+
+#: ../inc/theme-options.php:134
+msgid "Pick Navigation Position."
+msgstr "Wybierz pozycję nawigacji."
+
+#: ../inc/theme-options.php:135
+msgid "Navigation above the banner, below, or within the body column?"
+msgstr "Nawigacja nad czy pod banerem?"
+
+#: ../inc/theme-options.php:137
+#: ../inc/theme-options.php:445
+msgid "Nav Above Banner"
+msgstr ""
+
+#: ../inc/theme-options.php:138
+#: ../inc/theme-options.php:140
+#: ../inc/theme-options.php:424
+#: ../inc/theme-options.php:445
+msgid "Nav Below Banner"
+msgstr ""
+
+#: ../inc/theme-options.php:145
+msgid "Left, Right, None, or Both Sidebars?"
+msgstr "Wybór obszarów bocznych"
+
+#: ../inc/theme-options.php:146
+msgid "Pick which side you want the sidebar on. Choose none for no sidebar."
+msgstr "Wybierz pozycję obszaru bocznego, zaznacz brak jeśli nie chcesz używać obszarów bocznych."
+
+#: ../inc/theme-options.php:150
+#: ../inc/theme-options.php:446
+msgid "none"
+msgstr ""
+
+#: ../inc/theme-options.php:151
+#: ../inc/theme-options.php:446
+msgid "both"
+msgstr ""
+
+#: ../inc/theme-options.php:152
+#: ../inc/theme-options.php:446
+msgid "two left"
+msgstr ""
+
+#: ../inc/theme-options.php:153
+#: ../inc/theme-options.php:446
+msgid "two right"
+msgstr ""
+
+#: ../inc/theme-options.php:160
+msgid "How Many Columns Should the Sidebar Occupy?"
+msgstr "Ile kolumn powinien zajmować obszar boczny?"
+
+#: ../inc/theme-options.php:161
+msgid "Pick a number between two and four."
+msgstr "Wybierz cyfrę pomiędzy dwa, a cztery."
+
+#: ../inc/theme-options.php:172
+msgid "Content Width:"
+msgstr "Szerokość treści:"
+
+#: ../inc/theme-options.php:173
+msgid "Choose the overall Content Width in pixels."
+msgstr "Wybierz szerokość całej treści (w pikselach)."
+
+#: ../inc/theme-options.php:185
+msgid "Posted On Position:"
+msgstr "Pozycja metadanych:"
+
+#: ../inc/theme-options.php:186
+msgid "This is the part that says <b>by AUTHOR posted on DATE</b>."
+msgstr "To jest część, która mówi <b>dodano przez AUTOR dnia DATA</b>."
+
+#: ../inc/theme-options.php:188
+#: ../inc/theme-options.php:428
+msgid "Above Post"
+msgstr ""
+
+#: ../inc/theme-options.php:189
+msgid "Below Post"
+msgstr ""
+
+#: ../inc/theme-options.php:190
+msgid "Hidden"
+msgstr ""
+
+#: ../inc/theme-options.php:197
+msgid "Show Full Post in Archives and Tags?"
+msgstr "Pokazać całe wpisy w archiwach i tagach?"
+
+#: ../inc/theme-options.php:198
+msgid "Check to show full post, uncheck for excerpt."
+msgstr "Zaznacz żeby pokazać całe wpisy w archiwach i tagach."
+
+#: ../inc/theme-options.php:204
+msgid "Use box shadow?"
+msgstr "Pokazać cień obszaru?"
+
+#: ../inc/theme-options.php:205
+msgid "Check to add a groovy box shadow (new browsers only)"
+msgstr "Zaznacz żeby dodać cień obszaru (tylko nowe przeglądarki)."
+
+#: ../inc/theme-options.php:211
+msgid "Custom CSS:"
+msgstr "Własny kod CSS:"
+
+#: ../inc/theme-options.php:212
+msgid "Caution! CSS is very powerful!"
+msgstr "Uwaga! CSS to potężne narzędzie."
+
+#: ../inc/theme-options.php:235
+#: ../inc/theme-options.php:254
+msgid "Donate"
+msgstr "Datek"
+
+#: ../inc/theme-options.php:253
+msgid "General"
+msgstr "Ogólne"
+
+#: ../inc/theme-options.php:297
+msgid "Settings saved."
+msgstr "Ustawienia zapisano."
+
+#: ../inc/theme-options.php:462
+#, php-format
+msgid "Thank you for using Brunelleschi version %s. Edit your theme options <a href=\"%s\">here</a>. Learn what's new in version <a href=\"http://kitmacallister.com/2011/brunelleschi-changelog/\">%s</a>."
+msgstr "Dziękuję za używanie Brunelleschi w wersji %s. Dostosuj ustawienia <a href=\"%s\">Tu</a>. Sprawdź co nowego w wersji <a href=\"http://kitmacallister.com/2011/brunelleschi-changelog/\">%s</a>."
+

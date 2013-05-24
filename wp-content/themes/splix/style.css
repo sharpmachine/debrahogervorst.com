@@ -1,0 +1,65 @@
+/*  
+Theme Name: Splix
+Theme URI: http://www.splact.com/blog/themes/splix/
+Description: Splix is a theme for wordpress dominated by very light-looking colours. A peculiarity of this theme is the presence of an options page, which makes it highly customizable. This preview shows the theme when all settings are disabled, if you want to see this theme in action, visit the Author Homepage.
+Version: 1.1.14
+Author: Dario Carella | Splact
+Author URI: http://www.splact.com/
+Tags: green, blue, white, custom-colors, custom-header, theme-options, fixed-width, two-columns, translation-ready
+
+--- Languages ---
+en_UK, it_IT, fr_FR, zh_CN, zh_TW
+
+--- Plugins suggested ---
+In this theme I've implemented some parts of code for a better work of these plugins
+	* SexyBookmarks (set Menu Location as "Manual Mode")
+    * Highslide4WP
+    * WP-RecentComments
+    * WP-DownloadManager
+    * WP-PostRatings
+    * WP-UserOnline
+    * WP Private Messages
+	
+--- License ---
+Splix theme is released under the latest version of the GPL that give to you these freedoms:
+    * the freedom to use the software for any purpose,
+    * the freedom to change the software to suit your needs,
+    * the freedom to share the software with your friends and neighbors, and
+    * the freedom to share the changes you make.
+If you want to see the complete GPL license go here: http://www.gnu.org/licenses/gpl.html
+
+--- Bugs and suggestions ---
+If you have some problems with this theme or you want to give me a suggestion, please contact me here http://www.splact.com/blog/contact/ or send a comment here http://www.splact.com/blog/themes/splix/ .
+*/
+
+/* If you want edit the style of Splix take a look in "unparsed.txt" and refresh your theme options (with saving) */
+
+/* class required START */
+.alignleft {
+	float:left;
+	margin-right:10px;
+}
+.alignright {
+	float:right;
+	margin-left:10px;
+}
+.aligncenter {
+	display: block;
+	margin:0px auto;
+}
+/* class required END */
+
+.floatright{
+	float:right;
+}
+.floatleft{
+	float:left;
+}
+.left {
+	float:left;
+	margin-right:10px;
+}
+.right {
+	float:right;
+	margin-left:10px;
+}

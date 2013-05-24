@@ -1,0 +1,10 @@
+#header, #footer {
+	background: #662277 url(purple/head.png) repeat-x;
+}
+a, a:link, a:visited, .postmeta a:link, .postmeta a:visited, .postinfo a:link, .postinfo a:visited,
+.post-title, .post-title a:link, .post-title a:visited, .page-title, #comments h3, #respond h3 {
+	color: #662277;
+}
+.wp-pagenavi .current {
+	background: #662277;
+}

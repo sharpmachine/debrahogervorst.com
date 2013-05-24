@@ -1,0 +1,10 @@
+#header, #footer {
+	background: #ee4400 url(orange/head.png) repeat-x;
+}
+a, a:link, a:visited, .postmeta a:link, .postmeta a:visited, .postinfo a:link, .postinfo a:visited,
+.post-title, .post-title a:link, .post-title a:visited, .page-title, #comments h3, #respond h3 {
+	color: #ee4400;
+}
+.wp-pagenavi .current {
+	background: #ee4400;
+}

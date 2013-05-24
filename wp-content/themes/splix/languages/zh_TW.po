@@ -1,0 +1,658 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: splix\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-08-18 13:16+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Showfom <showfom@gmail.com>\n"
+"Language-Team: Splact <dario.kar@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: English\n"
+"X-Poedit-Country: UNITED KINGDOM\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-Basepath: D:\\Lavori\\Siti\\Splact6\\sync\\demo\\wp-content\\themes\\Splix\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: 404.php:5
+msgid "Error 404 - Page not found"
+msgstr "囧，404錯誤，沒有找到妳要查看的頁面哦，請檢查網址或者重新搜索"
+
+#: 404.php:7
+msgid "Sorry but the page you are trying to view does not exist. As a solution to this problem, you can try these tips:"
+msgstr "囧，妳查看的頁面不存在，可以試試以下方法："
+
+#: 404.php:9
+msgid "refresh this page in a few seconds"
+msgstr "在幾秒鍾後刷新這個頁面"
+
+#: 404.php:10
+msgid "check if the URL address is correct"
+msgstr "請檢查此URL的正確性"
+
+#: 404.php:11
+msgid "use the field in the sidebar to perform a quick search in this weblog"
+msgstr "使用此區域讓側邊欄出現搜索框"
+
+#: 404.php:12
+msgid "return to the homepage"
+msgstr "返回首頁"
+
+#: 404.php:14
+msgid "Otherwise you can visit the last posts:"
+msgstr "妳可以訪問最近的日志："
+
+#: archive.php:9
+#: archive.php:81
+#: index.php:56
+#: search.php:52
+msgid "Next posts"
+msgstr "下壹篇"
+
+#: archive.php:10
+#: archive.php:82
+#: index.php:57
+#: search.php:53
+msgid "Previous posts"
+msgstr "上壹篇"
+
+#: archive.php:17
+#, php-format
+msgid "Archive for the <b>%1$s</b> category"
+msgstr " <b>%1$s</b> 分類存檔"
+
+#: archive.php:19
+#, php-format
+msgid "Posts Tagged <b>%1$s</b>"
+msgstr "標簽： <b>%1$s</b>"
+
+#: archive.php:21
+#: archive.php:23
+#: archive.php:25
+msgid "Archive for"
+msgstr "存檔"
+
+# date format (day)
+#: archive.php:21
+#: archives.php:50
+#: comments.php:32
+#: comments.php:59
+#: comments.php:88
+#: guestbook.php:50
+#: links.php:49
+#: page.php:43
+#: reversecomments.php:32
+#: reversecomments.php:59
+#: reversecomments.php:88
+#: single.php:55
+msgid "F jS, Y"
+msgstr "F jS, Y"
+
+# date format  (month)
+#: archive.php:23
+msgid "F, Y"
+msgstr "F, Y"
+
+# date format (year)
+#: archive.php:25
+#: footer.php:8
+#: footer.php:10
+msgid "Y"
+msgstr "Y"
+
+#: archive.php:27
+msgid "Author Archive"
+msgstr "作者存檔"
+
+#: archive.php:29
+msgid "Blog Archives"
+msgstr "博客存檔"
+
+#: archive.php:37
+#: archives.php:19
+#: guestbook.php:19
+#: index.php:16
+#: links.php:19
+#: page.php:13
+#: search.php:16
+#: single.php:16
+msgid "Permanent Link to"
+msgstr "鏈接到 "
+
+# date format (only month)
+#: archive.php:45
+#: archives.php:28
+#: guestbook.php:28
+#: index.php:25
+#: links.php:28
+#: page.php:22
+#: search.php:24
+#: single.php:25
+msgid "M"
+msgstr "M"
+
+# date format (only day)
+#: archive.php:46
+#: archives.php:29
+#: guestbook.php:29
+#: index.php:26
+#: links.php:29
+#: page.php:23
+#: search.php:25
+#: single.php:26
+msgid "jS"
+msgstr "jS"
+
+#: archive.php:51
+#: comments.php:22
+#: index.php:35
+#: reversecomments.php:22
+#: search.php:30
+msgid "No comments"
+msgstr "沒有評論"
+
+#: archive.php:51
+#: comments.php:22
+#: index.php:35
+#: reversecomments.php:22
+#: search.php:30
+msgid "1 comment"
+msgstr "1條評論"
+
+#: archive.php:51
+#: comments.php:22
+#: index.php:35
+#: reversecomments.php:22
+#: search.php:30
+#, php-format
+msgid "% comments"
+msgstr "%條評論"
+
+#: archive.php:53
+#: archives.php:41
+#: comments.php:34
+#: comments.php:61
+#: comments.php:93
+#: guestbook.php:41
+#: index.php:37
+#: links.php:41
+#: page.php:35
+#: reversecomments.php:34
+#: reversecomments.php:61
+#: reversecomments.php:93
+#: search.php:32
+#: single.php:38
+msgid "Edit"
+msgstr "編輯"
+
+#: archive.php:58
+#: guestbook.php:45
+#: index.php:42
+#: page.php:39
+#: search.php:37
+#: single.php:43
+msgid "Read more..."
+msgstr "繼續閱讀..."
+
+#: archive.php:74
+#: search.php:58
+msgid "Not found"
+msgstr "沒有找到"
+
+#: archive.php:75
+#: search.php:59
+msgid "Sorry, no posts matched your criteria. Please, try again."
+msgstr "抱歉，沒有找到妳查看的日志，請重試。"
+
+#: archives.php:38
+#: guestbook.php:38
+#: links.php:38
+#: page.php:32
+#: single.php:35
+msgid "Go to comments"
+msgstr "查看評論"
+
+#: archives.php:39
+#: archives.php:56
+#: comments.php:135
+#: guestbook.php:39
+#: guestbook.php:56
+#: links.php:39
+#: links.php:55
+#: page.php:33
+#: page.php:49
+#: reversecomments.php:135
+#: single.php:36
+#: single.php:61
+msgid "Leave a comment"
+msgstr "增加評論"
+
+#: archives.php:45
+msgid "Archives by Month:"
+msgstr "按月存檔："
+
+#: archives.php:46
+msgid "Archives by Year:"
+msgstr "按年存檔："
+
+# Time format
+#: archives.php:53
+#: comments.php:33
+#: comments.php:60
+#: comments.php:89
+#: guestbook.php:53
+#: links.php:52
+#: page.php:46
+#: reversecomments.php:33
+#: reversecomments.php:60
+#: reversecomments.php:89
+#: single.php:58
+msgid "g:i a"
+msgstr "g:i a"
+
+#: archives.php:59
+#: guestbook.php:59
+#: links.php:58
+#: page.php:52
+#: single.php:64
+msgid "Trackback"
+msgstr "引用"
+
+#: archives.php:62
+#: guestbook.php:62
+#: links.php:61
+#: page.php:55
+msgid "Follow this page"
+msgstr "訂閱這個頁面"
+
+# Leave the <br/>.
+# Max three words.
+#: comments.php:46
+#: comments.php:73
+#: comments.php:105
+#: reversecomments.php:46
+#: reversecomments.php:73
+#: reversecomments.php:105
+msgid "Not<br/>approved<br/>yet"
+msgstr "沒有通過"
+
+#: comments.php:91
+#: reversecomments.php:91
+msgid "Reply"
+msgstr "回複"
+
+#: comments.php:124
+#: reversecomments.php:124
+msgid "No comments yet."
+msgstr "沒有評論"
+
+#: comments.php:127
+#: reversecomments.php:127
+msgid "Comments are closed."
+msgstr "評論關閉"
+
+#: comments.php:138
+#: reversecomments.php:138
+msgid "You must be"
+msgstr "妳必須"
+
+#: comments.php:138
+#: reversecomments.php:138
+msgid "logged in"
+msgstr "登陸"
+
+#: comments.php:138
+#: reversecomments.php:138
+msgid "to post a comment."
+msgstr "才能評論"
+
+#: comments.php:143
+#: reversecomments.php:143
+msgid "Logged in as"
+msgstr "Logged in as"
+
+#: comments.php:143
+#: header.php:70
+#: reversecomments.php:143
+#: sidebar.php:33
+msgid "Logout"
+msgstr "退出"
+
+#: comments.php:146
+#: reversecomments.php:146
+msgid "Name"
+msgstr "姓名"
+
+#: comments.php:146
+#: comments.php:149
+#: reversecomments.php:146
+#: reversecomments.php:149
+msgid "(required)"
+msgstr "(必須)"
+
+#: comments.php:149
+#: reversecomments.php:149
+msgid "Mail (will not be published)"
+msgstr "電子郵件(不會公開)"
+
+#: comments.php:152
+#: reversecomments.php:152
+msgid "Website"
+msgstr "網站/博客"
+
+#: comments.php:160
+#: functions.php:312
+#: reversecomments.php:159
+msgid "HTML enabled"
+msgstr "支持HTML"
+
+#: comments.php:165
+#: reversecomments.php:164
+msgid "Send"
+msgstr "發送"
+
+#: footer.php:5
+msgid "powered by"
+msgstr "powered by"
+
+#: footer.php:5
+msgid "Template by"
+msgstr "Template by"
+
+#: footer.php:8
+#: footer.php:10
+msgid "Copyright &copy;"
+msgstr "Copyright &copy;"
+
+#: footer.php:12
+msgid "Rss 2.0"
+msgstr "Rss 2.0"
+
+#: footer.php:14
+msgid "Sitemap"
+msgstr "Sitemap"
+
+#: footer.php:22
+msgid "en_UK"
+msgstr "en_UK"
+
+#: functions.php:163
+#: functions.php:170
+msgid "Theme Options"
+msgstr "主題選項"
+
+#: functions.php:173
+msgid "Before you start blogging with Splix is recommended to set up the options listed below. If you like this theme and want to help its developing, you can do a little donation with Paypal. Thanks."
+msgstr "在您使用 Splix 主題進行博客之前，我們推薦妳使用以下的選項，如果妳喜歡這個主題並且願意幫助我們繼續發展，可以選擇通過 Paypal 向我們捐款，非常感謝。"
+
+#: functions.php:182
+#: functions.php:417
+msgid "Save"
+msgstr "保存"
+
+#: functions.php:188
+msgid "Userbar"
+msgstr "用戶工具欄"
+
+#: functions.php:192
+msgid "Show userbar."
+msgstr "顯示用戶工具欄"
+
+#: functions.php:202
+msgid "Menubar"
+msgstr "菜單欄"
+
+#: functions.php:206
+msgid "Show pages in the menu."
+msgstr "在菜單欄顯示頁面"
+
+#: functions.php:210
+msgid "Show categories in the menu."
+msgstr "在菜單欄顯示分類"
+
+#: functions.php:215
+msgid "Show the homepage link in the menu (it will be the first page)."
+msgstr "在菜單欄顯示首頁（會成爲第壹個鏈接）"
+
+#: functions.php:220
+msgid "Activate the jQuery library in the menubar."
+msgstr "激活菜單欄的jQuery庫"
+
+#: functions.php:230
+msgid "Title"
+msgstr "標題"
+
+#: functions.php:234
+msgid "Show the blog title."
+msgstr "顯示博客標題"
+
+#: functions.php:238
+msgid "Show the blog description."
+msgstr "顯示博客描述"
+
+#: functions.php:248
+msgid "Title Background"
+msgstr "標題背景"
+
+#: functions.php:254
+msgid "Black"
+msgstr "黑色"
+
+#: functions.php:255
+msgid "Gray"
+msgstr "灰色"
+
+#: functions.php:256
+msgid "White"
+msgstr "白色"
+
+#: functions.php:257
+msgid "Green"
+msgstr "綠色"
+
+#: functions.php:258
+msgid "Lime"
+msgstr "淺色"
+
+#: functions.php:259
+msgid "Blue"
+msgstr "藍色"
+
+#: functions.php:260
+msgid "Light blue"
+msgstr "淡藍"
+
+#: functions.php:261
+msgid "Red"
+msgstr "紅色"
+
+#: functions.php:262
+msgid "Orange"
+msgstr "橙色"
+
+#: functions.php:263
+msgid "Purple"
+msgstr "紫色"
+
+#: functions.php:264
+msgid "Pink"
+msgstr "分紅"
+
+#: functions.php:266
+msgid "Select one of this default background color."
+msgstr "選擇默認背景顔色"
+
+#: functions.php:274
+msgid "Define a personal background (write the absolute url of this)."
+msgstr "自定義背景圖片（需要絕對URL地址）"
+
+#: functions.php:279
+#: functions.php:299
+msgid "Define the css 'background' values."
+msgstr "自定義css中'background'值"
+
+#: functions.php:290
+msgid "Title Foreground"
+msgstr "標題前景"
+
+#: functions.php:294
+msgid "Define a personal foreground (write the absolute url of this).<br />The max size that will be displayed is 930x85."
+msgstr "自定義前景（需要絕對URL地址）<br />最大尺寸爲 930X85"
+
+#: functions.php:310
+msgid "Info"
+msgstr "信息欄"
+
+#: functions.php:318
+msgid "This info message will be displayed at the top of posts (only in the homepage)."
+msgstr "信息欄會在日志的頂部出現（只在首頁中顯示）"
+
+#: functions.php:333
+msgid "Posts: Categories, Tags, Feed, Date & Time"
+msgstr "日志顯示：分類，標簽，Feed，時間日期"
+
+#: functions.php:337
+msgid "Show categories on posts."
+msgstr "在日志中顯示分類"
+
+#: functions.php:341
+msgid "Show tags on posts."
+msgstr "在日志中顯示標簽"
+
+#: functions.php:345
+msgid "Show feed on posts."
+msgstr "在日志中顯示Feed"
+
+#: functions.php:349
+msgid "Show date on posts."
+msgstr "在日志中顯示日期"
+
+#: functions.php:353
+msgid "Show time on posts."
+msgstr "在日志中顯示時間"
+
+#: functions.php:363
+msgid "Pages: Feed, Date & Time"
+msgstr "頁面顯示：Feed，時間日期"
+
+#: functions.php:367
+msgid "Show feed on pages."
+msgstr "在頁面中顯示Feed"
+
+#: functions.php:371
+msgid "Show date on pages."
+msgstr "在頁面中顯示日期"
+
+#: functions.php:375
+msgid "Show time on pages."
+msgstr "在頁面中顯示時間"
+
+#: functions.php:385
+msgid "Miscellaneus"
+msgstr "其他選項"
+
+#: functions.php:389
+msgid "Set a first year for copyright (leave empty if you don't want to display it)."
+msgstr "設置壹個Copyright的年份（如果不想顯示，請留空）"
+
+#: functions.php:394
+msgid "Show sitemap."
+msgstr "顯示 Sitemap"
+
+#: functions.php:399
+msgid "Sitemap url."
+msgstr "Sitemap 地址"
+
+#: functions.php:404
+msgid "Show rss."
+msgstr "顯示 Rss"
+
+#: functions.php:409
+msgid "Custom rss url. (leave empty if you want use the default url)"
+msgstr "自定義 Rss 地址（如果使用默認地址，請留空）"
+
+#: guestbook.php:46
+msgid "Leave your mark here!"
+msgstr "在此處留下妳的足迹！"
+
+#: header.php:44
+msgid "Remember me"
+msgstr "記住我"
+
+#: header.php:46
+#: sidebar.php:48
+msgid "Sign in"
+msgstr "登錄"
+
+#: header.php:77
+msgid "Private message"
+msgstr "私人消息"
+
+#: header.php:80
+msgid "No new messages"
+msgstr "沒有新信息"
+
+#: header.php:81
+msgid "new message"
+msgstr "新信息"
+
+#: header.php:82
+msgid "new messages"
+msgstr "新信息"
+
+#: header.php:89
+msgid "Add New Post"
+msgstr "增加新文章"
+
+#: header.php:93
+#: header.php:98
+#: header.php:100
+msgid "drafts"
+msgstr "草稿"
+
+#: header.php:95
+msgid "draft"
+msgstr "草稿"
+
+#: header.php:106
+msgid "Add New Link"
+msgstr "增加新鏈接"
+
+#: header.php:112
+msgid "Add New File"
+msgstr "增加新文件"
+
+#: header.php:118
+msgid "Layout"
+msgstr "樣式"
+
+#: header.php:124
+msgid "Plugins"
+msgstr "插件"
+
+#: header.php:131
+msgid "Users Online"
+msgstr "在線用戶"
+
+#: header.php:150
+msgid "Homepage"
+msgstr "首頁"
+
+#: search.php:9
+msgid "Search results for:"
+msgstr "搜索結果："
+
+#: sidebar.php:9
+msgid "Follow this weblog"
+msgstr "訂閱這個博客"
+
+#: sidebar.php:41
+msgid "Login"
+msgstr "登錄"
+
+#: single.php:67
+msgid "Follow this post"
+msgstr "訂閱評論"
+

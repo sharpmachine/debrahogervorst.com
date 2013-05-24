@@ -1,0 +1,26 @@
+.post-ratings {
+	height:20px;
+	width:60px;
+	line-height:20px;
+	overflow:hidden;
+}
+.post-ratings-loading {
+	display: none;
+	position:relative;
+	top:-25px;
+}
+.post-ratings-image {
+	border: 0px;
+}
+.post-ratings IMG, .post-ratings-loading IMG, .post-ratings-image IMG {
+	border: 0px;
+	padding: 0px;
+	margin: 0px;
+	vertical-align:middle;
+}
+.post-ratings-text {
+	display:none;
+}
+.post-ratings-comment-author {
+	display:none;
+}

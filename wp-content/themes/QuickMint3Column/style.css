@@ -1,0 +1,378 @@
+/*
+Theme Name: QuickMint 3 Column
+Theme URI: http://letsmint.com/
+Version: v1.0
+Author: Let's Mint
+Author URI: http://letsmint.com/
+Description: A minimal, simple, light 3 column (fixed and fluid) left menu design with widget support.
+__________________________________________________________________________________ */
+
+/* defaults, reset */
+* {	margin: 0;	padding: 0; }
+html { font-size: 100.01%; }
+body { font-size: 1em; margin:0px 10px 0px 10px;}
+body, p { font: normal normal normal 0.89em/1.4em "Lucida Grande", "Lucida Sans Unicode", Verdana, Helvetica, Arial, sans-serif; color: #666; }
+code, pre { font: normal normal normal 0.89em/1.4em Monaco, "Courier New", Courier, monotype, serif; color: #666; }
+img, a img, form { margin: 0; padding: 0; border: 0 none; text-decoration: none; }
+
+html, body {
+background: #f5f5f5;
+height: 100%;
+text-align: center;
+color: #666;
+}
+a{
+color:#000000;
+background-color: inherit;
+text-decoration: none;
+border-bottom: 1px solid #F1F7FF;
+}
+a:hover{
+color: #333;
+background-color: inherit;
+border-bottom: 1px solid #eee;
+}
+div#print {
+display: none;
+}
+div#container {
+/* width: 740px; */
+margin: 10px auto;
+text-align: left;
+}
+div#style_selector{
+text-align:right;
+font-size:90%;
+}
+#style_selector a {
+color: #888;
+font-size: 90%;
+text-decoration: none;
+border-bottom: 1px solid #eee;
+}
+#style_selector a:hover {
+color: #4494FF;
+border-bottom: 1px solid #F1F7FF;
+}
+
+div#header-wrap {
+margin: 8px 0;
+}
+div#header-in {
+padding: 10px;
+color: inherit;
+background-color: #fff;
+border: solid #eee;
+border-width: 0 2px 2px 0;
+}
+#header-in a{
+color:#333;
+text-decoration:none;
+}
+div#conten3t-wrap {
+	margin:0px 0px 10px 0px;
+}
+div#center {
+margin: 0 190px;
+color: inherit;
+background-color: #fff;
+border: solid #eee;
+border-width: 0 2px 2px 0;
+}
+div#center-in {
+padding: 20px 20px 40px 20px;
+font-size: 90%;
+}
+div.entry p {
+	margin: 6px 0;
+}
+div.entry a {
+	color: #607B8B;
+	text-decoration: none;
+	border-bottom: 1px dotted #e1e1e1;
+}
+div.entry a:hover {
+	color: inherit;
+	text-decoration: none;
+	border-bottom: 1px dotted #666;
+}
+div#left {
+float: left;
+width: 180px;
+color: inherit;
+background-color: #fff;
+border: solid #eee;
+border-width: 0 2px 2px 0;
+margin:0px 0px 5px 0px;
+}
+div#left-in {
+padding: 1px;
+font-size:90%;
+}
+div#left-in a{
+	border:0px;
+}
+div#feed{
+	text-align:center;
+}
+div#calendar_wrap{
+	margin: 0px 20px 20px 20px;
+}
+#calendar_wrap caption{
+	font-weight:700;
+	text-align:left;
+	margin-bottom:5px;
+}
+
+#left .FormInputs{
+width:100px;
+height:20px;
+}
+#left .FormButton{
+height:22px;
+width:52px;
+}
+div#right {
+float: right;
+width: 180px;
+color: inherit;
+background-color: #fff;
+border: solid #eee;
+border-width: 0 2px 2px 0;
+}
+div#right-in {
+padding: 1px;
+}
+
+div#footer-wrap {
+clear: both;
+height:40px;
+}
+div#footer-in {
+}
+
+#nav-left ul {
+margin: 0px 20px 20px 10px;
+list-style: none;
+}
+#nav-left li {
+	font-size:90%;
+}
+#nav-left li a {
+display: block;
+width: 138px;
+padding: 5px 5px 0px 10px;
+color: #666;
+background-color: inherit;
+text-decoration: none;
+border-bottom: 1px solid #eee;
+}
+#nav-left li a:hover {
+color: #666;
+background-color: #F1F7FF;
+border-bottom: 1px solid #E3EFFF;
+}
+ul#nav-top {
+float: right;
+padding: 1px 0;
+list-style: none;
+}
+ul#nav-top li,
+ul#nav-top li a {
+display: inline;
+margin: 0 8px;
+color: #888;
+background-color: inherit;
+font-size: 90%;
+text-decoration: none;
+border-bottom: 1px solid #eee;
+}
+ul#nav-top li a:hover {
+color: #4494FF;
+background-color: inherit;
+border-bottom: 1px solid #F1F7FF;
+}
+ul#nav-footer {
+margin: 0 190px 0 190px;
+padding: 5px 0px 0px 0px;
+color: #aaa;
+background-color: inherit;
+font-size: 80%;
+list-style: none;
+text-align: right;
+line-height:12px;
+border: solid #fff;
+border-width:2px 0px 0px 0px;
+}
+ul#nav-footer li {
+display: inline;
+}
+ul#nav-footer li.left {
+float: left;
+text-align:left;
+}
+ul#nav-footer li a {
+color: #aaa;
+background-color: inherit;
+}
+ul#nav-footer li a:hover {
+color: #333;
+background-color: inherit;
+}
+ul.list {
+margin: 20px 30px;
+font-size: 90%;
+line-height: 20px;
+}
+
+/* >>> TYPOGRAPHY <<< */
+*.x {
+display: none;
+}
+div#header-wrap h1 {
+padding: 10px;
+font-size: 200%;
+}
+div#center h2 {
+margin: 0 0 15px 0;
+font-size: 120%;
+}
+div#center h2 a{
+color:#333;
+text-decoration:none;
+}
+div#center ul {
+margin: 20px 30px;
+line-height: 20px;
+}
+.categories{
+	list-style-type:none;
+	font-weight:700;
+}
+.categories li{
+	font-weight:500;
+}
+#commentspopup{
+	text-align:left;
+	margin:0px 0px 0px 10px;
+}
+#commentspopup h1{
+	padding: 10px 10px 10px 0px;
+	font-size: 200%;
+	color:#333;
+}
+#commentspopup h2{
+	text-align:center;
+	padding:10px 10px 10px 0px;
+}
+#commentspopup h1 a{
+	color:#333;
+}
+#commentspopup p{
+	margin-bottom:10px;
+}
+div.postmetadata{
+font-size: 80%;
+background:#F1F7FF;
+padding:5px;
+margin: 6px 0 20px 0;
+}
+
+div#left h2 {
+margin: 20px 20px 5px 20px;
+font-size: 100%;
+}
+div#center p {
+margin: 5px 0 5px 0;
+color: #444;
+background-color: inherit;
+line-height: 18px;
+}
+div#left p,form {
+margin: 0 20px 5px 20px;
+color: #666;
+background-color: inherit;
+font-size: 90%;
+}
+div#right h2 {
+margin: 20px 20px 5px 20px;
+font-size: 100%;
+}
+div#right p,form {
+margin: 0 20px 5px 20px;
+color: #666;
+background-color: inherit;
+font-size: 90%;
+}
+#right-in ul {
+margin: 0px 20px 20px 10px;
+list-style: none;
+}
+#right-in li,
+#right-in li a {
+font-size:90%;
+display: block;
+width: 138px;
+padding: 5px 5px 0px 10px;
+color: #666;
+background-color: inherit;
+text-decoration: none;
+border-bottom: 1px solid #eee;
+}
+#right-in li a:hover {
+color: #666;
+background-color: #F1F7FF;
+border-bottom: 1px solid #E3EFFF;
+}
+
+p a, ul.list a {
+color: #000;
+background-color: inherit;
+text-decoration: none;
+border-bottom: 1px solid #F1F7FF;
+}
+p a:hover, ul.list a:hover {
+color: #333;
+background-color: inherit;
+border-bottom: 1px solid #eee;
+}
+
+.left{
+float:left;
+}
+
+.right{
+float:right;
+}
+/* >>> FORMS <<< */
+
+#center form{
+	margin:0px;
+}
+
+.FormInputs{
+border:1px solid #CCCCCC;
+vertical-align:top;
+}
+
+.FormInputs:hover{
+background:#F1F7FF;
+}
+
+.FormButton{
+border:1px solid #CCCCCC;
+padding:0px 3px 0px 3px;
+vertical-align:top;
+height:30px;
+}
+
+.commentlist li{
+background:#F1F7FF;
+list-style-type:none;
+padding:10px;
+margin-bottom:10px;
+}
+
+.commentlist li:hover{
+background:#FFF;
+}
