@@ -40,21 +40,24 @@ jQuery(function() {
 
 if (isset ($_POST['updateSortOrder']))  {
 	
-	global $wpdb;
-    $sub_name_videos = 'cvg_videos';
-    $table_videos = $wpdb->prefix . $sub_name_videos;
-	        
-	$sortArray = explode(',', $_POST['sortOrder']);
-
-	if (is_array($sortArray)){ 
-		$sortindex = 1;
-		foreach($sortArray as $pid) {		
-			$wpdb->query("UPDATE $table_videos SET sortorder = '$sortindex' WHERE pid = $pid");
-			$sortindex++;
-		}
-		CvgCore::xml_playlist($_GET['gid']);
-		CvgCore::show_video_message(__('Sort order updated successfully!'));
-	} 
+	// wp_nonce_field('cvg_gallery_sort_nonce','cvg_gallery_sort_nonce_csrf');
+	if ( check_admin_referer( 'cvg_gallery_sort_nonce', 'cvg_gallery_sort_nonce_csrf' ) ) {
+		global $wpdb;
+	    $sub_name_videos = 'cvg_videos';
+	    $table_videos = $wpdb->prefix . $sub_name_videos;
+		        
+		$sortArray = explode(',', $_POST['sortOrder']);
+	
+		if (is_array($sortArray)){ 
+			$sortindex = 1;
+			foreach($sortArray as $pid) {		
+				$wpdb->query("UPDATE $table_videos SET sortorder = '$sortindex' WHERE pid = $pid");
+				$sortindex++;
+			}
+			CvgCore::xml_playlist($_GET['gid']);
+			CvgCore::show_video_message(__('Sort order updated successfully!'));
+		} 
+	}
 }
 $gid = $_GET['gid'];
 $orderBy = isset($_GET['order']) ? $_GET['order'] : 'sortorder';
@@ -100,6 +103,7 @@ if(!isset($gid)) {
 				
 				<form id="updatevideos" method="POST" action="<?php echo $base_url; ?>" accept-charset="utf-8">
 				
+					<?php wp_nonce_field('cvg_gallery_sort_nonce','cvg_gallery_sort_nonce_csrf'); ?>
 					<div class="tablenav">
 						<div class="alignleft actions">
 							<a class="button" href="<?php echo admin_url('admin.php?page=cvg-gallery-manage&gid=' . $_GET['gid']); ?>"><?php _e('Back to Gallery'); ?></a>

@@ -28,7 +28,7 @@ function flag_sortorder($galleryID = 0){
 		if ($firstImage)
 			$wpdb->query("UPDATE $wpdb->flaggallery SET previewpic = '$firstImage' WHERE gid = '$galleryID'");
 
-		flagGallery::show_message(__('Sort order changed','flag'));
+		flagGallery::show_message(__('Sort order changed','flash-album-gallery'));
 
 		}
 
@@ -49,18 +49,18 @@ function flag_sortorder($galleryID = 0){
 ?>
 <script type="text/javascript" src="<?php echo FLAG_URLPATH; ?>admin/js/jquery.tablednd_0_5.js"></script>
 <script type="text/javascript" src="<?php echo FLAG_URLPATH; ?>admin/js/jquery.tablesorter.js"></script>
-<div class="wrap">
-			<h2><?php _e('Sort Gallery', 'flag'); ?></h2>
+<div class="flag-wrap">
+			<h2><?php _e('Sort Gallery', 'flash-album-gallery'); ?></h2>
 
 	<form class="alignright" method="POST" action="<?php echo admin_url() . 'admin.php?page=flag-manage-gallery&amp;mode=edit&amp;gid=' . $galleryID; ?>" accept-charset="utf-8">
 		<div class="alignright tablenav" style="margin-bottom: -36px;">
-			<input class="button-secondary action" type="submit" name="backToGallery" value="<?php _e('Back to gallery', 'flag'); ?>" />
+			<input class="button-secondary action" type="submit" name="backToGallery" value="<?php _e('Back to gallery', 'flash-album-gallery'); ?>" />
 		</div>
 	</form>
 	<form id="sortGallery" method="POST" action="<?php echo $base_url; ?>" accept-charset="utf-8">
 		<div class="alignleft tablenav">
 			<?php wp_nonce_field('flag_updatesortorder'); ?>
-			<input class="button-primary action" type="submit" name="updateSortorder" value="<?php _e('Update Sort Order', 'flag'); ?>" />
+			<input class="button-primary action" type="submit" name="updateSortorder" value="<?php _e('Update Sort Order', 'flash-album-gallery'); ?>" />
 		</div>
 		<br clear="all" />
 <script type="text/javascript">
@@ -92,24 +92,24 @@ jQuery(document).ready(function($) {
 });
 /*]]>*/
 </script>
-<table id="flag-listitems" class="widefat fixed" cellspacing="0" >
+<table id="flag-listitems" class="widefat fixed flag-table" cellspacing="0" >
 
 	<thead>
 	<tr>
-			<th class="header" width="30px"><p style="margin-right:-10px;"><?php _e('ID', 'flag'); ?></p></th>
-			<th width="80"><?php _e('Thumb', 'flag'); ?></th>
-			<th class="header"><p><?php _e('Filename', 'flag'); ?></p></th>
-			<th class="header" width="130"><p><?php _e('Date', 'flag'); ?></p></th>
-			<th class="header"><p><?php _e('Alt &amp; Title Text', 'flag'); ?></p></th>
+		<th class="header" width="30px"><p style="margin-right:-10px;"><?php _e('ID', 'flash-album-gallery'); ?></p></th>
+		<th width="120"><p><?php _e('Thumb', 'flash-album-gallery'); ?></p></th>
+		<th class="header"><p><?php _e('Filename', 'flash-album-gallery'); ?></p></th>
+		<th class="header" width="130"><p><?php _e('Date', 'flash-album-gallery'); ?></p></th>
+		<th class="header"><p><?php _e('Alt &amp; Title Text', 'flash-album-gallery'); ?></p></th>
 	</tr>
 	</thead>
 	<tfoot>
 	<tr>
-			<th><?php _e('ID', 'flag'); ?></th>
-			<th><?php _e('Thumb', 'flag'); ?></p></th>
-			<th><?php _e('Filename', 'flag'); ?></th>
-			<th><?php _e('Date', 'flag'); ?></th>
-			<th><?php _e('Alt &amp; Title Text', 'flag'); ?></th>
+		<th><p><?php _e('ID', 'flash-album-gallery'); ?></p></th>
+		<th><p><?php _e('Thumb', 'flash-album-gallery'); ?></p></th>
+		<th><p><?php _e('Filename', 'flash-album-gallery'); ?></p></th>
+		<th><p><?php _e('Date', 'flash-album-gallery'); ?></p></th>
+		<th><p><?php _e('Alt &amp; Title Text', 'flash-album-gallery'); ?></p></th>
 	</tr>
 	</tfoot>
 	<tbody id="listimages">
@@ -126,28 +126,27 @@ if($picturelist) {
 		
 		?>
 		<tr id="picture-<?php echo $pid; ?>" class="<?php echo $alternate; ?> iedit"  valign="top">
-				<td scope="row"><strong><?php echo $pid; ?></strong><input type="hidden" name="sortpid-<?php echo $pid; ?>" value="<?php echo $pid; ?>" /></td>
+				<td><strong><?php echo $pid; ?></strong><input type="hidden" name="sortpid-<?php echo $pid; ?>" value="<?php echo $pid; ?>" /></td>
 				<td><a href="<?php echo $act_gallery_url.$picture->filename; ?>" class="thickbox" title="<?php echo $picture->filename; ?>">
-					<img class="thumb" src="<?php echo $act_thumbnail_url ."thumbs_" .$picture->filename; ?>" style="width:40px; height:auto;" id="thumb-<?php echo $pid; ?>" />
+					<img class="thumb" src="<?php echo $act_thumbnail_url ."thumbs_" .$picture->filename; ?>" style="width:80px; height:auto;" id="thumb-<?php echo $pid; ?>" />
 				</a></td>
 				<td><?php echo $picture->filename; ?></td>
 				<td><?php echo $date; ?></td>
-				<td><?php echo stripslashes($picture->alttext); ?></td>
+				<td><?php echo esc_html(stripslashes($picture->alttext)); ?></td>
 		</tr>
 		<?php
 	}
 } else {
-	echo '<tr><td colspan="5" align="center"><strong>'.__('No entries found','flag').'</strong></td></tr>';
+	echo '<tr><td colspan="5" align="center"><strong>'.__('No entries found','flash-album-gallery').'</strong></td></tr>';
 }
 ?>
 	
 		</tbody>
 	</table>
-	<p class="actions"><input type="submit" class="button-primary action"  name="updateSortorder" onclick="saveImageOrder()" value="<?php _e('Update Sort Order', 'flag'); ?>" /></p>
+	<p class="actions"><input type="submit" class="button-primary action"  name="updateSortorder" onclick="saveImageOrder()" value="<?php _e('Update Sort Order', 'flash-album-gallery'); ?>" /></p>
 </form>	
 <br class="clear"/>
 </div><!-- /#wrap -->
 
 <?php
 }
-?>

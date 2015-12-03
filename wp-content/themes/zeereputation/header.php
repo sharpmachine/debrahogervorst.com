@@ -11,11 +11,14 @@
 </head>
 
 <body <?php body_class(); ?>>
+
+<?php themezee_wrapper_before(); // hook before #wrapper ?>
 <div id="wrapper">
 	<div id="topline"></div>
 	
 	<div id="wrap">
 		
+		<?php themezee_header_before(); // hook before #header ?>
 		<div id="header">
 			<div id="head">
 				<?php 
@@ -35,10 +38,10 @@
 			</div>
 			<div class="clear"></div>
 		</div>
+		<?php themezee_header_after(); // hook after #header ?>
 		
 		<?php if( get_header_image() != '' ) : ?>
 			<div id="custom_header">
 				<img src="<?php echo get_header_image(); ?>" />
 			</div>
 		<?php endif; ?>
-

@@ -1,6 +1,5 @@
 <?php
-preg_match('|^(.*?/)(wp-content)/|i', str_replace('\\', '/', __FILE__), $_m);
-require_once( $_m[1] . 'wp-load.php');
+require_once( dirname(dirname(__FILE__)) . '/flag-config.php');
 // check for correct capability
 if ( !is_user_logged_in() )
 	die('-1');
@@ -15,6 +14,7 @@ if ( !current_user_can('FlAG Manage video') )
 	<script type="text/javascript" src="<?php echo plugins_url('/'.FLAGFOLDER.'/'); ?>admin/js/swfobject.js"></script>
 </head>
 <body style="margin: 0; padding: 0; background: #555555; overflow: hidden;">
-<?php echo flagShowVmPlayer($_GET['vid'], $w='520', $h='304', $autoplay=true); ?>
+<?php $vidID = intval($_GET['vid']);
+echo flagShowVmPlayer($vidID, $w='520', $h='304', $autoplay=true); ?>
 </body>
 </html>

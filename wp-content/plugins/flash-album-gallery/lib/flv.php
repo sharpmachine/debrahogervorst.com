@@ -1,12 +1,12 @@
 <?php // Create XML output
-preg_match('|^(.*?/)(wp-content)/|i', str_replace('\\', '/', __FILE__), $_m);
-require_once( $_m[1] . 'wp-load.php');
+require_once( dirname(dirname(__FILE__)) . '/flag-config.php');
 $flag_options = get_option ('flag_options');
 if(isset($_GET['vID'])) {
 	header("content-type:text/xml;charset=utf-8");
-	$vid = get_post($_GET['vID']);
+	$id = intval($_GET['vID']);
+	$vid = get_post($id);
 	if(in_array($vid->post_mime_type, array('video/x-flv'))) {
-		$thumb = get_post_meta($_GET['vID'], 'thumbnail', true);
+		$thumb = get_post_meta($id, 'thumbnail', true);
 		$content = '<item id="'.$vid->ID.'">
 	<properties>
 		<property0>0x'.$flag_options["vmColor1"].'</property0>
@@ -27,4 +27,3 @@ if(isset($_GET['vID'])) {
 } else {
 	echo 'no such file ID';
 }
-?>

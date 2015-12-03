@@ -1,45 +1,263 @@
-﻿=== GRAND FlAGallery ===
+=== Grand Flagallery - Photo Gallery Plugin ===
 Contributors: Rattus
 Donate link: http://photogallerycreator.com/grand-flagallery/
-Tags: admin, flash, fullscreen gallery, gallery, image, images, image gallery, mp3, music, page, photo, slider, plugin, Post, posts, slideshow, video, widget, iOS gallery, iphone gallery, best gallery
+Tags: admin, flash gallery, fullscreen gallery, gallery, image, images, image gallery, mp3, music, page, photo, photo gallery, slider, plugin, slideshow, video, widget, iphone gallery, best gallery, portfolio, image rotator
 Requires at least: 3.0
-Tested up to: 3.5.1
+Tested up to: 4.3.1
 Stable tag: trunk
 
-GRAND Flash Album Gallery is a Photo Gallery, Video Gallery, Music Album & Banner Rotator plugin with powerfull admin to manage your media content
+Photo Gallery, Video Gallery, Music Album & Banner Rotator plugin with powerfull admin to manage your image galleries and media content
 
 == Description ==
-Try GRAND Flash Album Gallery - powerfull flash & jQuery media content plugin. It provides a comprehensive interface for handling image galleries, audio and video.
 
-Edit your media content the way you want: upload images, import music and video, create photo gallery, music playlists, group pictures in slideshow and add descriptions for each image, mp3 or video - GRAND FlAGallery is the smart choice when showing the best of your product or describing in brief any event. GRAND FlAGallery can easily beautify your site with **image gallery, mp3 player, video player, banner rotator, nivo slider or nice widgets**. SEO optimized, compatibility with Google Reader, FeedBerner, etc. 
+Grand Flagallery - powerfull media and image gallery plugin. Easy interface for handling photos, image galleries, audio and video galleries.
+
+> Now You can upload and manage your images and photo galleries, anywhere
+> Download new **[application for iPhone](http://mypgc.co/ios-app/)**
+
+With this gallery plugin you can easy upload images, create music and video playlists, create photo gallery, group pictures in photo slideshow and add descriptions for each image, mp3 or video - Grand Flagallery is the smart choice when showing the best of your product or describing in brief any event. Grand Flagallery can easily beautify your site with **photo gallery, mp3 player, video player, banner rotator, nivo slider or nice slideshow widgets**. SEO optimized, compatibility with Google Reader, FeedBerner, etc.
+
+* iPhone, iPad, Android, Blackberry and Desktop friendly photo gallery, SEO optimized.
+* Full-screen mobile friendly gallery slideshow with touch controls (optional, if set PhotoSwipe library script for alternative gallery).
+* Widgets for Banner Rotator, Photo Gallery and Video Gallery.
+* Background music in gallery for desktop browsers.
 
 **[How to add gallery to your Wordpress site](http://mypgc.co/how-add-gallery-to-wordpress-website-or-blog)** - full HowTo guide.
 
-For more information read **[Review, Tutorials, FAQ](http://codeasily.com/wordpress-plugins/flag "GRAND FlAGallery Home Page")** and see demos created with "GRAND FlAGallery" WordPress Plugin.
+For more information read **[Review, Tutorials, FAQ](http://codeasily.com/wordpress-plugins/flag/ "Grand Flagallery Home Page")** and see demos created with "Grand Flagallery" WordPress Plugin.
 
-New version of Banner Rotator!!! Now it is responsive. Full support of iPhone/iPad. Ideal for mobile themes. [See demo](http://skins.mypgc.co) in the site's header.
+Image Link support now available in gallery skins. [See Slider Skin demo](http://codeasily.com/portfolio-item/flagallery-slider-skin/).
+
+Responsive Banner Rotator! Full support of iPhone/iPad. Ideal for mobile themes. [See demo](http://codeasily.com/portfolio-item/flagallery-nivoslider-banner-rotator/) in the site's header.
 
 Music/Video Player: Each instance (player copy) can play different file. All instances are connected between, so as soon as one start playing the previous is stopped automatically. Playlists also available.
 
-* iPhone, iPad, Android, Blackberry and Desktop friendly photo gallery, SEO optimized.
-* Full-screen mobile friendly slideshow with touch controls (optional, if set PhotoSwipe library script for alternative gallery).
-* Widgets for Banner Rotator, Photo Gallery and Video Gallery. 
-
-Added: GRAND Pages - Full Window Gallery Template. Now you can display your image gallery in full window separate page (gallery template). [View Demo 1](http://photogallerycreator.com/flagallery/grand-pages-full-window-gallery-template/), [View Demo 2](http://photogallerycreator.com/flagallery/3d-sphere-v2-0-full-window-mode/)
+GRAND Pages - Full Window Gallery Template. You can display your image gallery in full window separate page (gallery template). [View Demo 1](http://codeasily.com/flagallery/minima-skin/), [View Demo 2](http://codeasily.com/flagallery/sphere-3d-skin/)
 
 You have the opportunity to create image gallery, as separate pages. It looks very cool when you open image gallery, and gallery images occupies the entire page... such a large and beautiful. Wow! And there is a button with which you can go back to the previous page. You can also specify the name of the button and link.
 
+Added music playlist support in image gallery skins. Now your visitors can listen music while watching gallery. [View Demo](http://codeasily.com/flagallery/optima-skin/)
+
 Now you can see "Views" of each photo in the gallery and visitors can "Like" image and see image "Rating".
 
-* Demo [Photo Galleries](http://photogallerycreator.com/grand-flagallery/)
-* Demo [Full Window Gallery Template](http://photogallerycreator.com/flagallery/grand-pages-full-window-gallery-template/)
-* Demo [Video Galleries](http://photogallerycreator.com/flv-video-players/)
-* Demo [mp3 Music Players](http://photogallerycreator.com/mp3-music-players/)
-* Demo [Widgets](http://photogallerycreator.com/widgets-for-wordpress/)
-* Demo [Facebook Integration](http://www.facebook.com/#!/PhotoGalleryCreator?sk=app_206659789371708)
+* Demo [Photo Galleries](http://codeasily.com/portfolio/grand-flagallery-skins/)
+* Demo [Full Window Gallery Template](http://codeasily.com/flagallery/optima-skin/)
+* Demo [Video Galleries](http://codeasily.com/portfolio-item/flagallery-videoblog-pro-skin/)
+
+Also available mp3 players and widgets.
+
+> Try also another gallery plugin created by me, which called **[Gmedia Gallery](https://wordpress.org/plugins/grand-media/)**
+
 
 
 == Changelog ==
+
+= v4.37 - 27.09.2015 =
+* Update for importing the plugin into the translate.wordpress.org translation system
+
+= v4.36 - 12.08.2015 =
+* Support of Wordpress v4.3
+
+= v4.35 - 01.07.2015 =
+* Fixed alternative gallery thumbnails not showed on some themes
+
+= v4.34 - 02.05.2015 =
+* Fixed alternative gallery (when links in image descriptions)
+
+= v4.33 - 24.04.2015 =
+* Compatibility with WP 4.2
+
+= v4.32 - 30.03.2015 =
+* Fixed Widget slow loading images
+
+= v4.31 - 13.03.2015 =
+* Fixed Alternative gallery for some themes
+
+= v4.30 - 18.02.2015 =
+* Added Combobox for search and insert galleries when insert shortcode
+  (Select gallerires in order you need for shortcode, drag'n'drop galleries inside combobox)
+* Fixed and improved CSS on all admin pages
+
+= v4.29 - 21.01.2015 =
+* Fixed warning on Skins page when open_basedir = 'Off'
+
+= v4.28 - 12.01.2015 =
+* Fixed urls to install skins and other plugin's website links
+
+= v4.27 - 26.12.2014 =
+* Fixed few PHP Notices
+* Compatibility with EWW Image Optimizer plugin
+
+= v4.26 - 20.11.2014 =
+* Fixed few PHP Notices
+
+= v4.25 - 23.10.2014 =
+* Fixed vulnerability in banner skins
+* Rename banner to rotator
+
+= v4.24 - 22.10.2014 =
+* Improved script for Alternate JS gallery
+* Fixed js error with widgets
+* Minima skin updated: New option to preview alternative gallery (To update skins click Reset Settings button on Overview page)
+
+= v4.23 - 9.09.2014 =
+* Wordpress 4.0 compatibility
+
+= v4.22 - 27.08.2014 =
+* Now you can add Google Analytics Tracking Code for GRAND Pages in Flagallery Options
+
+= v4.21 - 07.08.2014 =
+* Fix for Widget
+
+= v4.20 - 24.07.2014 =
+* Added Flagallery Iframe page
+
+= v4.19 - 24.07.2014 =
+* Fixes and improvements
+
+= v4.18 - 16.06.2014 =
+* Replaced deprecated wordpress function
+* Fix error on Skins page when no cURL installed on server
+
+= v4.17 - 23.05.2014 =
+* Fix conflict with Gmedia Gallery
+* Fix js error 'swfobject undefined'
+
+= v4.16 - 13.05.2014 =
+* Slider skin small fix
+* Remove Facebook page due to changed Facebook API
+
+= v4.15 - 13.05.2014 =
+* Added support for themes with Ajax page loading
+
+= v4.14 - 22.04.2014 =
+* fix albums drag&drop
+
+= v4.13 - 22.04.2014 =
+* fix plupload uploader for wordpress 3.9
+* update plupload uploader to loatest version
+* small css changes
+
+= v4.12 - 26.03.2014 =
+* fix for video galleries and banners
+* optimization for some themes
+* added new action: Reset Views & Likes Counters
+
+= v4.10 - 11.02.2014 =
+* optimization for new iOS app
+* fixed hitcounter.php on some servers
+* small changes and improvements
+
+= v4.00 - 17.01.2014 =
+* added ability to set thumb size while upload
+* added optimized image size for mobile devices
+* added ability to turn off optimized images for mobile devices
+* fixed strict warnings
+* added hooks when creating thumbs or resizing images
+* fixed alternative gallery for firefox based browsers
+* added action for creating optimized images on Manage Galleries page and on Edit Gallery page
+* show sizes for thumbnails and optimized images
+* small fixes and improvements
+
+= v3.20 - 15.10.2013 =
+* Fix alternative gallery
+* Added Gallery sorting on Manage Galleries page
+* Added fields on Options page for gallery sorting
+
+= v3.19 - 10.10.2013 =
+* Fix browser upload (submit button was absent)
+* fix for switch between uploaders
+
+= v3.18 - 10.10.2013 =
+* Replace swfupload with plupload uploader.
+* Added: compatibility with old flagallery database (if it was not upgraded)
+* Update: Minima skin
+
+= v3.16 - 28.09.2013 =
+* Fix: for Flagallery widget
+
+= v3.15 - 27.09.2013 =
+* Fix: New skins not loaded sometimes
+* Added: Thumb Qty field to Flagallery widget
+* Added: Hungarian translate
+
+= v3.14 - 28.08.2013 =
+* Fix: Flash Uploader not worked on some servers
+* Fix: Upload for iOS application
+* Fix: Banner Widget, Music and Video player (click reset options on Overview page to update default skins to latest versions)
+
+= v3.12 - 18.07.2013 =
+* Fix: Not worked for wordpress with custom 'wp-content' folder
+* Fix: Minima skin wrong install url
+* Fix: Photoswipe js
+
+= v3.11 - 18.07.2013 =
+* Fix: Widgets page was not accessible
+
+= v3.10 - 17.07.2013 =
+* Fix: Security bugs reported by Nikolai Tschacher for the White Fir Design Bug Bounty
+* Fix: Small bugs and improvements
+* Added: 2 new languages
+
+= v3.01 - 09.07.2013 =
+* New: iOS application 'MyPGC' for Flagallery plugin now available on the App Store for everyone
+
+= v3.00 - 03.07.2013 =
+* Fix: Free skins settings reset to default after plugin update
+* Fix: XSS bugs reported by Ken S for the White Fir Design Bug Bounty
+* Fix: small bugfixes
+* New: iOS application 'MyPGC' for Flagallery plugin now available on the App Store
+
+= v2.78 - 26.06.2013 =
+* Fix: bundled free skins not copied to flagallery-skins directory
+
+= v2.77 - 25.06.2013 =
+* Fix: XSS vulnerability with albums (thanks to Ken S - for the White Fir Design Bug Bounty)
+* Fix: PHP Notices
+* Fix: Compatibility with some modern themes
+* Update: New version of swfupload
+* Update: Compatibility with Wordpress SEO plugin
+* Update: Update code for default skins
+
+= v2.76 - 13.06.2013 =
+* Fixed: Size for thumbs on Manage Images page
+* Fixed: Create New Thumbnails not working properly with fix dimensions
+* Fixed: First activation of plugin do not move free skins to 'flagallery-skins' folder
+* Fixed: GRAND Page do not remembers playlist option
+
+= v2.75 - 10.06.2013 =
+* Added: Link feald for image (optional for skin)
+* Added: Draft for galleries
+* Fixed: PHP and CSS improvements
+
+= v2.72 - 20.05.2013 =
+* Added: pagination on Music Box page
+* Fixed: small fixes for Banner Box page
+
+= v2.71 - 07.05.2013 =
+* Added: pagination on Banner Box page
+* Fixed: reports sometimes a error "Fatal error: Only variables can be passed by reference"
+* Fixed: compatibility with SEO plugin
+* Changed: Options page
+* Fixed: Vulnerability on Search images.
+
+= v2.70 - 11.04.2013 =
+* Fixed: Compatibility with some modern themes
+* Added: Music for gallery skins
+
+= v2.56 - 25.03.2013 =
+* Fixed: SQL injection vulnerability
+* Fixed: Video Box admin shows parse error
+* Fixed: Restrict access to menu "GRAND Pages"
+* Added: Informative descriptions on skins and options pages
+* Updated: Minima skin now have option to hide views/likes counter
+
+= v2.55 - 19.03.2013 =
+* Fixed: Alternative gallery on mobile browsers not shows big image on tap
+* Fixed: Alternative gallery brokes if file name have spaces.
+* Added: Option to hide views/likes counter on alternative gallery
+* Fixed: Back button for GRAND Pages
+* Fixed: Playlists not worked if galleries path different from default
 
 = v2.54 - 05.03.2013 =
 * Fixed: Error opening pages "call this page directly" message
@@ -501,14 +719,7 @@ Now you can see "Views" of each photo in the gallery and visitors can "Like" ima
 * Bugfix : Fix for Upload Images button on Overview page 
 * Bugfix : Fixed conflict with NextGEN Gallery (creating thumbnails cause error) 
  
-== Upgrade Notice ==
-
-* After plugin update go to Skins page and update skins with 'Update skins' button.
-* If you use Facebook template and copied it in the root directory, then after each plugin update click 'Copy facebook.php file to root directory'.
-* If GRAND FlAGallery displays an error message after upgrade, go to FlAGallery Overview page and press 'Reset settings'.
-* Have some troubles with plugin? Try first reseting settings, **deactivate and reactivate plugin.**
-
-== Credits == 
+== Credits ==
 
 Copyright 2009 by Sergey Pasyuk & CodEasily.com DevTeam 
  
@@ -521,7 +732,7 @@ You should have received a copy of the GNU General Public License along with thi
 = Upgrade Notice =
 * After plugin update go to Skins page and update skins with 'Update skins' button.
 * If you use Facebook template and copied it in the root directory, then after each plugin update click 'Copy facebook.php file to root directory'.
-* If GRAND FlAGallery displays an error message after upgrade, go to FlAGallery Overview page and press 'Reset settings'.
+* If Grand Flagallery displays an error message after upgrade, go to FlAGallery Overview page and press 'Reset settings'.
 * Have some troubles with plugin? Try first reseting settings, deactivate and reactivate plugin.
 
 == Installation == 
@@ -530,19 +741,13 @@ You should have received a copy of the GNU General Public License along with thi
 2. Activate the plugin. 
 3. Be sure that after activation 'wp-content/plugins/flagallery-skins' folder (chmod 755) created successfully. If not, create it manually and install skins through admin Skins page or via ftp.
 3. Add a gallery and upload some images (the main gallery folder must have write permission). 
-4. Go to your post/page an enter the tag '[flagallery gid=X name="ALBUM TITLE"]', where X - gallery IDs separated by comma;  ALBUM TITLE - title of your album (default 'Gallery'). Easy way is click FlAGallery button on the Editor panel. 
-5. If you would like to use additional Flash Skins (only a option), go to <a href="http://photogallerycreator.com/grand-flagallery/" title="Flash Skins">Flash Skins</a>, download the skin and upload the file through Skins page in Wordpress admin panel. 
+4. Go to your post/page an enter the tag '[flagallery gid=X]', where X - gallery IDs separated by comma. Easy way is click FlAGallery button on the Editor panel.
+5. If you would like to use additional Skins (only a option), go to <a href="http://photogallerycreator.com/grand-flagallery/" title="Skins">Skins</a>, download the skin and upload the file through Skins page in Wordpress admin panel.
  
 See more tags in the FAQ section 
  
 That's it ... Have fun! 
  
-= Upgrade Notice =
-* After plugin update go to Skins page and update skins with 'Update skins' button.
-* If you use Facebook template and copied it in the root directory, then after each plugin update click 'Copy facebook.php file to root directory'.
-* If GRAND FlAGallery displays an error message after upgrade, go to FlAGallery Overview page and press 'Reset settings'.
-* Have some troubles with plugin? Try first reseting settings, **deactivate and reactivate plugin.**
-
 
 == Screenshots == 
 
@@ -558,14 +763,10 @@ That's it ... Have fun!
  
 == Frequently Asked Questions == 
  
-= Upgrade Notice =
-* After plugin update go to Skins page and update skins with 'Update skins' button.
-* If you use Facebook template and copied it in the root directory, then after each plugin update click 'Copy facebook.php file to root directory'.
-* If GRAND FlAGallery displays an error message after upgrade, go to FlAGallery Overview page and press 'Reset settings'.
-* Have some troubles with plugin? Try first reseting settings, **deactivate and reactivate plugin.**
+= Read as startup : =
+Home page: http://codeasily.com/wordpress-plugins/flag/
 
-= Read as startup : = 
-http://codeasily.com/wordpress-plugins/flash-album-gallery/flag-review/
+Forum: http://codeasily.com/community/forum/flagallery-wordpress-plugin/
  
 = The flash didn't work. I only see the message "The Flash Player and a browser with Javascript  needed..", but everything is installed and activated. =
 
@@ -577,7 +778,7 @@ That line would go in between your <HEAD> </HEAD> tags
 
 = When I try to activate the plugin I get the message : "Plugin could not be activated because it triggered a fatal error." =
 
-This problem could happened if you have a low memory_limit in your php environment and a lot of plugins installed. For a simple test deactivate all other plugins and try then to activate GRAND FlAGallery again. Please check also if you have a minimum memory_limit of 16Mbyte (as much as possible).
+This problem could happened if you have a low memory_limit in your php environment and a lot of plugins installed. For a simple test deactivate all other plugins and try then to activate Grand Flagallery again. Please check also if you have a minimum memory_limit of 16Mbyte (as much as possible).
 
 = I get the message "Fatal error: Allowed memory size of xxx bytes exhausted" or get the "Error: Exceed Memory limit.". What does this means? =
 
@@ -593,14 +794,14 @@ It's because your theme use some function different from <?php the_content('Read
 
 = How to create a categories in flash album? I only have one category, which is the name of the gallery. =
 
-You can do it easily with FlAGallery button on editor panel, when you edit post. In trhe popup window hold down 'Ctrl' button and choose galleries left mouse button. Or just write gallery IDs separated by comma in "gid" attribute: [flagallery gid=7,3,5,2 name="My Galleries"]
+You can do it easily with FlAGallery button on editor panel, when you edit post. In trhe popup window hold down 'Ctrl' button and choose galleries left mouse button. Or just write gallery IDs separated by comma in "gid" attribute: [flagallery gid=7,3,5,2]
 
-To display ALL galleries as categories: [flagallery gid=all name="My Galleries"]
+To display ALL galleries as categories: [flagallery gid=all]
 
 = How can I set it to auto slideshow when open the page? =
 
 Download and activate skin with auto slideshow 
-http://photogallerycreator.com/grand-flagallery/
+http://codeasily.com/portfolio/
 
 = The gallery keeps loading without ever showing the images =
 
@@ -612,9 +813,9 @@ Make sure that you have equal number of images in Manage Gallery and in ftp fold
 
 = How do I set a specific category as the first one that is displayed? =
 
-if you have three galleries and shortcode like: [flagallery gid=3,1,2 name=Gallery]
+if you have three galleries and shortcode like: [flagallery gid=3,1,2]
 first gallery will be with ID=3, then ID=1, and then ID=2
-if you have: [flagallery gid=all name=Gallery orderby=title order=ASC exclude=1]
+if you have: [flagallery gid=all orderby=title order=ASC exclude=1]
 it will display all galleries except ID=1 sorted by title of gallery.
 
 = [IOErrorEvent type="ioError" bubbles=false cancelable=false eventPhase=2 text="Error #2032"] =
@@ -632,8 +833,8 @@ Create it manually with chmod 0755.
  
 = Live Demos: =
 
-http://photogallerycreator.com/grand-flagallery/ 
+http://codeasily.com/portfolio/
  
 = A further FAQ you can found here: = 
 
-http://codeasily.com/wordpress-plugins/flash-album-gallery/faq/
+http://codeasily.com/community/forum/flagallery-wordpress-plugin/

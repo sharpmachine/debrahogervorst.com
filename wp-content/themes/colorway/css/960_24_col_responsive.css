@@ -2,27 +2,99 @@
   960 Grid System Modified for
   Responsive layout 960 Grid 
   System ~ Core CSS.
-  Learn more ~ http://960.gs/
-    
+  Learn more ~ http://960.gs/    
   Author: InkThemes
   Licensed under GPL and MIT.
 */
-
 /*
   Forces backgrounds to span full width,
   even if there is horizontal scrolling.
   Increase this if your layout is wider.
-
   Note: IE6 works fine without this fix.
 */
 
 /* `Container >> 24 Columns
 -----------------------------------*/
-.container_24 {
-    margin-left: auto;
-    margin-right: auto;
-    width: 960px;
-}
+ .container_24 {
+        margin-left: auto;
+        margin-right: auto;
+        width: 1240px;
+    }
+    /*  Each columns are measured 
+        For their specific size.
+    */
+    .container_24 .grid_1 {
+        width: 3.167%;
+    }
+    .container_24 .grid_2 {
+        width: 7.333%;
+    }
+    .container_24 .grid_3 {
+        width: 11.5%;
+    }
+    .container_24 .grid_4 {
+        width: 15.667%;
+    }
+    .container_24 .grid_5 {
+        width: 19.833%;
+    }
+    .container_24 .grid_6 {
+        width: 24%;
+    }
+    .container_24 .grid_7 {
+        width: 29.1%;
+    }
+    .container_24 .grid_8 {
+        width: 33.4%;
+    }
+    .container_24 .grid_9 {
+        width: 36.5%;
+    }
+    .container_24 .grid_10 {
+        width: 40.667%;
+    }
+    .container_24 .grid_11 {
+        width: 44.833%;
+    }
+    .container_24 .grid_12 {
+        width: 49%;
+    }
+    .container_24 .grid_13 {
+        width: 53.167%;
+    }
+    .container_24 .grid_14 {
+        width: 57.993%;
+    }
+    .container_24 .grid_15 {
+        width: 61.5%;
+    }
+    .container_24 .grid_16 {
+        width: 65.667%;
+    }
+    .container_24 .grid_17 {
+        width: 69.833%;
+    }
+    .container_24 .grid_18 {
+        width: 74%;
+    }
+    .container_24 .grid_19 {
+        width: 78.167%;
+    }
+    .container_24 .grid_20 {
+        width: 82.333%;
+    }
+    .container_24 .grid_21 {
+        width: 86.5%;
+    }
+    .container_24 .grid_22 {
+        width: 90.667%;
+    }
+    .container_24 .grid_23 {
+        width: 94.833%;
+    }
+    .container_24 .grid_24 {
+        width: 99.2%;
+    }
 /* `Grid >> Global
 -----------------------------------*/
 
@@ -40,81 +112,6 @@
 }
 .omega {
     margin-right: 0;
-}
-/* `Grid >> 24 Columns
------------------------------------*/
-
-.container_24 .grid_1 {
-    width: 30px;
-}
-.container_24 .grid_2 {
-    width: 70px;
-}
-.container_24 .grid_3 {
-    width: 110px;
-}
-.container_24 .grid_4 {
-    width: 150px;
-}
-.container_24 .grid_5 {
-    width: 190px;
-}
-.container_24 .grid_6 {
-    width: 230px;
-}
-.container_24 .grid_7 {
-    width: 270px;
-}
-.container_24 .grid_8 {
-    width: 310px;
-}
-.container_24 .grid_9 {
-    width: 350px;
-}
-.container_24 .grid_10 {
-    width: 390px;
-}
-.container_24 .grid_11 {
-    width: 430px;
-}
-.container_24 .grid_12 {
-    width: 470px;
-}
-.container_24 .grid_13 {
-    width: 510px;
-}
-.container_24 .grid_14 {
-    width: 550px;
-}
-.container_24 .grid_15 {
-    width: 590px;
-}
-.container_24 .grid_16 {
-    width: 630px;
-}
-.container_24 .grid_17 {
-    width: 670px;
-}
-.container_24 .grid_18 {
-    width: 710px;
-}
-.container_24 .grid_19 {
-    width: 750px;
-}
-.container_24 .grid_20 {
-    width: 790px;
-}
-.container_24 .grid_21 {
-    width: 830px;
-}
-.container_24 .grid_22 {
-    width: 870px;
-}
-.container_24 .grid_23 {
-    width: 910px;
-}
-.container_24 .grid_24 {
-    width: 950px;
 }
 /* `Clear Floated Elements
 -----------------------------------*/
@@ -153,6 +150,88 @@
 /*  This query is applied for
     Protait Tablet ipad
 */
+@media only screen and (min-width: 960px) and (max-width: 1260px) {
+.container_24 {
+    margin-left: auto;
+    margin-right: auto;
+    width: 960px;
+}
+/* `Grid >> 24 Columns
+-----------------------------------*/
+
+.container_24 .grid_1 {
+    width: 30px;
+}
+.container_24 .grid_2 {
+    width: 70px;
+}
+.container_24 .grid_3 {
+    width: 110px;
+}
+.container_24 .grid_4 {
+    width: 150px;
+}
+.container_24 .grid_5 {
+    width: 190px;
+}
+.container_24 .grid_6 {
+    width: 230px;
+}
+.container_24 .grid_7 {
+    width: 270px;
+}
+.container_24 .grid_8 {
+    width: 276px;
+}
+.container_24 .grid_9 {
+    width: 350px;
+}
+.container_24 .grid_10 {
+    width: 390px;
+}
+.container_24 .grid_11 {
+    width: 430px;
+}
+.container_24 .grid_12 {
+    width: 470px;
+}
+.container_24 .grid_13 {
+    width: 510px;
+}
+.container_24 .grid_14 {
+    width: 550px;
+}
+.container_24 .grid_15 {
+    width: 590px;
+}
+.container_24 .grid_16 {
+    width: 600px;
+}
+.container_24 .grid_17 {
+    width: 670px;
+}
+.container_24 .grid_18 {
+    width: 710px;
+}
+.container_24 .grid_19 {
+    width: 750px;
+}
+.container_24 .grid_20 {
+    width: 790px;
+}
+.container_24 .grid_21 {
+    width: 830px;
+}
+.container_24 .grid_22 {
+    width: 870px;
+}
+.container_24 .grid_23 {
+    width: 910px;
+}
+.container_24 .grid_24 {
+    width: 950px;
+}
+}
 @media only screen and (min-width: 768px) and (max-width: 960px) {
     .container_24 {
         margin-left: auto;

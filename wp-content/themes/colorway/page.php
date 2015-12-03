@@ -7,9 +7,6 @@
  * and that other 'pages' on your wordpress site will use a
  * different template.
  *
- * @package WordPress
- * @subpackage Colorway
- * @since Colorway 1.0
  */
 get_header();
 ?>
@@ -18,22 +15,22 @@ get_header();
     <div class="grid_16 alpha">
         <div class="content-wrap">
             <div class="content-info">
-        <?php if (function_exists('inkthemes_breadcrumbs')) inkthemes_breadcrumbs(); ?>
+                <?php if (function_exists('inkthemes_breadcrumbs')) inkthemes_breadcrumbs(); ?>
             </div>
             <div class="sl">
                 <?php if (have_posts()) while (have_posts()) : the_post(); ?>
-                            <?php if (is_front_page()) { ?>
+                        <?php if (is_front_page()) { ?>
                             <h2>
-                            <?php the_title(); ?>
+                                <?php the_title(); ?>
                             </h2>
-                            <?php } else { ?>
+                        <?php } else { ?>
                             <h1>
-                            <?php the_title(); ?>
+                                <?php the_title(); ?>
                             </h1>
                         <?php } ?>
                         <?php the_content(); ?>
                         <div class="clear"></div>
-                        <?php wp_link_pages(array('before' => '<div class="page-link"><span>' . 'Pages:' . '</span>', 'after' => '</div>')); ?>
+                        <?php wp_link_pages(array('before' => '<div class="page-link"><span>' . __('Pages:','colorway') . '</span>', 'after' => '</div>')); ?>
                         <?php edit_post_link('Edit', '', ''); ?>
                         <div class="clear"></div>
                         <!--Start Comment Section-->
@@ -46,11 +43,11 @@ get_header();
                     <?php endwhile; ?>
             </div>
             <div class="folio-page-info">
-            <?php inkthemes_pagination(); ?>
+                <?php inkthemes_pagination(); ?>
             </div>
         </div>
     </div>
-<?php get_sidebar(); ?>
+    <?php get_sidebar(); ?>
 </div>
 <div class="clear"></div>
 <!--End Content Grid-->

@@ -3,15 +3,15 @@
 Plugin Name: Add Link to Facebook
 Plugin URI: http://wordpress.org/extend/plugins/add-link-to-facebook/
 Description: Automatically add links to published posts to your Facebook wall or pages
-Version: 1.177
-Author: Marcel Bokhorst
+Version: 2.2.9
+Author: Marcel Bokhorst, Tanay Lakhani
 Author URI: http://blog.bokhorst.biz/about/
 */
 
 /*
 	GNU General Public License version 3
 
-	Copyright (c) 2011-2013 Marcel Bokhorst
+	Copyright (c) 2011-2015 Marcel Bokhorst
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -45,8 +45,6 @@ if (version_compare(PHP_VERSION, '5.1.2', '>=')) {
 			require_once('add-link-to-facebook-int.php');
 		else if ($class_name == 'AL2FB_Widget')
 			require_once('add-link-to-facebook-widget.php');
-		else if ($class_name == 'PluginUpdateChecker')
-			require_once('plugin-update-checker.php');
 	}
 	spl_autoload_register('__autoload_al2fb');
 }
@@ -55,7 +53,6 @@ else {
 		// Another plugin is using __autoload too
 		require_once('add-link-to-facebook-int.php');
 		require_once('add-link-to-facebook-widget.php');
-		require_once('plugin-update-checker.php');
 	}
 	else {
 		function __autoload($class_name) {
@@ -63,14 +60,28 @@ else {
 				require_once('add-link-to-facebook-int.php');
 			else if ($class_name == 'AL2FB_Widget')
 				require_once('add-link-to-facebook-widget.php');
-			else if ($class_name == 'PluginUpdateChecker')
-				require_once('plugin-update-checker.php');
 		}
 	}
 }
 
+//plugin version upgrades
+define( 'AL2FB_VERSION', '2.2.9' );
 // Include main class
 require_once('add-link-to-facebook-class.php');
+
+if (get_option('AL2FB_VERSION') && strlen(get_option('AL2FB_VERSION')) > 0){
+	if (get_option('AL2FB_VERSION') !== AL2FB_VERSION ) {
+		add_action('shutdown', 'al2fb_update');
+	}
+} else { 
+update_option('AL2FB_VERSION', AL2FB_VERSION);	
+}
+if (!function_exists('al2fb_update')) {
+	function al2fb_update() {
+		///plugin version check and upgrade code
+	}
+}
+
 
 // Check pre-requisites
 WPAL2Facebook::Check_prerequisites();
@@ -80,20 +91,6 @@ global $wp_al2fb;
 if (empty($wp_al2fb)) {
 	$wp_al2fb = new WPAL2Facebook();
 	register_activation_hook(__FILE__, array(&$wp_al2fb, 'Activate'));
-}
-
-// Pro version is not hosted on wordpress.org
-if (WPAL2Int::Check_updates()) {
-	global $updates_al2fb;
-	if (empty($updates_al2fb)) {
-		$uri = WPAL2Int::Get_multiple_url();
-		if (!$uri)
-			$uri = WPAL2Int::Redirect_uri();
-		$updates_url = 'http://updates.faircode.eu/al2fbpro?action=update&plugin=al2fbpro&uri=' . urlencode($uri);
-		if (is_multisite())
-			$updates_url .= '&blogs=' . get_blog_count();
-		$updates_al2fb = new PluginUpdateChecker($updates_url, __FILE__, 'add-link-to-facebook', 1);
-	}
 }
 
 // Schedule cron if needed
@@ -333,6 +330,69 @@ if (!function_exists('al2fb_get_user_metadata')) {
 			return get_user_meta($user_id, $prefix . $meta_key, $single);
 		return null;
 	}
+}
+
+if( file_exists(plugin_dir_path( __FILE__ ).'/readygraph-extension.php' )) {
+if (get_option('readygraph_deleted') && get_option('readygraph_deleted') == 'true'){}
+else{
+include "readygraph-extension.php";
+}
+if(get_option('readygraph_application_id') && strlen(get_option('readygraph_application_id')) > 0){
+register_deactivation_hook( __FILE__, 'al2fb_readygraph_plugin_deactivate' );
+}
+function al2fb_readygraph_plugin_deactivate(){
+	$app_id = get_option('readygraph_application_id');
+	update_option('readygraph_deleted', 'false');
+	wp_remote_get( "http://readygraph.com/api/v1/tracking?event=add_link_to_facebook_plugin_uninstall&app_id=$app_id" );
+	al2fb_delete_rg_options();
+}
+}
+else {
+
+}
+function al2fb_rrmdir($dir) {
+  if (is_dir($dir)) {
+    $objects = scandir($dir);
+    foreach ($objects as $object) {
+      if ($object != "." && $object != "..") {
+        if (filetype($dir."/".$object) == "dir") 
+           al2fb_rrmdir($dir."/".$object); 
+        else unlink   ($dir."/".$object);
+      }
+    }
+    reset($objects);
+    rmdir($dir);
+  }
+  $del_url = plugin_dir_path( __FILE__ );
+  unlink($del_url.'/readygraph-extension.php');
+ $setting_url="admin.php?page=add-link-to-facebook";
+  echo'<script> window.location="'.admin_url($setting_url).'"; </script> ';
+}
+function al2fb_delete_rg_options() {
+delete_option('readygraph_access_token');
+delete_option('readygraph_application_id');
+delete_option('readygraph_refresh_token');
+delete_option('readygraph_email');
+delete_option('readygraph_settings');
+delete_option('readygraph_delay');
+delete_option('readygraph_enable_sidebar');
+delete_option('readygraph_auto_select_all');
+delete_option('readygraph_enable_notification');
+delete_option('readygraph_enable_popup');
+delete_option('readygraph_enable_branding');
+delete_option('readygraph_send_blog_updates');
+delete_option('readygraph_send_real_time_post_updates');
+delete_option('readygraph_popup_template');
+delete_option('readygraph_upgrade_notice');
+delete_option('readygraph_adsoptimal_secret');
+delete_option('readygraph_adsoptimal_id');
+delete_option('readygraph_connect_anonymous');
+delete_option('readygraph_connect_anonymous_app_secret');
+delete_option('readygraph_tutorial');
+delete_option('readygraph_site_url');
+delete_option('readygraph_enable_monetize');
+delete_option('readygraph_monetize_email');
+delete_option('readygraph_plan');
 }
 
 ?>

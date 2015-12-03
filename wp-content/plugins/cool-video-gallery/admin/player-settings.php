@@ -32,9 +32,14 @@ $plugin_url = WP_CONTENT_URL.'/plugins/'.plugin_basename( dirname(dirname(__FILE
 require_once( $plugin_path . '/cvg-player/core-functions.php');
 
 if(isset($_POST['update_CVGSettings'])){
-	$options_player = $_POST['options_player'];
-	update_option('cvg_player_settings', $options_player);
-	echo '<div class="updated"><p><strong>' . __('Options saved.') . '</strong></p></div>';
+	
+	// wp_nonce_field('cvg_player_settings_nonce','cvg_player_settings_nonce_csrf');
+	if ( check_admin_referer( 'cvg_player_settings_nonce', 'cvg_player_settings_nonce_csrf' ) ) {
+		
+		$options_player = $_POST['options_player'];
+		update_option('cvg_player_settings', $options_player);
+		echo '<div class="updated"><p><strong>' . __('Options saved.') . '</strong></p></div>';
+	}
 }
 
 $options_player = get_option('cvg_player_settings');
@@ -200,6 +205,7 @@ $options_player = get_option('cvg_player_settings');
 		
 		<div class="clear"></div>
 		
+		<?php wp_nonce_field('cvg_player_settings_nonce','cvg_player_settings_nonce_csrf'); ?>
 		<div class="submit">
 			<input class="button-primary" type="submit" name="update_CVGSettings" value="Save Player Settings" />
 		</div>

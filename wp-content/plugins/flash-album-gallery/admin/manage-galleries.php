@@ -10,10 +10,15 @@ function flag_manage_gallery_main() {
 	//Build the pagination for more than 25 galleries
 	if ( ! isset( $_GET['paged'] ) || $_GET['paged'] < 1 )
 		$_GET['paged'] = 1;
-	
-	$perpage = 50;
+
+	$sort_gall_by = (isset($_GET['galsort']))? $_GET['galsort'] : $flag->options['albSort'];
+	$sort_gall_dir = (isset($_GET['sortdir']))? $_GET['sortdir'] : $flag->options['albSortDir'];
+	$ascdesc = ($sort_gall_dir == 'DESC')? 'ASC' : 'DESC';
+
+	$_GET['paged'] = intval($_GET['paged']);
+	$perpage = intval($flag->options['albPerPage'])? intval($flag->options['albPerPage']) : 50;
 	$start = ( $_GET['paged'] - 1 ) * $perpage;
-	$gallerylist = $flagdb->find_all_galleries('gid', 'asc', TRUE, $perpage, $start, false);
+	$gallerylist = $flagdb->find_all_galleries($sort_gall_by, $sort_gall_dir, $counter = true, $perpage, $start, $exclude = false, $draft = true);
 
 	$page_links = paginate_links( array(
 		'base' => add_query_arg( 'paged', '%#%' ),
@@ -60,7 +65,7 @@ function flag_manage_gallery_main() {
 		var numchecked = getNumChecked(document.getElementById('editgalleries'));
 		 
 		if(numchecked < 1) { 
-			alert('<?php echo esc_js(__('No images selected', 'flag')); ?>');
+			alert('<?php echo esc_js(__('No images selected', 'flash-album-gallery')); ?>');
 			return false; 
 		} 
 		
@@ -77,7 +82,7 @@ function flag_manage_gallery_main() {
 				break;
 		}
 		
-		return confirm('<?php echo sprintf(esc_js(__("You are about to start the bulk edit for %s galleries \n \n 'Cancel' to stop, 'OK' to proceed.",'flag')), "' + numchecked + '") ; ?>');
+		return confirm('<?php echo sprintf(esc_js(__("You are about to start the bulk edit for %s galleries \n \n 'Cancel' to stop, 'OK' to proceed.",'flash-album-gallery')), "' + numchecked + '") ; ?>');
 	}
 
 	function showDialog( windowId, height ) {
@@ -101,14 +106,14 @@ function flag_manage_gallery_main() {
 	
 	//-->
 	</script>
-	<div class="wrap">
-		<h2><?php _e('Gallery Overview', 'flag'); ?></h2>
+	<div class="flag-wrap" style="margin-top:40px;">
+		<h2><?php _e('Gallery Overview', 'flash-album-gallery'); ?></h2>
 		<form class="search-form" action="" method="get">
 		<p class="search-box">
-			<label class="hidden" for="media-search-input"><?php _e( 'Search Images', 'flag' ); ?>:</label>
+			<label class="hidden" for="media-search-input"><?php _e( 'Search Images', 'flash-album-gallery' ); ?>:</label>
 			<input type="hidden" id="page-name" name="page" value="flag-manage-gallery" />
 			<input type="text" id="media-search-input" name="s" value="<?php the_search_query(); ?>" />
-			<input type="submit" value="<?php _e( 'Search Images', 'flag' ); ?>" class="button" />
+			<input type="submit" value="<?php _e( 'Search Images', 'flash-album-gallery' ); ?>" class="button" />
 		</p>
 		</form>
 		<form id="editgalleries" class="flagform" method="POST" action="<?php echo $flag->manage_page->base_page . '&amp;paged=' . $_GET['paged']; ?>" accept-charset="utf-8">
@@ -120,14 +125,15 @@ function flag_manage_gallery_main() {
 			<div class="alignleft actions">
 				<?php if ( function_exists('json_encode') ) : ?>
 				<select name="bulkaction" id="bulkaction">
-					<option value="no_action" ><?php _e("No action",'flag'); ?></option>
-					<option value="new_thumbnail" ><?php _e("Create new thumbnails",'flag'); ?></option>
-					<option value="resize_images" ><?php _e("Resize images",'flag'); ?></option>
-					<option value="import_meta" ><?php _e("Import metadata",'flag'); ?></option>
-					<option value="copy_meta" ><?php _e("Metadata to description",'flag'); ?></option>
+					<option value="no_action" ><?php _e("No action",'flash-album-gallery'); ?></option>
+					<option value="webview_images" ><?php _e("Create images optimized for web",'flash-album-gallery'); ?></option>
+					<option value="new_thumbnail" ><?php _e("Create new thumbnails",'flash-album-gallery'); ?></option>
+					<option value="resize_images" ><?php _e("Resize images",'flash-album-gallery'); ?></option>
+					<option value="import_meta" ><?php _e("Import metadata",'flash-album-gallery'); ?></option>
+					<option value="copy_meta" ><?php _e("Metadata to description",'flash-album-gallery'); ?></option>
 					<?php do_action('flag_manage_galleries_bulkaction'); ?>
 				</select>
-				<input name="showThickbox" class="button-secondary" type="submit" value="<?php _e('Apply','flag'); ?>" onclick="if ( !checkSelected() ) return false;" />
+				<input name="showThickbox" class="button-secondary" type="submit" value="<?php _e('Apply','flash-album-gallery'); ?>" onclick="if ( !checkSelected() ) return false;" />
 				<?php endif; ?>
 			</div>
 			
@@ -142,73 +148,75 @@ function flag_manage_gallery_main() {
 		<?php endif; ?>
 		
 		</div>
-		<table class="widefat" cellspacing="0">
+		<table class="widefat flag-table" cellspacing="0">
 			<thead>
 			<tr>
 				<th scope="col" class="cb column-cb" >
 					<input type="checkbox" onclick="checkAll(document.getElementById('editgalleries'));" name="checkall"/>
 				</th>
-				<th scope="col" ><?php _e('ID'); ?></th>
-				<th scope="col" width="25%"><?php _e('Title', 'flag'); ?></th>
-				<th scope="col" width="55%"><?php _e('Description', 'flag'); ?></th>
-				<th scope="col" ><?php _e('Author', 'flag'); ?></th>
-				<th scope="col" ><?php _e('Quantity', 'flag'); ?></th>
-				<th scope="col" ><?php _e('Action', 'flag'); ?></th>
+				<th scope="col"><a href="<?php echo $flag->manage_page->base_page . "&galsort=gid&sortdir={$ascdesc}&paged=" . $_GET['paged']; ?>"><?php _e('ID'); ?></a></th>
+				<th scope="col"><a href="<?php echo $flag->manage_page->base_page . "&galsort=title&sortdir={$ascdesc}&paged=" . $_GET['paged']; ?>"><?php _e('Title', 'flash-album-gallery'); ?></a></th>
+				<th scope="col"><?php _e('Description', 'flash-album-gallery'); ?></th>
+				<th scope="col"><?php _e('Author', 'flash-album-gallery'); ?></th>
+				<th scope="col"><?php _e('Quantity', 'flash-album-gallery'); ?></th>
+				<th scope="col"><?php _e('Action', 'flash-album-gallery'); ?></th>
 			</tr>
 			</thead>
 			<tbody>
 <?php
 if($gallerylist) {
 	foreach($gallerylist as $gallery) {
-		$class = ( !isset($class) || $class == 'class="alternate"' ) ? '' : 'class="alternate"';
+		$class = ( !isset($class) || $class == 'alt ' ) ? '' : 'alt ';
 		$gid = $gallery->gid;
 		$name = (empty($gallery->title) ) ? $gallery->name : $gallery->title;
 		$author_user = get_userdata( (int) $gallery->author );
 		?>
-		<tr id="gallery-<?php echo $gid; ?>" <?php echo $class; ?> >
+		<tr id="gallery-<?php echo $gid; ?>" class="<?php echo $class; echo ( $gallery->status ) ? 'flag_draft' : 'flag_public'; ?>" >
 			<th scope="row" class="cb column-cb">
 				<?php if (flagAdmin::can_manage_this_gallery($gallery->author)) { ?>
 					<input name="doaction[]" type="checkbox" value="<?php echo $gid; ?>" />
 				<?php } ?>
 			</th>
 			<td scope="row"><?php echo $gid; ?></td>
-			<td>
+			<td style="width:30%">
 				<?php if (flagAdmin::can_manage_this_gallery($gallery->author)) { ?>
 					<a href="<?php echo wp_nonce_url( $flag->manage_page->base_page . "&amp;mode=edit&amp;gid=" . $gid, 'flag_editgallery')?>" class='edit' title="<?php _e('Edit'); ?>" >
-						<?php echo flagGallery::i18n($name); ?>
+						<?php echo esc_html(flagGallery::i18n($name)); ?>
 					</a>
 				<?php } else { ?>
-					<?php echo flagGallery::i18n($gallery->title); ?>
-				<?php } ?>
+					<?php echo esc_html(flagGallery::i18n($gallery->title)); ?>
+				<?php }
+				if($gallery->status){ echo ' <b>- '.__('Draft', 'flash-album-gallery').'</b>'; }?>
 			</td>
-			<td><?php echo flagGallery::i18n($gallery->galdesc); ?>&nbsp;</td>
+			<td style="width:30%"><?php echo esc_html(flagGallery::i18n($gallery->galdesc)); ?>&nbsp;</td>
 			<td><?php echo $author_user->display_name; ?></td>
 			<td><?php echo $gallery->counter; ?></td>
-			<td>
+			<td style="white-space:nowrap;">
 				<?php if (flagAdmin::can_manage_this_gallery($gallery->author)) : ?>
-					<a href="<?php echo wp_nonce_url( $flag->manage_page->base_page . "&amp;mode=delete&amp;gid=" . $gid, 'flag_editgallery')?>" class="delete" onclick="javascript:check=confirm( '<?php _e("Delete this gallery ?",'flag')?>');if(check==false) return false;"><?php _e('Delete','flag'); ?></a>
+					<a href="<?php echo wp_nonce_url( $flag->manage_page->base_page . "&amp;mode=delete&amp;gid=" . $gid, 'flag_editgallery')?>" class="delete" onclick="javascript:check=confirm( '<?php _e("Delete this gallery ?",'flash-album-gallery')?>');if(check==false) return false;"><?php _e('Delete','flash-album-gallery'); ?></a>
+					<?php if($gallery->status) { ?>
+					| <a href="<?php echo wp_nonce_url( $flag->manage_page->base_page . "&amp;mode=publish&amp;gid=" . $gid, 'flag_editgallery')?>" class="status" onclick="javascript:check=confirm( '<?php _e("Publish this gallery?",'flash-album-gallery')?>');if(check==false) return false;"><?php _e('Publish','flash-album-gallery'); ?></a>
+					<?php } else { ?>
+					| <a href="<?php echo wp_nonce_url( $flag->manage_page->base_page . "&amp;mode=draft&amp;gid=" . $gid, 'flag_editgallery')?>" class="status" onclick="javascript:check=confirm( '<?php _e("Make this gallery draft?",'flash-album-gallery')?>');if(check==false) return false;"><?php _e('Draft','flash-album-gallery'); ?></a>
+					<?php } ?>
 				<?php endif; ?>
 			</td>
 		</tr>
 		<?php
 	}
 } else {
-	echo '<tr><td colspan="7" align="center"><strong>'.__('No entries found','flag').'</strong></td></tr>';
+	echo '<tr><td colspan="7" align="center"><strong>'.__('No entries found','flash-album-gallery').'</strong></td></tr>';
 }
 ?>			
 			</tbody>
 		</table>
 		</form>
 	</div>
+<?php if ( current_user_can('FlAG Manage others gallery') ) { ?>
 <script type="text/javascript">
 /*<![CDATA[*/
 jQuery(document).ready(function(){
-	jQuery(".albums_table .album_categoties").sortable({ opacity: 0.6, cursor: 'move', connectWith: ".album_categoties", update: function() {
-		//jQuery.post("updateDB.php", order, function(theResponse){
-		//	jQuery("#contentRight").html(theResponse);
-		//}); 															 
-	}								  
-	}).disableSelection();
+	jQuery(".album_categoties").sortable({ opacity: 0.6, cursor: 'move', connectWith: ".album_categoties", update: function() {}}).disableSelection();
 	jQuery( "#draggable .acat" ).draggable({
 		connectToSortable: ".album_categoties",
 		helper: "clone",
@@ -218,14 +226,16 @@ jQuery(document).ready(function(){
 		accept: ".acat",
 		hoverClass: "active",
 		drop: function( event, ui ) {
-			jQuery( this ).find(jQuery(ui.draggable))
-				.addClass( "highlight_new" ).attr("id", "g_"+jQuery(ui.draggable).attr('rel'))
-				.find( "p" )
-					.remove();
+			jQuery( this ).find(jQuery(ui.draggable)).addClass( "highlight_new" ).attr("id", "g_"+jQuery(ui.draggable).attr('rel')).removeAttr('style');
+			jQuery( this ).find( "p" ).hide();
 		}
 	});
 	jQuery( ".album_categoties .drop" ).live('click',function(){
+		var acat_parent = jQuery(this).parent().parent();
 		jQuery(this).parent().remove();
+		if(!acat_parent.find('.acat').length){
+			acat_parent.find('p').show();
+		}
 	});
 	jQuery('.flag-ajax-post').click(function(e){
 		var form = jQuery(this).attr('data-form');
@@ -248,11 +258,11 @@ jQuery(document).ready(function(){
 });
 /*]]>*/
 </script>
-	<div class="wrap">
-		<h2><?php _e('Albums', 'flag'); ?></h2>
-		<form method="post" style="width: 658px; float: left;"><?php wp_nonce_field('flag_album'); ?>
-		<p><input type="text" id="album_name" name="album_name" value="" /> &nbsp; <input type="submit" value="<?php _e('Create New Album','flag'); ?>" class="button-primary" /></p></form>
-		<h2><?php _e('Categories', 'flag'); ?></h2>
+	<div class="flag-wrap">
+		<h2><?php _e('Albums', 'flash-album-gallery'); ?></h2>
+		<form method="post" style="width: 658px; float: left;" action="<?php echo admin_url('admin.php?page=flag-manage-gallery'); ?>"><?php wp_nonce_field('flag_album'); ?>
+		<p><input type="text" id="album_name" name="album_name" value="" /> &nbsp; <input type="submit" value="<?php _e('Create New Album','flash-album-gallery'); ?>" class="button-primary" /></p></form>
+		<h2><?php _e('Categories', 'flash-album-gallery'); ?></h2>
 		<div class="clear"></div>
 		<div class="floatholder">
 			<div class="albums_table">
@@ -262,7 +272,7 @@ if($albumlist) {
 	foreach($albumlist as $album) {
 ?>
 				<div class="album">
-					<div class="album_name"><span class="albID"><?php echo $album->id; ?>.</span> <form method="post" id="albName_<?php echo $album->id; ?>" name="albName_<?php echo $album->id; ?>"><input type="text" name="album_name" value="<?php echo $album->name; ?>" /><input type="hidden" name="album_id" value="<?php echo $album->id; ?>" /></form> <span class="album_actions"><span class="alb_msg"></span>&nbsp;&nbsp;&nbsp;<span class="del flag-ajax-post" data-action="flag_delete_album" data-_ajax_nonce="<?php echo $nonce; ?>" data-post="<?php echo $album->id; ?>"><?php _e('Delete', 'flag'); ?></span>&nbsp;<span class="album_save flag-ajax-post button" data-action="flag_save_album" data-_ajax_nonce="<?php echo $nonce; ?>" data-form="albName_<?php echo $album->id; ?>"><strong><?php _e('Save', 'flag'); ?></strong></span></span></div>
+					<div class="album_name"><span class="albID"><?php echo $album->id; ?>.</span> <form method="post" id="albName_<?php echo $album->id; ?>" name="albName_<?php echo $album->id; ?>"><input type="text" name="album_name" value="<?php echo esc_html($album->name); ?>" /><input type="hidden" name="album_id" value="<?php echo $album->id; ?>" /></form> <span class="album_actions"><span class="alb_msg"></span>&nbsp;&nbsp;&nbsp;<span class="button del flag-ajax-post" data-action="flag_delete_album" data-_ajax_nonce="<?php echo $nonce; ?>" data-post="<?php echo $album->id; ?>"><?php _e('Delete', 'flash-album-gallery'); ?></span>&nbsp;&nbsp;<span class="album_save flag-ajax-post button-primary" data-action="flag_save_album" data-_ajax_nonce="<?php echo $nonce; ?>" data-form="albName_<?php echo $album->id; ?>"><strong><?php _e('Save', 'flash-album-gallery'); ?></strong></span></span></div>
 					<div class="album_categoties">
 					<?php $galids = explode(',',$album->categories);
 						if($album->categories) {
@@ -270,17 +280,17 @@ if($albumlist) {
 								$acat = $flagdb->find_gallery($galid);
 					?>
 								
-						<div class="acat" id="g_<?php echo $acat->gid; ?>"><?php echo $acat->title; ?><span class="drop">x</span></div>
+						<div class="acat" id="g_<?php echo $acat->gid; ?>"><?php echo esc_html($acat->title); ?><span class="drop">x</span></div>
 						<?php }
 						} else {
-							echo '<p style="text-align:center; padding: 7px 0; margin: 0;">'.__('Drag&Drop Categories Here','flag').'</p>';
+							echo '<p style="text-align:center; padding: 7px 0; margin: 0;">'.__('Drag&Drop Categories Here','flash-album-gallery').'</p>';
 						}
 					?>
 					</div>
 				</div>
 <?php }
 } else {
-	echo '<p style="text-align:center; padding: 20px 0; margin: 0;">'.__('No Albums','flag').'</p>';
+	echo '<p style="text-align:center; padding: 20px 0; margin: 0;">'.__('No Albums','flash-album-gallery').'</p>';
 }
 ?>
 			</div>
@@ -289,7 +299,7 @@ if($albumlist) {
 if($gallerylist) {
 	foreach($gallerylist as $gallery) {
 		$gid = $gallery->gid;
-		$name = (empty($gallery->title) ) ? $gallery->name : $gallery->title;
+		$name = (empty($gallery->title) ) ? $gallery->name : esc_html($gallery->title);
 		$author_user = get_userdata( (int) $gallery->author );
 		if (flagAdmin::can_manage_this_gallery($gallery->author)) {
 ?>
@@ -302,7 +312,7 @@ if($gallerylist) {
 			</div>
 		</div>
 	</div>
-
+<?php } ?>
 	<!-- #resize_images -->
 	<div id="resize_images" style="display: none;" >
 		<form id="form_resize_images" method="POST" accept-charset="utf-8">
@@ -313,18 +323,18 @@ if($gallerylist) {
 		<table width="100%" border="0" cellspacing="3" cellpadding="3" >
 			<tr valign="top">
 				<td>
-					<strong><?php _e('Resize Images to', 'flag'); ?>:</strong> 
+					<strong><?php _e('Resize Images to', 'flash-album-gallery'); ?>:</strong>
 				</td>
 				<td>
 					<input type="text" size="5" name="imgWidth" value="<?php echo $flag->options['imgWidth']; ?>" /> x <input type="text" size="5" name="imgHeight" value="<?php echo $flag->options['imgHeight']; ?>" />
-					<br /><small><?php _e('Width x height (in pixel). FlAGallery will keep ratio size','flag'); ?></small>
+					<br /><small><?php _e('Width x height (in pixel). FlAGallery will keep ratio size','flash-album-gallery'); ?></small>
 				</td>
 			</tr>
 		  	<tr align="right">
 		    	<td colspan="2" class="submit">
-		    		<input class="button-primary" type="submit" name="TB_ResizeImages" value="<?php _e('OK', 'flag'); ?>" />
+		    		<input class="button-primary" type="submit" name="TB_ResizeImages" value="<?php _e('OK', 'flash-album-gallery'); ?>" />
 		    		&nbsp;
-		    		<input class="button-secondary" type="reset" value="&nbsp;<?php _e('Cancel', 'flag'); ?>&nbsp;" onclick="tb_remove()"/>
+		    		<input class="button-secondary" type="reset" value="&nbsp;<?php _e('Cancel', 'flash-album-gallery'); ?>&nbsp;" onclick="tb_remove()"/>
 		    	</td>
 			</tr>
 		</table>
@@ -341,20 +351,20 @@ if($gallerylist) {
 		<input type="hidden" name="page" value="manage-galleries" />
 		<table width="100%" border="0" cellspacing="3" cellpadding="3" >
 			<tr valign="top">
-				<th align="left"><?php _e('Width x height (in pixel)','flag'); ?></th>
+				<th align="left"><?php _e('Width x height (in pixel)','flash-album-gallery'); ?></th>
 				<td><input type="text" size="5" maxlength="5" name="thumbWidth" value="<?php echo $flag->options['thumbWidth']; ?>" /> x <input type="text" size="5" maxlength="5" name="thumbHeight" value="<?php echo $flag->options['thumbHeight']; ?>" />
-				<br /><small><?php _e('These values are maximum values ','flag'); ?></small></td>
+				<br /><small><?php _e('These values are maximum values ','flash-album-gallery'); ?></small></td>
 			</tr>
 			<tr valign="top">
-				<th align="left"><?php _e('Set fix dimension','flag'); ?></th>
+				<th align="left"><?php _e('Set fix dimension','flash-album-gallery'); ?></th>
 				<td><input type="checkbox" name="thumbFix" value="1" <?php checked('1', $flag->options['thumbFix']); ?> />
-				<br /><small><?php _e('Ignore the aspect ratio, no portrait thumbnails','flag'); ?></small></td>
+				<br /><small><?php _e('Ignore the aspect ratio, no portrait thumbnails','flash-album-gallery'); ?></small></td>
 			</tr>
 		  	<tr align="right">
 		    	<td colspan="2" class="submit">
-		    		<input class="button-primary" type="submit" name="TB_NewThumbnail" value="<?php _e('OK', 'flag'); ?>" />
+		    		<input class="button-primary" type="submit" name="TB_NewThumbnail" value="<?php _e('OK', 'flash-album-gallery'); ?>" />
 		    		&nbsp;
-		    		<input class="button-secondary" type="reset" value="&nbsp;<?php _e('Cancel', 'flag'); ?>&nbsp;" onclick="tb_remove()"/>
+		    		<input class="button-secondary" type="reset" value="&nbsp;<?php _e('Cancel', 'flash-album-gallery'); ?>&nbsp;" onclick="tb_remove()"/>
 		    	</td>
 			</tr>
 		</table>
@@ -364,4 +374,3 @@ if($gallerylist) {
 
 <?php
 } 
-?>

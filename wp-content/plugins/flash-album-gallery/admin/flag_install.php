@@ -25,14 +25,14 @@ function flag_install () {
 	// add charset & collate like wp core
 	$charset_collate = '';
 
-	if ( version_compare(mysql_get_server_info(), '4.1.0', '>=') ) {
+	if ( $wpdb->has_cap('collation') ) {
 		if ( ! empty($wpdb->charset) )
 			$charset_collate = "DEFAULT CHARACTER SET $wpdb->charset";
 		if ( ! empty($wpdb->collate) )
 			$charset_collate .= " COLLATE $wpdb->collate";
 	}
 		
-    $flagpictures					= $wpdb->prefix . 'flag_pictures';
+  $flagpictures					= $wpdb->prefix . 'flag_pictures';
 	$flaggallery					= $wpdb->prefix . 'flag_gallery';
 	$flagcomments					= $wpdb->prefix . 'flag_comments';
 	$flagalbum						= $wpdb->prefix . 'flag_album';
@@ -45,7 +45,9 @@ function flag_install () {
 		filename VARCHAR(255) NOT NULL ,
 		description MEDIUMTEXT NULL ,
 		alttext MEDIUMTEXT NULL ,
+		link TEXT NULL ,
 		imagedate DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+		modified TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP,
 		exclude TINYINT NULL DEFAULT '0',
 		sortorder BIGINT(20) DEFAULT '0' NOT NULL ,
 		location TEXT,
@@ -78,6 +80,7 @@ function flag_install () {
 		previewpic BIGINT(20) NULL DEFAULT '0' ,
 		sortorder BIGINT(20) DEFAULT '0' NOT NULL ,
 		author BIGINT(20) NOT NULL DEFAULT '0' ,
+		status TINYINT NULL DEFAULT '0' ,
 		PRIMARY KEY gid (gid)
 		) $charset_collate;";
 	
@@ -118,7 +121,7 @@ function flag_install () {
 
 	// check one table again, to be sure
 	if( !$wpdb->get_var( "SHOW TABLES LIKE '$flagpictures'" ) ) {
-		update_option( "flag_init_check", __('Flash Album Gallery : Tables could not created, please check your database settings','flag') );
+		update_option( "flag_init_check", __('Flash Album Gallery : Tables could not created, please check your database settings','flash-album-gallery') );
 		return;
 	}
 
@@ -131,6 +134,9 @@ function flag_install () {
 	// if all is passed , save the VERSIONs
 	add_option("flag_db_version", FLAG_DBVERSION);
 	add_option("flagVersion", FLAGVERSION);
+
+	include_once( dirname (__FILE__). '/tuning.php');
+	flag_tune(false);
 }
 
 function flag_capabilities() {
@@ -140,7 +146,7 @@ function flag_capabilities() {
 	$role = get_role('administrator');
 	// We need this role, no other chance
 	if ( empty($role) ) {
-		update_option( "flag_init_check", __('Sorry, Flash Album Gallery works only with a role called administrator','flag') );
+		update_option( "flag_init_check", __('Sorry, Flash Album Gallery works only with a role called administrator','flash-album-gallery') );
 		return;
 	}
 	
@@ -157,7 +163,7 @@ function flag_capabilities() {
 	$role->add_cap('FlAG Manage music');
 	$role->add_cap('FlAG Manage video');
 	$role->add_cap('FlAG Manage banners');
-	$role->add_cap('FlAG Facebook page');
+	$role->add_cap('FlAG iFrame page');
 
 }
 
@@ -189,7 +195,8 @@ function flag_default_options() {
 }
 
 function flag_list_options() {
-	$flag_options['galleryPath']			= 'wp-content/flagallery/';  		// set default path to the gallery
+	$wp_content = basename(WP_CONTENT_DIR);
+	$flag_options['galleryPath']			= $wp_content.'/flagallery/';  		// set default path to the gallery
 	$flag_options['swfUpload']				= true;								// activate the batch upload
 	$flag_options['deleteImg']				= true;								// delete Images
 	$flag_options['deepLinks']				= true;
@@ -197,9 +204,14 @@ function flag_list_options() {
 	$flag_options['license_key']			= '';
 	$flag_options['useMediaRSS']			= false;							// activate the global Media RSS file
 
+	$flag_options['gp_jscode']		= '';							// GRAND Pages: google analytics code
+
 	// Sort Settings
-	$flag_options['galSort']				= 'sortorder';						// Sort order
-	$flag_options['galSortDir']				= 'ASC';							// Sort direction
+	$flag_options['albSort']			= 'title';						// Galleries Sort order
+	$flag_options['albSortDir']		= 'ASC';						  // Galleries Sort dir
+	$flag_options['albPerPage']		= '50';						    // Galleries per page
+	$flag_options['galSort']					= 'sortorder';				// Images Sort order
+	$flag_options['galSortDir']				= 'ASC';							// Images Sort direction
 
 	// Flash settings
 	$flag_options['skinsDirABS']			= str_replace("\\","/", WP_PLUGIN_DIR . '/flagallery-skins/' );
@@ -209,44 +221,46 @@ function flag_list_options() {
 	$flag_options['flashHeight']			= '500';
 
 	// Image Settings
-	$flag_options['imgWidth']				= 800;  							// Image Width
+	$flag_options['imgWidth']					= 800;  							// Image Width
 	$flag_options['imgHeight']				= 600;  							// Image height
 	$flag_options['imgQuality']				= 85;								// Image Quality
-	
+	$flag_options['optimized_imgs']		= false;								// Image Quality
+
 	// Thumbnail Settings
-	$flag_options['thumbWidth']				= 220;  							// Thumb Width
-	$flag_options['thumbHeight']			= 220;  							// Thumb height
-	$flag_options['thumbFix']				= true;								// Fix the dimension
+	$flag_options['thumbWidth']				= 100;  							// Thumb Width
+	$flag_options['thumbHeight']			= 100;  							// Thumb height
+	$flag_options['thumbFix']					= true;								// Fix the dimension
 	$flag_options['thumbQuality']			= 100;  							// Thumb Quality
 
 	// Flash default skin colors settings TODO remove old settings
 	$flag_options['flashBacktransparent'] 	= false;
-	$flag_options['flashBackcolor']			= '262626';
-	$flag_options['buttonsBG']				= '000000';
-	$flag_options['buttonsMouseOver']		= '7485c2';
-	$flag_options['buttonsMouseOut']		= '717171';
-	$flag_options['catButtonsMouseOver']	= '000000';
-	$flag_options['catButtonsMouseOut']		= '000000';
+	$flag_options['flashBackcolor']					= '262626';
+	$flag_options['buttonsBG']							= '000000';
+	$flag_options['buttonsMouseOver']				= '7485c2';
+	$flag_options['buttonsMouseOut']				= '717171';
+	$flag_options['catButtonsMouseOver']		= '000000';
+	$flag_options['catButtonsMouseOut']			= '000000';
 	$flag_options['catButtonsTextMouseOver']= '7485c2';
 	$flag_options['catButtonsTextMouseOut']	= 'bcbcbc';
-	$flag_options['thumbMouseOver']			= '7485c2';
-	$flag_options['thumbMouseOut']			= '000000';
-	$flag_options['mainTitle']				= 'ffffff';
-	$flag_options['categoryTitle']			= '7485c2';
-	$flag_options['itemBG']					= 'eae6ef';		
-	$flag_options['itemTitle']				= '7485c2';		
-	$flag_options['itemDescription']		= 'e0e0e0';		
+	$flag_options['thumbMouseOver']					= '7485c2';
+	$flag_options['thumbMouseOut']					= '000000';
+	$flag_options['mainTitle']							= 'ffffff';
+	$flag_options['categoryTitle']					= '7485c2';
+	$flag_options['itemBG']									= 'eae6ef';
+	$flag_options['itemTitle']							= '7485c2';
+	$flag_options['itemDescription']				= 'e0e0e0';
 
 	// Alternative gallery colors
 	$flag_options['jAlterGal']				= true;
-	$flag_options['jAlterGalScript']		= 1;							// If '0' - use FancyBox script
-	$flag_options['BarsBG']					= '292929';
+	$flag_options['jAlterGalScript']	= 1;							// If '0' - use FancyBox script
+	$flag_options['disableViews']			= 0;
+	$flag_options['BarsBG']						= '292929';
 	$flag_options['CatBGColor']				= '292929';
-	$flag_options['CatBGColorOver']			= '737373';
-	$flag_options['CatColor']				= 'ffffff';
+	$flag_options['CatBGColorOver']		= '737373';
+	$flag_options['CatColor']					= 'ffffff';
 	$flag_options['CatColorOver']			= 'ffffff';
-	$flag_options['ThumbBG']				= 'ffffff';
-	$flag_options['ThumbLoaderColor']		= '4a4a4a';
+	$flag_options['ThumbBG']					= 'ffffff';
+	$flag_options['ThumbLoaderColor']	= '4a4a4a';
 	$flag_options['TitleColor']				= 'ff9900';
 	$flag_options['DescrColor']				= 'cfcfcf';
 
@@ -254,14 +268,14 @@ function flag_list_options() {
 	$flag_options['videoBG']				= '000000';
 	$flag_options['vmColor1']				= 'ffffff';
 	$flag_options['vmColor2']				= '3283A7';
-	$flag_options['vmAutoplay']				= 'true';
+	$flag_options['vmAutoplay']			= 'true';
 	$flag_options['vmWidth']				= '520';
 	$flag_options['vmHeight']				= '304';
 
-	$flag_options['mpBG']					= '4f4f4f';
+	$flag_options['mpBG']						= '4f4f4f';
 	$flag_options['mpColor1']				= 'ffffff';
 	$flag_options['mpColor2']				= '3283A7';
-	$flag_options['mpAutoplay']				= 'false';
+	$flag_options['mpAutoplay']			= 'false';
 
 	$flag_options['advanced']				= false;  							// Advanced options
 	
@@ -307,6 +321,7 @@ function flag_uninstall() {
 	delete_option( 'flag_options' );
 	delete_option( 'flag_db_version' );
 	delete_option( 'flagVersion' );
+	delete_option( 'flag_plugin_error' );
 
 	// now remove the capability
 	flag_remove_capability("FlAG overview");
@@ -322,9 +337,5 @@ function flag_uninstall() {
 	flag_remove_capability("FlAG Manage music");
 	flag_remove_capability("FlAG Manage video");
 	flag_remove_capability("FlAG Manage banners");
-	flag_remove_capability("FlAG Facebook page");
+	flag_remove_capability("FlAG iFrame page");
 }
-
-
-
-?>

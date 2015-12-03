@@ -2,13 +2,13 @@
 
 /*
 	Support class Add Link to Facebook plugin
-	Copyright (c) 2011-2013 by Marcel Bokhorst
+	Copyright (c) 2011-2015 by Marcel Bokhorst
 */
 
 /*
 	GNU General Public License version 3
 
-	Copyright (c) 2011-2013 Marcel Bokhorst
+	Copyright (c) 2011-2014 Marcel Bokhorst
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -47,11 +47,11 @@ if (!class_exists('WPAL2Int')) {
 		// Get Facebook authorize address
 		static function Authorize_url($user_ID) {
 			// http://developers.facebook.com/docs/authentication/permissions
-			$url = 'https://graph.facebook.com/oauth/authorize';
+			$url = 'https://graph.facebook.com/v2.2/oauth/authorize';
 			$url = apply_filters('al2fb_url', $url);
 			$url .= '?client_id=' . urlencode(get_user_meta($user_ID, c_al2fb_meta_client_id, true));
 			$url .= '&redirect_uri=' . urlencode(WPAL2Int::Redirect_uri());
-			$url .= '&scope=read_stream,publish_stream,offline_access,manage_pages,user_groups';
+			$url .= '&scope=publish_pages,manage_pages,publish_actions';
 			$url .= '&state=' . WPAL2Int::Authorize_secret();
 			return $url;
 		}
@@ -80,10 +80,10 @@ if (!class_exists('WPAL2Int')) {
 				$query['al2fb_action'] = 'authorize';
 				if (is_multisite()) {
 					global $blog_id;
-					$url = get_admin_url($blog_id, 'tools.php?page=' . plugin_basename(WPAL2Int::Get_main_file()), 'admin');
+					$url = get_admin_url($blog_id, 'admin.php?page=' . str_replace('/add-link-to-facebook.php', '', plugin_basename(WPAL2Int::Get_main_file())), 'admin');
 				}
 				else
-					$url = admin_url('tools.php?page=' . plugin_basename(WPAL2Int::Get_main_file()));
+					$url = admin_url('admin.php?page=' . str_replace('/add-link-to-facebook.php', '', plugin_basename(WPAL2Int::Get_main_file())));
 				$url .= '&' . http_build_query($query, '', '&');
 
 				// Debug info
@@ -100,7 +100,7 @@ if (!class_exists('WPAL2Int')) {
 
 		// Request token
 		static function Get_fb_token($user_ID) {
-			$url = 'https://graph.facebook.com/oauth/access_token';
+			$url = 'https://graph.facebook.com/v2.2/oauth/access_token';
 			$url = apply_filters('al2fb_url', $url);
 			$query = http_build_query(array(
 				'client_id' => get_user_meta($user_ID, c_al2fb_meta_client_id, true),
@@ -120,7 +120,7 @@ if (!class_exists('WPAL2Int')) {
 			// https://developers.facebook.com/docs/offline-access-deprecation/
 			$token = WPAL2Int::Get_access_token($user_ID);
 			if ($token) {
-				$url = 'https://graph.facebook.com/oauth/access_token';
+				$url = 'https://graph.facebook.com/v2.2/oauth/access_token';
 				$url = apply_filters('al2fb_url', $url);
 				$query = http_build_query(array(
 					'client_id' => get_user_meta($user_ID, c_al2fb_meta_client_id, true),
@@ -162,7 +162,7 @@ if (!class_exists('WPAL2Int')) {
 		// Get application properties
 		static function Get_fb_application($user_ID) {
 			$app_id = get_user_meta($user_ID, c_al2fb_meta_client_id, true);
-			$url = 'https://graph.facebook.com/' . $app_id;
+			$url = 'https://graph.facebook.com/v2.2/' . $app_id;
 			$url = apply_filters('al2fb_url', $url);
 			$token = WPAL2Int::Get_access_token($user_ID);
 			$query = http_build_query(array('access_token' => $token), '', '&');
@@ -198,7 +198,7 @@ if (!class_exists('WPAL2Int')) {
 		}
 
 		static function Get_fb_info($user_ID, $page_id) {
-			$url = 'https://graph.facebook.com/' . $page_id;
+			$url = 'https://graph.facebook.com/v2.2/' . $page_id;
 			$url = apply_filters('al2fb_url', $url);
 			$token = WPAL2Int::Get_access_token_by_page($user_ID, $page_id);
 			if (empty($token))
@@ -237,10 +237,10 @@ if (!class_exists('WPAL2Int')) {
 
 		// Get page list
 		static function Get_fb_pages($user_ID) {
-			$url = 'https://graph.facebook.com/me/accounts';
+			$url = 'https://graph.facebook.com/v2.2/me/accounts';
 			$url = apply_filters('al2fb_url', $url);
 			$token = WPAL2Int::Get_access_token($user_ID);
-			$query = http_build_query(array('access_token' => $token), '', '&');
+			$query = http_build_query(array('access_token' => $token, 'limit' => 250), '', '&');
 			$response = WPAL2Int::Request($url, $query, 'GET');
 			$accounts = json_decode($response);
 			return $accounts;
@@ -268,10 +268,10 @@ if (!class_exists('WPAL2Int')) {
 
 		// Get group list
 		static function Get_fb_groups($user_ID) {
-			$url = 'https://graph.facebook.com/me/groups';
+			$url = 'https://graph.facebook.com/v2.2/me/groups';
 			$url = apply_filters('al2fb_url', $url);
 			$token = WPAL2Int::Get_access_token($user_ID);
-			$query = http_build_query(array('access_token' => $token), '', '&');
+			$query = http_build_query(array('access_token' => $token, 'limit' => 250), '', '&');
 			$response = WPAL2Int::Request($url, $query, 'GET');
 			$groups = json_decode($response);
 			return $groups;
@@ -299,7 +299,7 @@ if (!class_exists('WPAL2Int')) {
 
 		// Get friend list
 		static function Get_fb_friends($user_ID) {
-			$url = 'https://graph.facebook.com/me/friends';
+			$url = 'https://graph.facebook.com/v2.2/me/friends';
 			$url = apply_filters('al2fb_url', $url);
 			$token = WPAL2Int::Get_access_token($user_ID);
 			$query = http_build_query(array('access_token' => $token), '', '&');
@@ -309,7 +309,7 @@ if (!class_exists('WPAL2Int')) {
 		}
 
 		static function Get_fb_permissions($user_ID, $id) {
-			$url = 'https://graph.facebook.com/' . $id . '/permissions';
+			$url = 'https://graph.facebook.com/v2.2/' . $id . '/permissions';
 			$url = apply_filters('al2fb_url', $url);
 			$token = WPAL2Int::Get_access_token($user_ID);
 			$query = http_build_query(array('access_token' => $token), '', '&');
@@ -335,10 +335,15 @@ if (!class_exists('WPAL2Int')) {
 
 		// Get comments
 		static function Get_fb_comments($user_ID, $id) {
-			$url = 'https://graph.facebook.com/' . $id . '/comments';
+			$url = 'https://graph.facebook.com/v2.2/' . $id . '/comments';
 			$url = apply_filters('al2fb_url', $url);
 			$token = WPAL2Int::Get_access_token($user_ID);
-			$query = http_build_query(array('access_token' => $token), '', '&');
+			// Query comments & replies
+			$query = http_build_query(array(
+				'access_token' => $token,
+				'limit' => 250,
+				'filter' => 'stream',
+				'fields' => 'id,from,message,can_remove,created_time,like_count,user_likes,parent.fields(id)'), '', '&');
 			$response = WPAL2Int::Request($url, $query, 'GET');
 			$comments = json_decode($response);
 			$comments = apply_filters('al2fb_fb_comments', $comments);
@@ -367,10 +372,10 @@ if (!class_exists('WPAL2Int')) {
 
 		// Get likes
 		static function Get_fb_likes($user_ID, $id) {
-			$url = 'https://graph.facebook.com/' . $id . '/likes';
+			$url = 'https://graph.facebook.com/v2.2/' . $id . '/likes';
 			$url = apply_filters('al2fb_url', $url);
 			$token = WPAL2Int::Get_access_token($user_ID);
-			$query = http_build_query(array('access_token' => $token), '', '&');
+			$query = http_build_query(array('access_token' => $token, 'limit' => 250), '', '&');
 			$response = WPAL2Int::Request($url, $query, 'GET');
 			$likes = json_decode($response);
 			$likes = apply_filters('al2fb_fb_likes', $likes);
@@ -396,7 +401,7 @@ if (!class_exists('WPAL2Int')) {
 		// Get messages
 		static function Get_fb_feed($user_ID) {
 			$page_id = WPAL2Int::Get_page_id($user_ID, false);
-			$url = 'https://graph.facebook.com/' . $page_id . '/feed';
+			$url = 'https://graph.facebook.com/v2.2/' . $page_id . '/feed';
 			$url = apply_filters('al2fb_url', $url);
 			$token = WPAL2Int::Get_access_token_by_page($user_ID, $page_id);
 			if (empty($token))
@@ -427,7 +432,7 @@ if (!class_exists('WPAL2Int')) {
 		// Returns a HTTP 302 with the URL of the user's profile picture
 		// (use ?type=square | small | normal | large to request a different photo)
 		static function Get_fb_picture_url($id, $size) {
-			$url = 'https://graph.facebook.com/' . $id . '/picture?' . $size;
+			$url = 'https://graph.facebook.com/v2.2/' . $id . '/picture?' . $size;
 			$url = apply_filters('al2fb_url', $url);
 			if (function_exists('curl_init') && !get_option(c_al2fb_option_nocurl)) {
 				$timeout = get_option(c_al2fb_option_timeout);
@@ -479,7 +484,7 @@ if (!class_exists('WPAL2Int')) {
 		static function Get_fb_profilelink($id) {
 			if (empty($id))
 				return '';
-			return 'http://www.facebook.com/profile.php?id=' . $id;
+			return 'https://www.facebook.com/app_scoped_user_id/' . $id;
 		}
 
 		static function Get_page_from_link_id($link_id) {
@@ -602,14 +607,16 @@ if (!class_exists('WPAL2Int')) {
 			$description = WPAL2Int::Convert_encoding($user_ID, $description);
 
 			// Get name
-			$name = html_entity_decode(get_the_title($post->ID), ENT_QUOTES, get_bloginfo('charset'));
+			$name = strip_tags(get_the_title($post->ID));
+			$name = html_entity_decode($name, ENT_QUOTES, get_bloginfo('charset'));
 			$name = WPAL2Int::Convert_encoding($user_ID, $name);
 			$name = apply_filters('al2fb_name', $name, $post);
 
 			// Get caption
 			$caption = '';
 			if (get_user_meta($user_ID, c_al2fb_meta_caption, true)) {
-				$caption = html_entity_decode(get_bloginfo('title'), ENT_QUOTES, get_bloginfo('charset'));
+				$caption = strip_tags(get_bloginfo('title'));
+				$caption = html_entity_decode($caption, ENT_QUOTES, get_bloginfo('charset'));
 				$caption = WPAL2Int::Convert_encoding($user_ID, $caption);
 			}
 			$caption = apply_filters('al2fb_caption', $caption, $post);
@@ -623,8 +630,10 @@ if (!class_exists('WPAL2Int')) {
 			$message = '';
 			if (get_user_meta($user_ID, c_al2fb_meta_msg, true)) {
 				$message = $excerpt;
-				if (empty($message))
-					$message = html_entity_decode(get_bloginfo('title'), ENT_QUOTES, get_bloginfo('charset'));
+				if (empty($message)) {
+					$message = strip_tags(get_bloginfo('title'));
+					$message = html_entity_decode($message, ENT_QUOTES, get_bloginfo('charset'));
+				}
 				$message = WPAL2Int::Convert_encoding($user_ID, $message);
 			}
 			$message = apply_filters('al2fb_message', $message, $post);
@@ -653,10 +662,10 @@ if (!class_exists('WPAL2Int')) {
 			);
 
 			// Add home link
-			$actions = array(
-				name => __('Website', c_al2fb_text_domain),
-				link => get_home_url());
-			$query_array['actions'] = json_encode($actions);
+			// $actions = array(
+			//	name => __('Website', c_al2fb_text_domain),
+			//	link => get_home_url());
+			// $query_array['actions'] = json_encode($actions);
 
 			// Add video
 			$video = WPAL2Facebook::Get_link_video($post, $user_ID);
@@ -676,17 +685,6 @@ if (!class_exists('WPAL2Int')) {
 			$icon = apply_filters('al2fb_icon', $icon, $post);
 			if ($icon)
 				$query_array['icon'] = $icon;
-
-			// Add share link (overwrites how link)
-			if (get_user_meta($user_ID, c_al2fb_meta_share_link, true)) {
-				// http://forum.developers.facebook.net/viewtopic.php?id=50049
-				// http://bugs.developers.facebook.net/show_bug.cgi?id=9075
-				$actions = array(
-					'name' => __('Share', c_al2fb_text_domain),
-					'link' => 'http://www.facebook.com/share.php?u=' . urlencode($link) . '&t=' . rawurlencode($name)
-				);
-				$query_array['actions'] = json_encode($actions);
-			}
 
 			// Get me info (needed for malformed link id's)
 			try {
@@ -714,7 +712,7 @@ if (!class_exists('WPAL2Int')) {
 					$token = WPAL2Int::Get_access_token_by_page($user_ID, $page_id);
 					if ($token) {
 						// Get URL
-						$url = 'https://graph.facebook.com/' . $page_id . (get_option(c_al2fb_option_uselinks) ? '/links' : '/feed');
+						$url = 'https://graph.facebook.com/v2.2/' . $page_id . (get_option(c_al2fb_option_uselinks) ? '/links' : '/feed');
 						$url = apply_filters('al2fb_url', $url);
 
 						// Add privacy option
@@ -738,6 +736,7 @@ if (!class_exists('WPAL2Int')) {
 						$query_array['access_token'] = $token;
 
 						// Build query
+						$query_array = apply_filters('al2fb_query', $query_array);
 						$query = http_build_query($query_array, '', '&');
 
 						// Log request
@@ -762,7 +761,7 @@ if (!class_exists('WPAL2Int')) {
 						$fb_link = json_decode($response);
 
 						// Workaround for some links
-						if (strpos($fb_link->id, '_') === false)
+						if (!empty($fb_link->id) && strpos($fb_link->id, '_') === false)
 							$fb_link->id = ($page_id == 'me' ? $me->id : $page_id) . '_' . $fb_link->id;
 
 						// Register link/date
@@ -816,7 +815,7 @@ if (!class_exists('WPAL2Int')) {
 			foreach ($link_ids as $link_id) {
 				// Do not disturb WordPress
 				try {
-					$url = 'https://graph.facebook.com/' . $link_id;
+					$url = 'https://graph.facebook.com/v2.2/' . $link_id;
 					$url = apply_filters('al2fb_url', $url);
 
 					// Decode link id
@@ -865,7 +864,7 @@ if (!class_exists('WPAL2Int')) {
 			// Do not disturb WordPress
 			try {
 				// Build request
-				$url = 'https://graph.facebook.com/' . $fb_comment_id;
+				$url = 'https://graph.facebook.com/v2.2/' . $fb_comment_id;
 				$url = apply_filters('al2fb_url', $url);
 				$query = http_build_query(array(
 					'access_token' => WPAL2Int::Get_access_token_by_post($post),
@@ -922,7 +921,7 @@ if (!class_exists('WPAL2Int')) {
 
 			// Do not disturb WordPress
 			try {
-				$url = 'https://graph.facebook.com/' . $link_id . '/comments';
+				$url = 'https://graph.facebook.com/v2.2/' . $link_id . '/comments';
 				$url = apply_filters('al2fb_url', $url);
 
 				$query_array = array(
@@ -978,7 +977,7 @@ if (!class_exists('WPAL2Int')) {
 
 			// Do not disturb WordPress
 			try {
-				$url = 'https://graph.facebook.com/' . $link_id . '/comments';
+				$url = 'https://graph.facebook.com/v2.2/' . $link_id . '/comments';
 				$url = apply_filters('al2fb_url', $url);
 
 				$query_array = array(
@@ -1123,6 +1122,7 @@ if (!class_exists('WPAL2Int')) {
 				// Get options
 				$layout = get_user_meta($user_ID, c_al2fb_meta_like_layout, true);
 				$faces = get_user_meta($user_ID, c_al2fb_meta_like_faces, true);
+				$share = get_user_meta($user_ID, c_al2fb_meta_like_share, true);
 				if ($box) {
 					$width = get_user_meta($user_ID, c_al2fb_meta_like_box_width, true);
 					$height = get_user_meta($user_ID, c_al2fb_meta_like_box_height, true);
@@ -1217,6 +1217,7 @@ if (!class_exists('WPAL2Int')) {
 					if (!$box)
 						$content .= ' layout="' . (empty($layout) ? 'standard' : $layout) . '"';
 					$content .= ' show_faces="' . ($faces ? 'true' : 'false') . '"';
+					$content .= ' share="' . ($share ? 'true' : 'false') . '"';
 					$content .= ' width="' . (empty($width) ? ($box ? '292' : '450') : $width) . '"';
 					if ($height)
 						$content .= ' height="' . $height . '"';
@@ -1401,7 +1402,7 @@ if (!class_exists('WPAL2Int')) {
 				$fields .= ",{'name':'first_name'}";
 				$fields .= ",{'name':'last_name'}";
 				$fields .= ",{'name':'email'}";
-				$fields .= ",{'name':'user_name','description':'" . __('WordPress user name', c_al2fb_text_domain) . "','type':'text'}";
+				$fields .= ",{'name':'user_name','description':'" . addslashes(__('WordPress user name', c_al2fb_text_domain)) . "','type':'text'}";
 				$fields .= ",{'name':'password'}]";
 
 				// Build content
@@ -1441,7 +1442,7 @@ if (!class_exists('WPAL2Int')) {
 				$rows = get_user_meta($user_ID, c_al2fb_meta_pile_rows, true);
 				$permissions = '';
 				if (get_option(c_al2fb_option_login_add_links))
-					$permissions .= 'read_stream,publish_stream,manage_pages,user_groups';
+					$permissions .= 'publish_stream,manage_pages';
 
 				// Build content
 				if ($appid) {
@@ -1538,7 +1539,7 @@ if (!class_exists('WPAL2Int')) {
 			else
 				try {
 					// Validate
-					$url = 'https://graph.facebook.com/' . $reg['user_id'];
+					$url = 'https://graph.facebook.com/v2.2/' . $reg['user_id'];
 					$url = apply_filters('al2fb_url', $url);
 					$query = http_build_query(array('access_token' => $reg['oauth_token']), '', '&');
 					$response = WPAL2Int::Request($url, $query, 'GET');
@@ -1623,22 +1624,16 @@ if (!class_exists('WPAL2Int')) {
 			header('Content-type: text/plain');
 			try {
 				// Check token
-				$url = 'https://graph.facebook.com/' . $_REQUEST['uid'];
+				$url = 'https://graph.facebook.com/v2.2/' . $_REQUEST['uid'];
 				$url = apply_filters('al2fb_url', $url);
 				$query = http_build_query(array('access_token' => $_REQUEST['token']), '', '&');
 				$response = WPAL2Int::Request($url, $query, 'GET');
 				$me = json_decode($response);
 
-				$c_al2fb_meta_facebook_id = c_al2fb_meta_facebook_id;
-				if (is_multisite()) {
-					global $blog_id;
-					$c_al2fb_meta_facebook_id = 'blog_' . $blog_id . '_' . $c_al2fb_meta_facebook_id;
-				}
-
 				// Workaround if no e-mail present
 				if (!empty($me) && empty($me->email)) {
 					$users = get_users(array(
-						'meta_key' => $c_al2fb_meta_facebook_id,
+						'meta_key' => c_al2fb_meta_facebook_id,
 						'meta_value' => $me->id
 					));
 					if (count($users) == 0) {
@@ -1654,7 +1649,7 @@ if (!class_exists('WPAL2Int')) {
 				if (!empty($me) && !empty($me->id)) {
 					// Find user by Facebook ID
 					$users = get_users(array(
-						'meta_key' => $c_al2fb_meta_facebook_id,
+						'meta_key' => c_al2fb_meta_facebook_id,
 						'meta_value' => $me->id
 					));
 
@@ -1936,7 +1931,13 @@ if (!class_exists('WPAL2Int')) {
 				}
 			}
 			else {
-				update_site_option(c_al2fb_option_multiple, $code);
+				$current_site = get_current_site();
+				$blog_details = get_blog_details($current_site->blog_id, true);
+				$main_site_url = strtolower(trailingslashit($blog_details->siteurl));
+				if ($code == md5($main_site_url . $count))
+					update_site_option(c_al2fb_option_multiple, $code);
+				else
+					update_site_option(c_al2fb_option_multiple, md5(WPAL2Int::Redirect_uri()));
 				if ($count > 1)
 					update_site_option(c_al2fb_option_multiple_count, $count);
 				else
@@ -1978,10 +1979,6 @@ if (!class_exists('WPAL2Int')) {
 				return
 					($code == md5(WPAL2Int::Redirect_uri()) ||
 					$code == md5(strtolower(WPAL2Int::Redirect_uri())));
-		}
-
-		static function Check_updates() {
-			return get_site_option(c_al2fb_option_multiple);
 		}
 
 		static function Get_multiple_url() {

@@ -7,7 +7,7 @@ function do_skin_install_local_package($package, $filename = '') {
 	global $wp_filesystem;
 
 	if ( empty($package) ) {
-		show_message( __('No skin Specified', 'flag') );
+		show_message( __('No skin Specified', 'flash-album-gallery') );
 		return false;
 	}
 
@@ -36,17 +36,17 @@ function do_skin_install_local_package($package, $filename = '') {
 
 	if ( is_wp_error($result) ) {
 		show_message($result);
-		show_message( __('Installation Failed', 'flag') );
+		show_message( __('Installation Failed', 'flash-album-gallery') );
 		return false;
 	} else {
-		show_message( __('The skin installed successfully.', 'flag') );
+		show_message( __('The skin installed successfully.', 'flash-album-gallery') );
 		$skin_file = basename($result);
 		$install_actions = apply_filters('install_skin_complete_actions', array(
-							'activate_skin' => '<a href="'.admin_url('admin.php?page=flag-skins&skin='.$skin_file).'" title="' . __('Activate this skin', 'flag') . '" target="_parent">' . __('Activate Skin', 'flag') . '</a>',
-							'skins_page' => '<a href="#'.$skin_file.'" title="' . __('Goto skin overview', 'flag') . '" target="_parent">' . __('Skin overview', 'flag') . '</a>'
+							'activate_skin' => '<a href="'.admin_url('admin.php?page=flag-skins&skin='.$skin_file).'" title="' . __('Activate this skin', 'flash-album-gallery') . '" target="_parent">' . __('Activate Skin', 'flash-album-gallery') . '</a>',
+							'skins_page' => '<a href="#'.$skin_file.'" title="' . __('Goto skin overview', 'flash-album-gallery') . '" target="_parent">' . __('Skin overview', 'flash-album-gallery') . '</a>'
 							), array(), $skin_file);
 		if ( ! empty($install_actions) ) {
-			//show_message('<strong>' . __('Actions:', 'flag') . '</strong> ' . implode(' | ', (array)$install_actions));
+			//show_message('<strong>' . __('Actions:', 'flash-album-gallery') . '</strong> ' . implode(' | ', (array)$install_actions));
 		}
 		return $result;
 	}
@@ -67,27 +67,27 @@ function wp_install_skin_local_package($package, $feedback = '') {
 		WP_Filesystem();
 
 	if ( ! is_object($wp_filesystem) )
-		return new WP_Error('fs_unavailable', __('Could not access filesystem.', 'flag'));
+		return new WP_Error('fs_unavailable', __('Could not access filesystem.', 'flash-album-gallery'));
 
 	if ( $wp_filesystem->errors->get_error_code() )
-		return new WP_Error('fs_error', __('Filesystem error', 'flag'), $wp_filesystem->errors);
+		return new WP_Error('fs_error', __('Filesystem error', 'flash-album-gallery'), $wp_filesystem->errors);
 
 	//Get the base skin folder
 	$flag_options = get_option('flag_options');
 	$skins_dir = $flag_options['skinsDirABS'];
 	if ( empty($skins_dir) )
-		return new WP_Error('fs_no_skins_dir', __('Unable to locate FlAGallery Skin directory.', 'flag'));
+		return new WP_Error('fs_no_skins_dir', __('Unable to locate FlAGallery Skin directory.', 'flash-album-gallery'));
 
 	//And the same for the Content directory.
 	$content_dir = $wp_filesystem->wp_content_dir();
 	if( empty($content_dir) )
-		return new WP_Error('fs_no_content_dir', __('Unable to locate WordPress Content directory (wp-content).', 'flag'));
+		return new WP_Error('fs_no_content_dir', __('Unable to locate WordPress Content directory (wp-content).', 'flash-album-gallery'));
 
 	$skins_dir = trailingslashit( $skins_dir );
 	$content_dir = trailingslashit( $content_dir );
 
 	if ( empty($package) )
-		return new WP_Error('no_package', __('Install package not available.', 'flag'));
+		return new WP_Error('no_package', __('Install package not available.', 'flash-album-gallery'));
 
 	$working_dir = $content_dir . 'upgrade/' . basename($package, '.zip');
 
@@ -95,7 +95,7 @@ function wp_install_skin_local_package($package, $feedback = '') {
 	if ( $wp_filesystem->is_dir($working_dir) )
 		$wp_filesystem->delete($working_dir, true);
 
-	apply_filters('install_feedback', __('Unpacking the skin package', 'flag'));
+	apply_filters('install_feedback', __('Unpacking the skin package', 'flash-album-gallery'));
 	// Unzip package to working directory
 	$result = unzip_file($package, $working_dir);
 
@@ -112,10 +112,10 @@ function wp_install_skin_local_package($package, $feedback = '') {
 
 	if( $wp_filesystem->exists( $skins_dir . $filelist[0] ) ) {
 		$wp_filesystem->delete($working_dir, true);
-		return new WP_Error('install_folder_exists', __('Folder already exists.', 'flag'), $filelist[0] );
+		return new WP_Error('install_folder_exists', __('Folder already exists.', 'flash-album-gallery'), $filelist[0] );
 	}
 
-	apply_filters('install_feedback', __('Installing the skin', 'flag'));
+	apply_filters('install_feedback', __('Installing the skin', 'flash-album-gallery'));
 	// Copy new version of skin into place.
 	$result = copy_dir($working_dir, $skins_dir);
 	if ( is_wp_error($result) ) {
@@ -139,5 +139,3 @@ function wp_install_skin_local_package($package, $feedback = '') {
 	//Return the skin files name.
 	return  $skins_dir.$folder . '/';
 }
-
-?>

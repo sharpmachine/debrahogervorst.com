@@ -72,13 +72,13 @@ class flagGallery {
 	}
 
 	/**
-	* flagGallery::get_thumbnail_folder()
+	* flagGallery::create_webview_folder()
 	* 
 	* @param mixed $gallerypath
 	* @param bool $include_Abspath
 	* @return string $foldername
 	*/
-	static function create_thumbnail_folder($gallerypath, $include_Abspath = TRUE) {
+	static function create_webview_folder($gallerypath, $include_Abspath = TRUE) {
 		if (!$include_Abspath) {
 			$gallerypath = WINABSPATH . $gallerypath;
 		}
@@ -87,26 +87,65 @@ class flagGallery {
 			return FALSE;
 		}
 		
+		if (is_dir($gallerypath . '/webview/')) {
+			return '/webview/';
+		}
+		
+		if (is_admin()) {
+			if (!is_dir($gallerypath . '/webview/')) {
+				if ( !wp_mkdir_p($gallerypath . '/webview/') ) {
+					if (SAFE_MODE) {
+						flagAdmin::check_safemode($gallerypath . '/webview/');
+					} else {
+						flagGallery::show_error(__('Unable to create directory ', 'flash-album-gallery') . $gallerypath . '/webview !');
+					}
+					return FALSE;
+				}
+
+				return '/webview/';
+			}
+		}
+		
+		return FALSE;
+		
+	}
+
+	/**
+	* flagGallery::get_thumbnail_folder()
+	*
+	* @param mixed $gallerypath
+	* @param bool $include_Abspath
+	* @return string $foldername
+	*/
+	static function create_thumbnail_folder($gallerypath, $include_Abspath = TRUE) {
+		if (!$include_Abspath) {
+			$gallerypath = WINABSPATH . $gallerypath;
+		}
+
+		if (!file_exists($gallerypath)) {
+			return FALSE;
+		}
+
 		if (is_dir($gallerypath . '/thumbs/')) {
 			return '/thumbs/';
 		}
-		
+
 		if (is_admin()) {
 			if (!is_dir($gallerypath . '/thumbs/')) {
 				if ( !wp_mkdir_p($gallerypath . '/thumbs/') ) {
 					if (SAFE_MODE) {
-						flagAdmin::check_safemode($gallerypath . '/thumbs/');	
+						flagAdmin::check_safemode($gallerypath . '/thumbs/');
 					} else {
-						flagGallery::show_error(__('Unable to create directory ', 'flag') . $gallerypath . '/thumbs !');
+						flagGallery::show_error(__('Unable to create directory ', 'flash-album-gallery') . $gallerypath . '/thumbs !');
 					}
 					return FALSE;
 				}
 				return '/thumbs/';
 			}
 		}
-		
+
 		return FALSE;
-		
+
 	}
 
 	/**
@@ -197,7 +236,7 @@ class flagGallery {
 			foreach ($sizes as $size){
 				// very, very rough estimation
 				if ($freeMemory < round( $size['width'] * $size['height'] * 5.09 )) {
-                	$result = sprintf(  __( 'Note : Based on your server memory limit you should not upload larger images then <strong>%d x %d</strong> pixel', 'flag' ), $size['width'], $size['height']); 
+                	$result = sprintf(  __( 'Note : Based on your server memory limit you should not upload larger images then <strong>%d x %d</strong> pixel', 'flash-album-gallery' ), $size['width'], $size['height']);
 					return $result;
 				}
 			}
@@ -214,7 +253,7 @@ class flagGallery {
 	static function fileinfo( $name ) {
 		
 		//Sanitizes a filename replacing whitespace with dashes
-		$name = sanitize_file_name($name);
+		$name = sanitize_flagname($name);
 		
 		//get the parts of the name
 		$filepart = pathinfo ( strtolower($name) );
@@ -227,9 +266,12 @@ class flagGallery {
 			$filepart['filename'] = substr($filepart['basename'],0 ,strlen($filepart['basename']) - (strlen($filepart['extension']) + 1) );
 		
 		$filepart['filename'] = sanitize_title_with_dashes( $filepart['filename'] );
-		
+
+		if ( empty($filepart['filename']) )
+			$filepart['filename'] = str_replace(array(' ',':'), array('_',''), current_time('mysql'));
+
 		//extension jpeg will not be recognized by the slideshow, so we rename it
-		$filepart['extension'] = ($filepart['extension'] == 'jpeg') ? 'jpg' : $filepart['extension'];
+		$filepart['extension'] = (empty($filepart['extension']) || $filepart['extension'] == 'jpeg') ? 'jpg' : strtolower($filepart['extension']);
 		
 		//combine the new file name
 		$filepart['basename'] = $filepart['filename'] . '.' . $filepart['extension'];
@@ -277,13 +319,13 @@ class flagGallery {
 
 	static function saveFile($sName,$sContent,$mode='w+') {
 		if (!$dFile=fopen($sName, $mode)) {
-			flagGallery::show_error(__("Can't create/open file '","flag").$sName."'.");
+			flagGallery::show_error(__("Can't create/open file '","flash-album-gallery").$sName."'.");
 			exit;
 		}
 		flock ($dFile,LOCK_EX);
 		ftruncate ($dFile,0);
 		if ( $result=fwrite($dFile,$sContent) === FALSE) {
-	        flagGallery::show_error(__("Can't write data to file '","flag").$sName."'.");
+	        flagGallery::show_error(__("Can't write data to file '","flash-album-gallery").$sName."'.");
 	        exit;
 	    }
 		fflush ($dFile);
@@ -320,16 +362,19 @@ class flagGallery {
 	}
 	
 	static function flagSaveWpMedia() {
+		global $wpdb;
 	   	if ( !empty($_POST['item_a']) )
 	    foreach ( $_POST['item_a'] as $item_id => $item ) {
 			$post = $_post = get_post($item_id, ARRAY_A);
 			$postmeta = get_post_meta($item_id, 'thumbnail', true);
 			$postlink = get_post_meta($item_id, 'link', true);
 			$postpreview = get_post_meta($item_id, 'preview', true);
-			if ( isset($item['post_content']) )
-				$post['post_content'] = $item['post_content'];
-			if ( isset($item['post_title']) )
-				$post['post_title'] = $item['post_title'];
+			if(isset($item['post_content'])){
+				$post['post_content'] = esc_sql($item['post_content']);
+			}
+			if(isset($item['post_title'])){
+				$post['post_title'] = esc_sql($item['post_title']);
+			}
 
 			$post = apply_filters('attachment_fields_to_save', $post, $item);
 
@@ -356,5 +401,3 @@ class flagGallery {
 	}
 
 }
-
-?>

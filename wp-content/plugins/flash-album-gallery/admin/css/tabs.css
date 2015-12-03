@@ -3,7 +3,7 @@
 	border-style:solid;
 	border-width:1px;
 	padding:2px;
-	margin-top:45px;
+	margin-top:60px;
 
 	-moz-border-radius-topright: 6px;
 	-khtml-border-top-right-radius: 6px;
@@ -18,11 +18,11 @@
 	display: none;
 	padding:0 15px;
 }
-.cptab h2 {margin-top:-85px; margin-bottom:45px;}
+.cptab h2 {margin-top:-65px; margin-bottom:45px;}
 
 #tabs{
 	display: block;
-	background:#F1F1F1 none repeat scroll 0%;
+	background:#dedede none repeat scroll 0%;
 	font-size:14px;
 	overflow:hidden;
 
@@ -49,7 +49,7 @@
 .tabs li {
     float: left;
     padding: 6px 5px;
-    min-width: 84px; /* be nice to Opera */
+    min-width: 50px; /* be nice to Opera */
     margin: 2px 2px 0px 1px !important;
 	text-decoration: none;
 	list-style: none;

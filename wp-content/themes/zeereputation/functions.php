@@ -95,7 +95,10 @@ function themezee_include_files() {
 	// include custom Javascript and custom CSS Handler files
 	locate_template('/includes/js/jscript.php', true);
 	locate_template('/includes/css/csshandler.php', true);
-
+	
+	// include Theme Hooks
+	locate_template('/includes/theme-hooks.php', true);
+	
 	// include Widget Files
 	locate_template('/includes/widgets/theme-widget-ads.php', true);
 	locate_template('/includes/widgets/theme-widget-socialmedia.php', true);
@@ -138,7 +141,7 @@ function themezee_default_menu() {
 
 // Display Credit Link Function
 function themezee_credit_link() { ?>
-	<a href="http://themezee.com/"><?php _e('Theme by ThemeZee', 'themezee_lang'); ?></a>
+	<a href="http://themezee.com/themes/zeereputation/"><?php _e('zeeReputation Theme', 'themezee_lang'); ?></a>
 <?php
 }
 
@@ -151,26 +154,24 @@ function themezee_excerpt_more($more) {
 
 
 // Add Postmeta Data
-add_action( 'themezee_display_postmeta_index', 'themezee_postmeta_content' ); 
-add_action( 'themezee_display_postmeta_single', 'themezee_postmeta_content' ); 
-
-function themezee_postmeta_content() { ?>
+if ( ! function_exists( 'themezee_display_postmeta' ) ):
+function themezee_display_postmeta() { ?>
 	<span class="date"><a href="<?php the_permalink() ?>"><?php the_time(get_option('date_format')); ?></a> </span>
 	<span class="author"> / <?php the_author_posts_link(); ?> </span>
 	<span class="comment"> / <?php comments_popup_link( __('No comments', 'themezee_lang'),__('One comment','themezee_lang'),__('% comments','themezee_lang') ); ?></span>
 <?php 
 	edit_post_link(__( 'Edit', 'themezee_lang' ), ' / ');
 }
+endif;
 
 
 // Add Postinfo Data
-add_action( 'themezee_display_postinfo_index', 'themezee_postinfo_content' ); 
-add_action( 'themezee_display_postinfo_single', 'themezee_postinfo_content' );
-
-function themezee_postinfo_content() { ?>
+if ( ! function_exists( 'themezee_display_postinfo' ) ):
+function themezee_display_postinfo() { ?>
 	<span class="folder"><?php _e('Categories: ', 'themezee_lang'); ?> <?php the_category(', ') ?> </span>
 	<span class="tag"> / <?php if (get_the_tags()) the_tags(__('Tags: ', 'themezee_lang'), ', '); ?></a></span>
 <?php 
 }
+endif;
 
 ?>

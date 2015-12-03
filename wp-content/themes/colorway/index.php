@@ -8,13 +8,10 @@
  * E.g., it puts together the home page when no home.php file exists.
  * Learn more: http://codex.wordpress.org/Template_Hierarchy
  *
- * @package WordPress
- * @subpackage Colorway
- * @since Colorway 1.0
  */
 ?>
 <?php get_header(); ?>
-<!--Start Content Grid-->
+<!--Start Content Grid--> 
 <div class="grid_24 content">
     <div class="grid_16 alpha">
         <div class="content-wrap">

@@ -2,7 +2,7 @@
 if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) { 	die('You are not allowed to call this page directly.'); }
 
 function get_playlist_data( $playlist_file ) {
-	global $wpdb;	
+
 	$playlist_content = file_get_contents($playlist_file);
 
 	$playlist_data['title'] = flagGallery::flagGetBetween($playlist_content,'<title><![CDATA[',']]></title>');
@@ -64,25 +64,35 @@ function flagSavePlaylist($title,$descr,$data,$file='',$skinaction='') {
 	if(!trim($title)) {
 		$title = 'default';
 	}
+	$title = htmlspecialchars_decode(stripslashes($title), ENT_QUOTES);
+	$descr = htmlspecialchars_decode(stripslashes($descr), ENT_QUOTES);
 	if (!$file) {
-		$file = sanitize_title($title);
+		$file = sanitize_flagname($title);
 	}
 	if(!is_array($data))
 		$data = explode(',', $data);
 
 	$flag_options = get_option('flag_options');
-    $skin = isset($_POST['skinname'])? $_POST['skinname'] : 'music_default';
+    $skin = isset($_POST['skinname'])? sanitize_flagname($_POST['skinname']) : 'music_default';
 	if(!$skinaction) {
-	    $skinaction = isset($_POST['skinaction'])? $_POST['skinaction'] : 'update';
+	    $skinaction = isset($_POST['skinaction'])? sanitize_key($_POST['skinaction']) : 'update';
 	}
 	$skinpath = trailingslashit( $flag_options['skinsDirABS'] ).$skin;
 	$playlistPath = ABSPATH.$flag_options['galleryPath'].'playlists/'.$file.'.xml';
+	$settings = '';
 	if( file_exists($playlistPath) && ($skin == $skinaction) ) {
 		$settings = file_get_contents($playlistPath);
-	} else {
+	} elseif( file_exists($skinpath . "/settings/settings.xml") ) {
 		$settings = file_get_contents($skinpath . "/settings/settings.xml");
+	} else {
+		flagGallery::show_message(__("Can't find skin settings", 'flash-album-gallery'));
+		return;
 	}
 	$properties = flagGallery::flagGetBetween($settings,'<properties>','</properties>');
+	if(empty($properties)) {
+		flagGallery::show_message(__("Can't find skin settings", 'flash-album-gallery'));
+		return;
+	}
 
 	if(count($data)) {
 		$content = '<gallery>
@@ -116,34 +126,34 @@ function flagSavePlaylist($title,$descr,$data,$file='',$skinaction='') {
 		$flag_options = get_option('flag_options');
 		if(wp_mkdir_p(ABSPATH.$flag_options['galleryPath'].'playlists/')) {
 			if( flagGallery::saveFile($playlistPath,$content,'w') ){
-				flagGallery::show_message(__('Playlist Saved Successfully','flag'));
+				flagGallery::show_message(__('Playlist Saved Successfully','flash-album-gallery'));
 			}
 		} else {
-			flagGallery::show_message(__('Create directory please:','flag').'"/'.$flag_options['galleryPath'].'playlists/"');
+			flagGallery::show_message(__('Create directory please:','flash-album-gallery').'"/'.$flag_options['galleryPath'].'playlists/"');
 		}
 	}
 }
 
 function flagSavePlaylistSkin($file) {
-	global $wpdb;
+
+	$file = sanitize_flagname($file);
 	$flag_options = get_option('flag_options');
 	$playlistPath = ABSPATH.$flag_options['galleryPath'].'playlists/'.$file.'.xml';
 	// Save options
-	$title = $_POST['playlist_title'];
-	$descr = $_POST['playlist_descr'];
+	$title = esc_html($_POST['playlist_title']);
+	$descr = esc_html($_POST['playlist_descr']);
 	$items = get_playlist_data($playlistPath);
 	$data = $items['items'];
 	flagSavePlaylist($title,$descr,$data,$file,$skinaction='update');
 }
 
 function flag_playlist_delete($playlist) {
+	$playlist = sanitize_flagname($playlist);
 	$flag_options = get_option('flag_options');
 	$playlistXML = ABSPATH.$flag_options['galleryPath'].'playlists/'.$playlist.'.xml';
 	if(file_exists($playlistXML)){
 		if(unlink($playlistXML)) {
-			flagGallery::show_message("'".$playlist.".xml' ".__('deleted','flag'));
+			flagGallery::show_message("'".$playlist.".xml' ".__('deleted','flash-album-gallery'));
 		}
 	}
 }
-
-?>

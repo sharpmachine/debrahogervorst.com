@@ -33,14 +33,6 @@ class flagdb {
 	var $paged;
 
 	/**
-	 * PHP4 compatibility layer for calling the PHP5 constructor.
-	 * 
-	 */
-	function flagdb() {
-		return $this->__construct();
-	}
-
-	/**
 	 * Init the Database Abstraction layer for FlAGallery
 	 * 
 	 */	
@@ -73,20 +65,25 @@ class flagdb {
 	 * @param int $limit number of paged galleries, 0 shows all galleries
 	 * @param int $start the start index for paged galleries
 	 * @param bool|int $exclude
+	 * @param bool|int $draft
 	 * @return array $galleries
 	 */
-    function find_all_galleries($order_by = 'gid', $order_dir = 'ASC', $counter = false, $limit = 0, $start = 0, $exclude = 0) {
+  function find_all_galleries($order_by = '', $order_dir = '', $counter = false, $limit = 0, $start = 0, $exclude = 0, $draft = false) {
 		/** @var $wpdb wpdb */
-		global $wpdb; 
-		
-        $exclude_clause = ($exclude) ? ' AND exclude<>1 ' : '';
+		global $wpdb;
+
+		$flag_options = get_option('flag_options');
+		if(empty($order_by)){ $order_by = $flag_options['albSort']; }
+		if(empty($order_dir)){ $order_dir = $flag_options['albSortDir']; }
+		$exclude_clause = ($exclude) ? ' AND exclude<>1 ' : '';
+    $draft_clause = ($draft || (get_option( 'flag_db_version' ) < 2.75)) ? '' : 'WHERE status=0';
 		$order_dir = ( $order_dir == 'DESC') ? 'DESC' : 'ASC';
 		if( !in_array($order_by, array('title','rand')) ) {
 			$order_by = 'gid';
 		}
 		if( $order_by == 'rand') $order_by = 'RAND()';
 		$limit_by  = ( $limit > 0 ) ? 'LIMIT ' . intval($start) . ',' . intval($limit) : '';
-		$this->galleries = $wpdb->get_results( "SELECT SQL_CALC_FOUND_ROWS * FROM $wpdb->flaggallery ORDER BY {$order_by} {$order_dir} {$limit_by}", OBJECT_K );
+		$this->galleries = $wpdb->get_results( "SELECT SQL_CALC_FOUND_ROWS * FROM $wpdb->flaggallery {$draft_clause} ORDER BY {$order_by} {$order_dir} {$limit_by}", OBJECT_K );
 		
 		// Count the number of galleries and calculate the pagination
 		if ($limit > 0) {
@@ -100,7 +97,7 @@ class flagdb {
 		
         // get the galleries information    
         foreach ($this->galleries as $key => $value) {
-            $galleriesID[] = $key;
+            $galleriesID[] = intval($key);
             // init the counter values
             $this->galleries[$key]->counter = 0;
             wp_cache_add($key, $this->galleries[$key], 'flag_gallery');      
@@ -132,10 +129,13 @@ class flagdb {
 	 * @param string $order_dir
 	 * @return object $albums
 	 */
-    function find_all_albums($order_by = 'id', $order_dir = 'DESC') {
+	function find_all_albums($order_by = 'id', $order_dir = 'DESC') {
 		/** @var $wpdb wpdb */
 		global $wpdb;
-		
+
+		if(!in_array($order_by, array('id','name'))){
+			$order_by = 'id';
+		}
 		$order_dir = ( $order_dir == 'DESC') ? 'DESC' : 'ASC';
 		$albums = $wpdb->get_results( "SELECT * FROM $wpdb->flagalbum ORDER BY {$order_by} {$order_dir}", OBJECT_K );
 		return $albums;
@@ -147,10 +147,10 @@ class flagdb {
 	 * @param $id
 	 * @return object $albums
 	 */
-    function get_album($id) {
+	function get_album($id) {
 		/** @var $wpdb wpdb */
 		global $wpdb;
-		$id = $wpdb->escape($id);
+		$id = esc_sql($id);
 		$albums = $wpdb->get_var( "SELECT categories FROM $wpdb->flagalbum WHERE id = '{$id}'" );
 		return $albums;
 	}
@@ -209,7 +209,11 @@ class flagdb {
 
 		// Say no to any other value
 		$order_dir = ( $order_dir == 'DESC') ? 'DESC' : 'ASC';
-		$order_by  = ( empty($order_by) ) ? 'tt.sortorder' : 'tt.'.$order_by;
+		if(in_array($order_by, array('sortorder','pid','filename','alttext','imagedate','hitcounter','total_votes','rand()'))){
+			$order_by= 'tt.'.$order_by;
+		} else {
+			$order_by  = 'tt.sortorder';
+		}
 		if($order_by == 'tt.rand()'){
 			$order_by = 'rand()';
 			$order_dir = '';
@@ -254,7 +258,7 @@ class flagdb {
 	 * @param bool|int $exclude
 	 * @return array containing the flagImage objects representing the images in the gallery.
 	 */
-    static function get_ids_from_gallery($id, $order_by = 'sortorder', $order_dir = 'ASC', $exclude = 0) {
+  static function get_ids_from_gallery($id, $order_by = 'sortorder', $order_dir = 'ASC', $exclude = 0) {
 
 		/** @var $wpdb wpdb */
 		global $wpdb;
@@ -264,13 +268,21 @@ class flagdb {
         
 		// Say no to any other value
 		$order_dir = ( $order_dir == 'DESC') ? 'DESC' : 'ASC';		
-		$order_by  = ( empty($order_by) ) ? 'sortorder' : $order_by;
-				
+		if(in_array($order_by, array('sortorder','pid','filename','alttext','imagedate','hitcounter','total_votes','rand()'))){
+			$order_by= 'tt.'.$order_by;
+		} else {
+			$order_by  = 'tt.sortorder';
+		}
+		if($order_by == 'tt.rand()'){
+			$order_by = 'rand()';
+			$order_dir = '';
+		}
+
 		// Query database
 		if( is_numeric($id) )
-			$result = $wpdb->get_col( $wpdb->prepare( "SELECT tt.pid FROM $wpdb->flaggallery AS t INNER JOIN $wpdb->flagpictures AS tt ON t.gid = tt.galleryid WHERE t.gid = %d $exclude_clause ORDER BY tt.{$order_by} $order_dir", $id ) );
+			$result = $wpdb->get_col( $wpdb->prepare( "SELECT tt.pid FROM $wpdb->flaggallery AS t INNER JOIN $wpdb->flagpictures AS tt ON t.gid = tt.galleryid WHERE t.gid = %d $exclude_clause ORDER BY $order_by $order_dir", $id ) );
 		else
-			$result = $wpdb->get_col( $wpdb->prepare( "SELECT tt.pid FROM $wpdb->flaggallery AS t INNER JOIN $wpdb->flagpictures AS tt ON t.gid = tt.galleryid WHERE t.name = %s $exclude_clause ORDER BY tt.{$order_by} $order_dir", $id ) );
+			$result = $wpdb->get_col( $wpdb->prepare( "SELECT tt.pid FROM $wpdb->flaggallery AS t INNER JOIN $wpdb->flagpictures AS tt ON t.gid = tt.galleryid WHERE t.name = %s $exclude_clause ORDER BY $order_by $order_dir", $id ) );
 
 		return $result;		
 	}	
@@ -305,9 +317,7 @@ class flagdb {
 		/** @var $wpdb wpdb */
 		global $wpdb;
 		
-		$result = $wpdb->query(
-			  "INSERT INTO $wpdb->flagpictures (galleryid, filename, description, alttext, exclude) VALUES "
-			. "('$gid', '$filename', '$desc', '$alttext', '$exclude');");
+		$result = $wpdb->query( $wpdb->prepare("INSERT INTO {$wpdb->flagpictures} (galleryid, filename, description, alttext, exclude) VALUES ('%d','%s','%s','%s','%d')", $gid, $filename, $desc, $alttext, $exclude));
 		$pid = (int) $wpdb->insert_id;
         wp_cache_delete($gid, 'flag_gallery');
 		
@@ -345,7 +355,7 @@ class flagdb {
 		// create the sql parameter "name = value"
 		foreach ($update as $key => $value)
 			if ($value)
-				$sql[] = $key . " = '" . $value . "'";
+				$sql[] = $key . " = '" . esc_sql($value) . "'";
 		
 		// create the final string
 		$sql = implode(', ', $sql);
@@ -405,6 +415,7 @@ class flagdb {
 		$order_clause = ($order == 'RAND') ? 'ORDER BY rand() ' : ' ORDER BY t.pid ASC' ;
 		
 		if ( is_array($pids) ) {
+			$pids = array_filter($pids, 'intval');
 			$id_list = "'" . implode("', '", $pids) . "'";
 			
 			// Save Query database
@@ -545,16 +556,17 @@ class flagdb {
 		
         // Check for the exclude setting
         $exclude_clause = ($exclude) ? ' AND tt.exclude != 1 ' : '';
-        
+				$draft_clause = (get_option( 'flag_db_version' ) < 2.75) ? '' : 'AND t.status == 0';
+
 		$number = (int) $number;
 		$galleryID = (int) $galleryID;
 		$images = array();
 		
 		// Query database
 		if ($galleryID == 0)
-			$result = $wpdb->get_results("SELECT t.*, tt.* FROM $wpdb->flaggallery AS t INNER JOIN $wpdb->flagpictures AS tt ON t.gid = tt.galleryid WHERE 1=1 $exclude_clause ORDER by rand() limit $number");
+			$result = $wpdb->get_results("SELECT t.*, tt.* FROM {$wpdb->flaggallery} AS t INNER JOIN {$wpdb->flagpictures} AS tt ON t.gid = tt.galleryid WHERE 1=1 {$draft_clause} {$exclude_clause} ORDER by rand() limit {$number}");
 		else
-			$result = $wpdb->get_results("SELECT t.*, tt.* FROM $wpdb->flaggallery AS t INNER JOIN $wpdb->flagpictures AS tt ON t.gid = tt.galleryid WHERE t.gid = $galleryID $exclude_clause ORDER by rand() limit {$number}");
+			$result = $wpdb->get_results("SELECT t.*, tt.* FROM {$wpdb->flaggallery} AS t INNER JOIN {$wpdb->flagpictures} AS tt ON t.gid = tt.galleryid WHERE t.gid = {$galleryID} {$exclude_clause} ORDER by rand() limit {$number}");
 		
 		// Return the object from the query result
 		if ($result) {
@@ -597,7 +609,7 @@ class flagdb {
                 $searchand = ' AND ';
             }
             
-            $term = $wpdb->escape($request);
+            $term = esc_sql($request);
             if (count($search_terms) > 1 && $search_terms[0] != $request )
                 $search .= " OR (tt.description LIKE '{$n}{$term}{$n}') OR (tt.alttext LIKE '{$n}{$term}{$n}') OR (tt.filename LIKE '{$n}{$term}{$n}')";
 
@@ -637,7 +649,7 @@ class flagdb {
 		// If a search pattern is specified, load the posts that match
         if ( !empty($filename) ) {
             // added slashes screw with quote grouping when done early, so done later
-            $term = $wpdb->escape($filename);
+            $term = esc_sql($filename);
             
             if ( is_numeric($galleryID) ) {
             	$id = (int) $galleryID;
@@ -684,6 +696,21 @@ class flagdb {
         return $result;
     }
 
+		function update_picture($args) {
+			global $wpdb;
+
+			$pid =intval($args['pid']);
+			$alttext = esc_sql($args['alttext']);
+			$desc = esc_sql($args['description']);
+			$link = esc_sql($args['link']);
+			$sortorder = intval($args['sortorder']);
+			$exclude = intval($args['exclude']);
+
+			$result = $wpdb->query( "UPDATE $wpdb->flagpictures SET alttext = '$alttext', description = '$desc', link = '$link', sortorder = $sortorder, exclude = $exclude WHERE pid = $pid");
+
+			return $result;
+		}
+
 }
 endif;
 
@@ -693,6 +720,5 @@ if ( ! isset($GLOBALS['flagdb']) ) {
      * @global object $flagdb Creates a new flagdb object
      */
     unset($GLOBALS['flagdb']);
-    $GLOBALS['flagdb'] =& new flagdb();
+    $GLOBALS['flagdb'] = new flagdb();
 }
-?>

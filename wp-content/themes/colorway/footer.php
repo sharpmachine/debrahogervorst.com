@@ -23,8 +23,8 @@
                 </ul>                
             </div>
         </div>
-        <div class="grid_14 omega">
-            <div class="right-navi">
+        <div class="grid_4">
+            <div class="social-icons">
                 <?php if (inkthemes_get_option('colorway_twitter') != '') { ?>
                     <a href="<?php echo inkthemes_get_option('colorway_twitter'); ?>"><img src="<?php echo get_template_directory_uri(); ?>/images/twitter-icon.png" alt="twitter" title="Twitter"/></a>
                 <?php } else { ?>
@@ -47,9 +47,12 @@
                 <?php } ?>
                 <?php if (inkthemes_get_option('colorway_digg') != '') { ?>
                     <a href="<?php echo inkthemes_get_option('colorway_digg'); ?>"><img src="<?php echo get_template_directory_uri(); ?>/images/digg.png" alt="digg" title="digg"/></a>
-                <?php } else { ?>
                 <?php } ?>
-                <p><a href="<?php echo esc_url('http://www.inkthemes.com'); ?>"><?php _e('Colorway Wordpress Theme</a> by InkThemes.com', 'colorway'); ?></p>
+            </div>
+        </div>
+        <div class="grid_10 omega">
+            <div class="right-navi">               
+                <p><a href="<?php echo esc_url('http://www.inkthemes.com'); ?>"  rel="nofollow"><?php _e('Colorway Wordpress Theme</a> by InkThemes.com', 'colorway'); ?></p>
             </div> 
         </div>
     </div>

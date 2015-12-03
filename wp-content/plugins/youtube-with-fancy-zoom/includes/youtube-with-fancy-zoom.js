@@ -1,6 +1,6 @@
 /**
  *     Youtube with fancy zoom
- *     Copyright (C) 2011  www.gopipulse.com
+ *     Copyright (C) 2011 - 2014  www.gopiplus.com
  * 
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by

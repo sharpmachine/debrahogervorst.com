@@ -2,7 +2,7 @@
 /*
 Plugin Name: Cool Video Gallery
 Description: Cool Video Gallery, a video gallery plugin to manage video galleries. Feature to upload videos, attach Youtube videos, media files from library and group them into galleries is available. Option to play videos using Fancybox. Supports '.flv', '.mp4', '.m4v', '.mov' and '.mp3' files playback. 
-Version: 1.8
+Version: 1.9
 Author: Praveen Rajan
 License: GPLv2
 	Copyright 2013  Praveen Rajan

@@ -4,10 +4,10 @@
 if ( empty( $_SERVER['HTTP_REFERER'] ) ) {
 	die('0');
 } else {
-	$ref = $_SERVER['HTTP_REFERER'];
-	if ( false === strpos( $ref, get_home_url() ) ) {
-		$homeUrl = get_home_url();
-		echo 'referer:'.$_SERVER['HTTP_REFERER']."\n";
+	$homeUrl = strtolower(get_home_url());
+	$ref = strtolower($_SERVER['HTTP_REFERER']);
+	if ( false === strpos( $ref, $homeUrl ) ) {
+		echo 'referer:'.$ref."\n";
 		echo 'homeUrl:'.$homeUrl."\n";
 		die('-1');
 	}
@@ -29,7 +29,7 @@ if(!$upd['pid']){
 if( $upd['pid'] && ($upd['hit'] || $upd['vote']) ) {
 	flag_update_counter($upd);
 }
-$pid = $upd['pid'];
+$pid = intval($upd['pid']);
 /** @var $wpdb wpdb */
 global $wpdb;
 $result = $wpdb->get_results( "SELECT hitcounter, total_votes FROM $wpdb->flagpictures WHERE `pid` = $pid" );
@@ -76,4 +76,3 @@ function flag_update_counter($upd) {
 	}
 
 }
-?>

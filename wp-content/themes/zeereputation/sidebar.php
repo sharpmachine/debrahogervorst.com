@@ -1,7 +1,7 @@
 <?php $options = get_option('themezee_options'); ?>
 
-<div id="sidebar">	
-	
+<div id="sidebar">
+	<?php themezee_widgets_before(); // hook before sidebar widgets ?>
 	<ul>
 
 <?php
@@ -22,3 +22,5 @@ else : ?>
 <?php endif; ?>
 	
 	</ul>
+	<?php themezee_widgets_after(); // hook after sidebar widgets ?>
+</div>

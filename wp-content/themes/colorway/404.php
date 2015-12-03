@@ -13,10 +13,10 @@ get_header();
     <div class="content-wrap">
         <div class="fullwidth">
             <div class="content-info">
-            <?php if (function_exists('inkthemes_breadcrumbs')) inkthemes_breadcrumbs(); ?>
+                <?php if (function_exists('inkthemes_breadcrumbs')) inkthemes_breadcrumbs(); ?>
             </div>
-            <h1> <?php echo ('Not Found'); ?> </h1>
-            <p> <?php echo ( 'Apologies, but the page you requested could not be found. Perhaps searching will help.'); ?> </p>
+            <h1> <?php _e('Not Found', 'colorway'); ?> </h1>
+            <p> <?php _e('Apologies, but the page you requested could not be found. Perhaps searching will help.', 'colorway'); ?> </p>
             <?php get_search_form(); ?>
         </div>
     </div>

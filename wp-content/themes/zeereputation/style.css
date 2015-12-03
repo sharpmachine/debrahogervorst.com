@@ -1,8 +1,8 @@
 /*======================================
 Theme Name: zeeReputation
-Theme URI: http://themezee.com/zeereputation
+Theme URI: http://themezee.com/themes/zeereputation/
 Description: A two column theme for personal use with great features:  Custom Logo, Several Color Schemes, Custom Color via Colorpicker, Content Slider, 125x125 Banner Widget, Dropdown Navigation, Social Media Buttons and more
-Version: 1.3
+Version: 1.4.1
 Author: ThemeZee
 Author URI: http://themezee.com
 Tags:  two-columns, light, custom-background, sticky-post, custom-menu, threaded-comments, translation-ready, theme-options, fixed-width, custom-colors, custom-header, editor-style, left-sidebar, white, red
@@ -91,6 +91,12 @@ a:hover, a:active {
 	font-family: Times New Roman, Arial, Verdana;
 	font-weight: bold;
 }
+#sidebar .widgettitle a:link, #sidebar .widgettitle a:visited {
+	text-decoration: underline;
+}
+#sidebar .widgettitle a:hover, #sidebar .widgettitle a:active {
+	text-decoration: none;
+}
 #sidebar ul li {
 	margin: 5px 10px;
 }
@@ -109,7 +115,7 @@ a:hover, a:active {
 }
 #sidebar ul li ul {
 	list-style: square inside !important;
-	color: #777 !important;
+	color: #999 !important;
 }
 #sidebar ul li ul a:hover, #sidebar ul li div a:hover {
 	color: #aaa;
@@ -825,10 +831,7 @@ blockquote:after{
 }
 .credit_link {
 	width: 900px;
-	margin: 5px auto;
-	padding: 10px;
-	font-size: 0.8em;
-}
-.credit_link p {
-	float: right;
+	margin: 10px auto 40px;
+	font-size: 0.9em;
+	text-align: center;
 }

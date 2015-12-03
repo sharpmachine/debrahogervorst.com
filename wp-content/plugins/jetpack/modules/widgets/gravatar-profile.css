@@ -11,7 +11,7 @@
 			list-style: none;
 			display: inline;
 		}
-		
+
 		.widget-grofile ul.grofile-accounts li::before {
 			content: "" !important; /* Kubrick :( */
 		}
@@ -31,7 +31,8 @@
 		}
 
 		.grofile-thumbnail {
-			width: 100%;
+			width: 500px;
+			max-width: 100%;
 		}
 		@media
 only screen and (-webkit-min-device-pixel-ratio: 1.5),

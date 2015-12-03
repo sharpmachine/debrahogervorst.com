@@ -4,13 +4,13 @@
             <?php get_search_form(); ?>
             <br/>
             <h2>
-                <?php echo ('Archives'); ?>
+                <?php _e('Archives', 'colorway'); ?>
             </h2>
             <ul>
                 <?php wp_get_archives('type=monthly'); ?>
             </ul>
             <h2>
-                <?php echo ('Categories'); ?>
+                <?php _e('Categories', 'colorway'); ?>
             </h2>
             <ul>
                 <?php wp_list_categories('title_li'); ?>

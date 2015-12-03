@@ -4,7 +4,7 @@ if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) { die('You 
 
 require_once(dirname(dirname(__FILE__)) . '/lib/core.php');
 
-function flag_tune($show_error=true) {
+function flag_tune($show_error=true, $skins_reset=false) {
 	/* Move skins outside the plugin folder */
 	$flag_options = get_option('flag_options');
 	$skins_dir = str_replace("\\","/", WP_PLUGIN_DIR . '/flagallery-skins/' );
@@ -13,15 +13,21 @@ function flag_tune($show_error=true) {
 	$flag_options['skinsDirABS'] = $skins_dir;
 	$flag_options['skinsDirURL'] = WP_PLUGIN_URL . '/flagallery-skins/';
 	update_option('flag_options', $flag_options);
+
+	if(version_compare(get_option('flagVersion'), '4.25', '<')){
+		$skins_reset = true;
+		@unlink($skins_dir.'banner_default');
+		@unlink($skins_dir.'banner_widget_default');
+	}
 	
 	$errors = '';
 	// check for main folder
 	if ( !wp_mkdir_p( $skins_dir ) ) {
-			$errors .= __('Directory <strong>"', 'flag').$skins_dir.__('"</strong> doesn\'t exist. Please create first the <strong>"flagallery-skins"</strong> folder!', 'flag').'<br />';
+			$errors .= __('Directory <strong>"', 'flash-album-gallery').$skins_dir.__('"</strong> doesn\'t exist. Please create first the <strong>"flagallery-skins"</strong> folder!', 'flash-album-gallery').'<br />';
 	} else {
 		// check for permission settings, Safe mode limitations are not taken into account. 
 		if ( !is_writeable( $skins_dir ) ) {
-			$errors .= __('Directory <strong>"', 'flag').$skins_dir.__('"</strong> is not writeable!', 'flag').'<br />';
+			$errors .= __('Directory <strong>"', 'flash-album-gallery').$skins_dir.__('"</strong> is not writeable!', 'flash-album-gallery').'<br />';
 		} else {
 			
 			// Files in flash-album-gallery/skins directory
@@ -32,10 +38,14 @@ function flag_tune($show_error=true) {
 						continue;
 					if ( is_dir( $old_skins_dir.$file ) ) {
 						if( is_dir( $skins_dir.$file ) ) {
-							flagGallery::flagFolderDelete( $skins_dir.$file );
+							if($skins_reset){
+								flagGallery::flagFolderDelete( $skins_dir.$file );
+							} else {
+								continue;
+							}
 						}
 						if ( !@rename($old_skins_dir.$file, $skins_dir.$file) ) {
-							$errors .= sprintf(__('Failed to move file %1$s to %2$s','flag'), 
+							$errors .= sprintf(__('Failed to move files from %1$s to %2$s','flash-album-gallery'),
 								'<strong>'.$old_skins_dir.$file.'</strong>', $skins_dir.$file).'<br />';
 						}
 					}
@@ -52,4 +62,3 @@ function flag_tune($show_error=true) {
 	}
 	return true;
 }
-?>

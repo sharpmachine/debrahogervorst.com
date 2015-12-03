@@ -36,79 +36,108 @@ CvgCore::upgrade_plugin();
 <?php
 //Section to update video gallery details
 if (isset ($_POST['updatevideogallery'])) {
-	if(videoDB::update_gallery()) {
-		CvgCore::xml_playlist($_GET['gid']);
-		CvgCore::show_video_message(__('Gallery details successfully updated.'));
-	}	
+	
+	// wp_nonce_field('cvg_details_update_gallery_nonce','cvg_details_update_gallery_nonce_csrf');
+	if ( check_admin_referer( 'cvg_details_update_gallery_nonce', 'cvg_details_update_gallery_nonce_csrf' ) ) {
+		if(videoDB::update_gallery()) {
+			CvgCore::xml_playlist($_GET['gid']);
+			CvgCore::show_video_message(__('Gallery details successfully updated.'));
+		}	
+	}
 }
 		
 //Section to update video details.
 if(isset($_POST['updatevideos'])) {
-	if(CvgCore::update_videos()) {
-		CvgCore::xml_playlist($_GET['gid']);
-		_e('<div class="clear"><div class="wrap"><div id="message" class="updated fade below-h2"><p>Details of Video(s) updated successfully.</p></div></div></div>');
+	
+	// wp_nonce_field('cvg_details_update_video_nonce','cvg_details_update_video_nonce_csrf');
+	if ( check_admin_referer( 'cvg_details_update_video_nonce', 'cvg_details_update_video_nonce_csrf' ) ) {
+		if(CvgCore::update_videos()) {
+			CvgCore::xml_playlist($_GET['gid']);
+			_e('<div class="clear"><div class="wrap"><div id="message" class="updated fade below-h2"><p>Details of Video(s) updated successfully.</p></div></div></div>');
+		}
 	}		 
 }
 //Section to delete video list.
 if(isset($_POST['TB_gallerylist']) && !empty($_POST['TB_gallerylist'])) {
 	
-	$pids = explode(',', $_POST['TB_gallerylist']);
-	foreach($pids as $pid) {
-		CvgCore::delete_video_files($pid);
-		videoDB::delete_video($pid);
+	// wp_nonce_field('cvg_details_delete_video_nonce','cvg_details_delete_video_nonce_csrf');
+	if ( check_admin_referer( 'cvg_details_delete_video_nonce', 'cvg_details_delete_video_nonce_csrf' ) ) {
+		$pids = explode(',', $_POST['TB_gallerylist']);
+		foreach($pids as $pid) {
+			CvgCore::delete_video_files($pid);
+			videoDB::delete_video($pid);
+		}
+		CvgCore::xml_playlist($_GET['gid']);
+		_e('<div class="clear"><div class="wrap"><div id="message" class="updated fade below-h2"><p>Video(s) deleted successfully.</p></div></div></div>');
 	}
-	CvgCore::xml_playlist($_GET['gid']);
-	_e('<div class="clear"><div class="wrap"><div id="message" class="updated fade below-h2"><p>Video(s) deleted successfully.</p></div></div></div>');
 }
 
 if(isset($_POST['move_video_list']) && !empty($_POST['move_video_list'])) {
 	
-	$pids = explode(',', $_POST['move_video_list']);
-	
-	foreach($pids as $pid) {
+	// wp_nonce_field('cvg_details_move_video_nonce','cvg_details_move_video_nonce_csrf');
+	if ( check_admin_referer( 'cvg_details_move_video_nonce', 'cvg_details_move_video_nonce_csrf' ) ) {
+		$pids = explode(',', $_POST['move_video_list']);
 		
-		CvgCore::move_video($pid, $_POST['galleryselect']);
-		videoDB::move_video($pid, $_POST['galleryselect']);
+		foreach($pids as $pid) {
+			
+			CvgCore::move_video($pid, $_POST['galleryselect']);
+			videoDB::move_video($pid, $_POST['galleryselect']);
+		}
+		
+		CvgCore::xml_playlist($_GET['gid']);
+		_e('<div class="clear"><div class="wrap"><div id="message" class="updated fade below-h2"><p>Video(s) moved successfully.</p></div></div></div>');
 	}
-	
-	CvgCore::xml_playlist($_GET['gid']);
-	_e('<div class="clear"><div class="wrap"><div id="message" class="updated fade below-h2"><p>Video(s) moved successfully.</p></div></div></div>');
 }
 //Section to delete a single video.
 if(isset($_POST['TB_videosingle']) && !empty($_POST['TB_videosingle'])) {
 	
-	$pid = $_POST['TB_videosingle'];
-	CvgCore::delete_video_files($pid);
-	videoDB::delete_video($pid);
-	CvgCore::xml_playlist($_GET['gid']);
-	_e('<div class="clear"><div class="wrap"><div id="message" class="updated fade below-h2"><p>Video deleted successfully.</p></div></div></div>');
+	// wp_nonce_field('cvg_details_delete_single_video_nonce','cvg_details_delete_single_video_nonce_csrf');
+	if ( check_admin_referer( 'cvg_details_delete_single_video_nonce', 'cvg_details_delete_single_video_nonce_csrf' ) ) {
+			
+		$pid = $_POST['TB_videosingle'];
+		CvgCore::delete_video_files($pid);
+		videoDB::delete_video($pid);
+		CvgCore::xml_playlist($_GET['gid']);
+		_e('<div class="clear"><div class="wrap"><div id="message" class="updated fade below-h2"><p>Video deleted successfully.</p></div></div></div>');
+	}
 }
 
 //Section to upload preview imaage for video
 if(isset($_POST['TB_previewimage_single']) && !empty($_POST['TB_previewimage_single']) && is_array($_FILES['preview_image'])){
 	
-	if(trim($_FILES['preview_image']['error'][0]) == 4)
-		CvgCore::show_video_error(__('No preview images uploaded'));
-	else 	
-		CvgCore::upload_preview();
+	// wp_nonce_field('cvg_details_upload_preview_video_nonce','cvg_details_upload_preview_video_nonce_csrf');
+	if ( check_admin_referer( 'cvg_details_upload_preview_video_nonce', 'cvg_details_upload_preview_video_nonce_csrf' ) ) {
 		
-	CvgCore::xml_playlist($_GET['gid']);	
+		if(trim($_FILES['preview_image']['error'][0]) == 4)
+			CvgCore::show_video_error(__('No preview images uploaded'));
+		else 	
+			CvgCore::upload_preview();
+			
+		CvgCore::xml_playlist($_GET['gid']);	
+	}
 }
 
 //Section to publish a single video as Post
 if(isset($_POST['videosingle_publish'])) {
 
-	CvgCore::publish_video_post();	
+	// wp_nonce_field('cvg_details_publish_post_nonce','cvg_details_publish_post_nonce_csrf');
+	if ( check_admin_referer( 'cvg_details_publish_post_nonce', 'cvg_details_publish_post_nonce_csrf' ) ) {
+		CvgCore::publish_video_post();	
+	}
 }
 
 //Section to scan videos from folder and add to gallery
 if(isset($_POST['scanVideos'])) {
-	if(empty($_POST['galleryId']))
-		CvgCore::show_video_error(__('No Gallery selected'));
-	else
-		CvgCore::scan_upload_videos($_POST['galleryId']);
-		
-	CvgCore::xml_playlist($_GET['gid']);	
+	
+	// wp_nonce_field('cvg_details_scan_gallery_nonce','cvg_details_scan_gallery_nonce_csrf');
+	if ( check_admin_referer( 'cvg_details_scan_gallery_nonce', 'cvg_details_scan_gallery_nonce_csrf' ) ) {
+		if(empty($_POST['galleryId']))
+			CvgCore::show_video_error(__('No Gallery selected'));
+		else
+			CvgCore::scan_upload_videos($_POST['galleryId']);
+			
+		CvgCore::xml_playlist($_GET['gid']);	
+	}
 }
 
 $gid = $_GET['gid'];
@@ -296,6 +325,7 @@ if(!isset($gid)) {
 				<h2><?php echo esc_html( __($title) ); ?></h2>
 				<div class="clear" style="min-height:10px;"></div>
 				<form id="updategallery" method="POST" action="" accept-charset="utf-8">
+					<?php wp_nonce_field('cvg_details_update_gallery_nonce','cvg_details_update_gallery_nonce_csrf'); ?>
 					<input type="hidden" name="gid" value="<?php echo $_GET['gid'];?>" />
 					<div id="poststuff">
 						<div id="gallerydiv" class="postbox" >
@@ -319,11 +349,12 @@ if(!isset($gid)) {
 					</div> <!-- poststuff -->
 				</form>	
 				<form id="scanFolders" method="POST" action="<?php echo admin_url('admin.php?page=cvg-gallery-manage&gid=' . $_GET['gid']); ?>" accept-charset="utf-8">
+					<?php wp_nonce_field('cvg_details_scan_gallery_nonce','cvg_details_scan_gallery_nonce_csrf'); ?>
 					<input type="hidden" name="galleryId" value="<?php echo $_GET['gid'] ?>" />
 					<input type="hidden" name="scanVideos" value="<?php _e('Scan Videos'); ?>"  />
 				</form>
 				<form id="updatevideos" method="POST" action="<?php echo admin_url('admin.php?page=cvg-gallery-manage&gid=' . $_GET['gid']); ?>" accept-charset="utf-8">
-				
+					<?php wp_nonce_field('cvg_details_update_video_nonce','cvg_details_update_video_nonce_csrf'); ?>
 					<input type="hidden" name="galleryId" value="<?php echo $_GET['gid'] ?>" />
 					<div class="tablenav">
 						<div class="alignleft actions">
@@ -486,6 +517,7 @@ if(!isset($gid)) {
 			<!-- #video_delete -->
 			<div id="delete_gallery" style="display: none;" >
 				<form id="form-delete-gallery" method="POST" accept-charset="utf-8" action="<?php echo admin_url('admin.php?page=cvg-gallery-manage&gid=' . $_GET['gid']); ?>">
+				<?php wp_nonce_field('cvg_details_delete_video_nonce','cvg_details_delete_video_nonce_csrf'); ?>	
 				<input type="hidden" id="delete_gallery_deletelist" name="TB_gallerylist" value="" />
 				<input type="hidden" id="delete_gallery_bulkaction" name="TB_bulkaction" value="" />
 				<input type="hidden" name="page" value="manage-galleries" />
@@ -511,6 +543,8 @@ if(!isset($gid)) {
 			<!-- #move_videos -->
 			<div id="move_videos" style="display: none;" >
 				<form id="form-move_videos" method="POST" accept-charset="utf-8" action="<?php echo admin_url('admin.php?page=cvg-gallery-manage&gid=' . $_GET['gid']); ?>">
+					
+				<?php wp_nonce_field('cvg_details_move_video_nonce','cvg_details_move_video_nonce_csrf'); ?>
 				<input type="hidden" id="move_videos_deletelist" name="move_video_list" value="" />
 				<input type="hidden" id="move_videos_bulkaction" name="TB_bulkaction" value="" />
 				<input type="hidden" name="page" value="manage-galleries" />
@@ -549,6 +583,8 @@ if(!isset($gid)) {
 			<!-- #video_delete_single -->
 			<div id="delete_video_single" style="display: none;" >
 				<form id="form-delete-video_single" method="POST" accept-charset="utf-8" action="<?php echo admin_url('admin.php?page=cvg-gallery-manage&gid=' . $_GET['gid']); ?>">
+					
+					<?php wp_nonce_field('cvg_details_delete_single_video_nonce','cvg_details_delete_single_video_nonce_csrf'); ?>
 					<input type="hidden" id="delete_video_single_value" name="TB_videosingle" value="" />
 					<table width="100%" border="0" cellspacing="3" cellpadding="3" >
 						<tr valign="top">
@@ -569,6 +605,8 @@ if(!isset($gid)) {
 			<!-- #upload_video_image -->
 			<div id="upload_video_image" style="display: none;" >
 				<form name="uploadsinglepreview" id="uploadsingle_preview" method="POST" enctype="multipart/form-data" action="<?php echo admin_url('admin.php?page=cvg-gallery-manage&gid=' . $_GET['gid']); ?>" accept-charset="utf-8" >
+					
+					<?php wp_nonce_field('cvg_details_upload_preview_video_nonce','cvg_details_upload_preview_video_nonce_csrf'); ?>
 					<input type="hidden" id="preview_video_single" name="TB_previewimage_single" value="" />
 					<table width="100%" border="0" cellspacing="3" cellpadding="3" >
 						<tr valign="top">
@@ -593,7 +631,7 @@ if(!isset($gid)) {
 			<!-- #publish as Post -->
 			<div id="publish_video_single" style="display: none;" >
 				<form id="form-publish-video_single" method="POST" accept-charset="utf-8" action="<?php echo admin_url('admin.php?page=cvg-gallery-manage&gid=' . $_GET['gid']); ?>">
-					<?php wp_nonce_field('publish-post') ?>
+					<?php wp_nonce_field('cvg_details_publish_post_nonce','cvg_details_publish_post_nonce_csrf'); ?>
 					<input type="hidden" id="publish_video_single_value" name="videosingle_publish" value="" />
 					<table width="100%" border="0" cellspacing="2" cellpadding="2" >
 						<tr valign="top">

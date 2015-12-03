@@ -5,13 +5,17 @@
  *
  * http://www.ted.com/talks/view/id/210
  * http://www.ted.com/talks/marc_goodman_a_vision_of_crimes_in_the_future.html
- * [ted id="210" lang="eng"]
- * [ted id="http://www.ted.com/talks/view/id/210" lang="eng"]
+ * [ted id="210" lang="en"]
+ * [ted id="http://www.ted.com/talks/view/id/210" lang="en"]
  * [ted id=1539 lang=fr width=560 height=315]
  */
 
 wp_oembed_add_provider( '!https?://(www\.)?ted.com/talks/view/id/.+!i', 'http://www.ted.com/talks/oembed.json', true );
 wp_oembed_add_provider( '!https?://(www\.)?ted.com/talks/[a-zA-Z\-\_]+\.html!i', 'http://www.ted.com/talks/oembed.json', true );
+
+function jetpack_shortcode_get_ted_id( $atts ) {
+	return ( ! empty( $atts['id'] ) ? $atts['id'] : 0 );
+}
 
 add_shortcode( 'ted', 'shortcode_ted' );
 function shortcode_ted( $atts, $content = '' ) {
@@ -21,9 +25,9 @@ function shortcode_ted( $atts, $content = '' ) {
 			'id'          => '',
 			'width'       => '',
 			'height'      => '',
-			'lang'        => 'eng',
+			'lang'        => 'en',
 		);
-	$atts = shortcode_atts( $defaults, $atts );
+	$atts = shortcode_atts( $defaults, $atts, 'ted' );
 
 	if ( empty( $atts['id'] ) )
 		return '<!-- Missing TED ID -->';

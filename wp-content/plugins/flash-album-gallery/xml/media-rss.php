@@ -9,7 +9,7 @@ require_once(dirname(__FILE__) . "/../flag-config.php");
 require_once(dirname(__FILE__) . "/../lib/media-rss.php");
 
 // Check we have the required GET parameters
-$mode = $_GET["mode"];
+$mode = sanitize_key($_GET["mode"]);
 if (!isset($mode) || $mode == '')
 	$mode = 'last_pictures';
 
@@ -36,7 +36,7 @@ if ($mode=='last_pictures') {
 
 	if ( count($galleries) == 0 ) {
 		header('content-type:text/plain;charset=utf-8');
-		echo sprintf(__("No galleries have been yet created.","flag"), $gid);
+		echo sprintf(__("No galleries have been yet created.","flash-album-gallery"), $gid);
 		exit;
 	}
 	
@@ -55,7 +55,7 @@ if ($mode=='last_pictures') {
 	
 	if (!isset($gallery) || $gallery==null) {
 		header('content-type:text/plain;charset=utf-8');
-		echo sprintf(__("The gallery ID=%s does not exist.","flag"), $gid);
+		echo sprintf(__("The gallery ID=%s does not exist.","flash-album-gallery"), $gid);
 		exit;
 	}
 
@@ -82,7 +82,7 @@ if ($mode=='last_pictures') {
 	
 } else {
 	header('content-type:text/plain;charset=utf-8');
-	echo sprintf(__("Invalid MediaRSS command (%s).","flag"), $mode);
+	echo sprintf(__("Invalid MediaRSS command (%s).","flash-album-gallery"), $mode);
 	exit;
 }
 
@@ -91,4 +91,3 @@ if ($mode=='last_pictures') {
 header("content-type:text/xml;charset=utf-8");
 echo "<?xml version='1.0' encoding='UTF-8' standalone='yes'?>\n";
 echo $rss;
-?>

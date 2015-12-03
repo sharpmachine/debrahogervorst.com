@@ -1,8 +1,10 @@
-var fv = swfobject.getFlashPlayerVersion();
-var metaViewport = jQuery('meta[name=viewport]','head').attr('content');
+var metaViewport;
+jQuery(function() {
+	metaViewport = jQuery('meta[name=viewport]','head').attr('content');
+});
 
 function FlAGClass(ExtendVar, skin_id, pic_id, slideshow) {
-	jQuery(document).ready(function() {
+	jQuery(function() {
 		if(pic_id !== false){
 			var skin_function = flagFind(skin_id);
 			if(pic_id !== 0 ) {
@@ -16,14 +18,14 @@ function FlAGClass(ExtendVar, skin_id, pic_id, slideshow) {
 					'transitionOut'	: 'elastic',
 					'titlePosition'	: 'over',
 					'titleFormat'	: function(title, currentArray, currentIndex, currentOpts) {
-						var descr = jQuery('<div />').html(jQuery("#flag_pic_"+pic_id, flag_alt[skin_id]).find('.flag_pic_desc > span').html()).text();
-						title = jQuery('<div />').html(jQuery("#flag_pic_"+pic_id, flag_alt[skin_id]).find('.flag_pic_desc > strong').html()).text();
+						var descr = jQuery('<div />').html(jQuery("#flag_pic_"+pic_id, window[skin_id]).find('.flag_pic_desc > span').html()).text();
+						title = jQuery('<div />').html(jQuery("#flag_pic_"+pic_id, window[skin_id]).find('.flag_pic_desc > strong').html()).text();
 						if(title.length || descr.length)
 							return '<div class="grand_controls" rel="'+skin_id+'"><span rel="prev" class="g_prev">prev</span><span rel="show" class="g_slideshow '+slideshow+'">play/pause</span><span rel="next" class="g_next">next</span></div><div id="fancybox-title-over">'+(title.length? '<strong class="title">'+title+'</strong>' : '')+(descr.length? '<div class="descr">'+descr+'</div>' : '')+'</div>';
 						else
 							return '<div class="grand_controls" rel="'+skin_id+'"><span rel="prev" class="g_prev">prev</span><span rel="show" class="g_slideshow '+slideshow+'">play/pause</span><span rel="next" class="g_next">next</span></div>';
 					},
-					'href'			: jQuery("#flag_pic_"+pic_id, flag_alt[skin_id]).attr('href'),
+					'href'			: jQuery("#flag_pic_"+pic_id, window[skin_id]).attr('href'),
 					'onStart' 		: function(){
 						//if(skin_function && jQuery.isFunction(skin_function[skin_id+'_fb'])) {
 							skin_function[skin_id+'_fb']('active');
@@ -40,21 +42,20 @@ function FlAGClass(ExtendVar, skin_id, pic_id, slideshow) {
 					}
 				});
 			}
-			jQuery('#fancybox-wrap').on('click', '.grand_controls span', function(){
+			jQuery('#fancybox-wrap').off('click', '.grand_controls span').on('click', '.grand_controls span', function(){
 				skin_function[skin_id+'_fb'](jQuery(this).attr('rel'));
 					if(jQuery(this).hasClass('g_slideshow')){
 					jQuery(this).toggleClass('play stop');
 				}
-				jQuery('#fancybox-wrap').off('click', '.grand_controls span');
 			});
 		} else {
-			if(!metaViewport && ExtendVar == 'photoswipe'){
+			if((('undefined' == metaViewport) || !metaViewport) && ExtendVar == 'photoswipe'){
 				jQuery('head').append('<meta content="width=device-width, initial-scale=1.0;" name="viewport" />');
 			}
 			jQuery('.flashalbum').css('height','auto');
 			jQuery('body#fullwindow').css('overflow','auto');
-			jQuery('.flag_alternate').each(function(i){
-				jQuery(this).show();
+			jQuery('#'+skin_id+'_jq').each(function(i){
+				jQuery(this).css({display: 'block'});
 				var catMeta = jQuery('.flagCatMeta',this).hide().get();
 				for(j=0; j<catMeta.length; j++) {
 					var catName = jQuery(catMeta[j]).find('h4').text();
@@ -65,30 +66,35 @@ function FlAGClass(ExtendVar, skin_id, pic_id, slideshow) {
 					jQuery('.flagcatlinks',this).append('<a class="flagcat'+act+'" href="#'+catId+'" title="'+catDescr+'">'+catName+'</a>');
 				}
 				jQuery('a#backlink').appendTo('.flagcatlinks',this);
+				jQuery('.flagcategory', this).each(function(){
+					var flagcatid = jQuery(this).attr('id');
+					jQuery('a.flag_pic_alt', this).attr('rel',flagcatid);
+				});
 			});
-			jQuery('.flag_alternate .flagcat').click(function(){
+			jQuery('#'+skin_id+'_jq .flagcat').click(function(){
 				if(!jQuery(this).hasClass('active')) {
 					var catId = jQuery(this).attr('href');
 					jQuery(this).addClass('active').siblings().removeClass('active');
-					jQuery('.flag_alternate '+catId).show().siblings('.flagcategory').hide();
-					alternate_flag_e(catId, ExtendVar);
+					jQuery('#'+skin_id+'_jq '+catId).css({display: 'block'}).siblings('.flagcategory').hide();
+					alternate_flag_e(skin_id, catId, ExtendVar);
 				}
 				return false;
 			});
-			alternate_flag_e('.flagcategory:first', ExtendVar);
+			alternate_flag_e(skin_id, '.flagcategory:first', ExtendVar);
 		}
 	});
 }
 
-function alternate_flag_e(t, ExtendVar){
-	jQuery('.flag_alternate').find(t).not('.loaded').each(function(){
+function alternate_flag_e(skin_id, t, ExtendVar){
+	jQuery('#'+skin_id+'_jq').find(t).not('.loaded').each(function(){
 		var d = jQuery(this).html();
 		if(d) {
-			d = d.replace(/\[/g, '<');
-			d = d.replace(/\]/g, ' />');
+			d = d.replace(/>\[img src=/g, '><img src="');
+			//d = d.replace(/src=/g, 'src="');
+			d = d.replace(/\]</g, '" /><');
 			jQuery(this).addClass('loaded').html(d);
 		}
-		jQuery(this).show();
+		jQuery(this).css({display: 'block'});
 		if(ExtendVar == 'photoswipe') {
 			var
 				showDescr, longDescription, imgdescr, psImgCaption, curel,
@@ -119,13 +125,19 @@ function alternate_flag_e(t, ExtendVar){
 
 					}
 				},
-				instance = jQuery('a.flag_pic_alt',this).photoSwipe(options);
+                flagBodyScrollTop,
+                flagBodyScrollLeft,
+				instance = jQuery('a.flag_pic_alt',this).on('click',function(){
+                    flagBodyScrollTop = jQuery(window).scrollTop();
+                    flagBodyScrollLeft = jQuery(window).scrollLeft();
+                }).photoSwipe(options);
 
 			// onBeforeShow - store a reference to our "say hi" button
 		  	instance.addEventHandler(window.Code.PhotoSwipe.EventTypes.onBeforeShow, function(e){
 		  		jQuery(window).scrollLeft(0).scrollTop(0);
+                jQuery('html').addClass('ps-noscroll');
 				jQuery('meta[name=viewport]').attr('content','width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0');
-				window.location.hash = '#OpenGallery';
+				//window.location.hash = '#OpenGallery';
 			});
 			// onShow - store a reference to our "say hi" button
 		  	instance.addEventHandler(window.Code.PhotoSwipe.EventTypes.onShow, function(e){
@@ -137,12 +149,16 @@ function alternate_flag_e(t, ExtendVar){
 			});
 			// onHide - clean up
 			instance.addEventHandler(window.Code.PhotoSwipe.EventTypes.onHide, function(e){
-				if(!metaViewport){
+				if(('undefined' == metaViewport) || !metaViewport){
 					jQuery('meta[name=viewport]').attr('content','width=device-width, initial-scale=1.0, minimum-scale=0.25, maximum-scale=1.6, user-scalable=1');
+					jQuery('meta[name=viewport]').remove();
 				} else {
 					jQuery('meta[name=viewport]').attr('content',metaViewport);
 				}
-				window.location.hash = '#CloseGallery';
+                jQuery('html').removeClass('ps-noscroll');
+                setTimeout(function(){ jQuery(window).scrollTop(flagBodyScrollTop).scrollLeft(flagBodyScrollLeft); }, 0);
+                console.log(flagBodyScrollLeft, flagBodyScrollTop);
+                //window.location.hash = '#CloseGallery';
 			});
 			// onDisplayImage
 			instance.addEventHandler(window.Code.PhotoSwipe.EventTypes.onDisplayImage, function(e){
@@ -205,9 +221,7 @@ function alternate_flag_e(t, ExtendVar){
 
 	});
 }
-if(fv.major<10 || (navigator.userAgent.toLowerCase().indexOf("android") > -1)) {
-	new FlAGClass(ExtendVar, false, false, false);
-}
+
 function thumb_cl(skin_id, pic_id, slideshow){
   	pic_id = parseInt(pic_id);
 	new FlAGClass(ExtendVar, skin_id, pic_id, slideshow);

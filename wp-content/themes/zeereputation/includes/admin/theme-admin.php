@@ -81,7 +81,7 @@ function themezee_options_sidebar() {
 		<dl><dt><h4><?php _e('Upgrade', 'themezee_lang'); ?> <?php echo $theme_data->Name; ?></h4></dt>
 			<dd>
 				<ul>
-					<li><a href="<?php echo $pro_url; ?>#proversion" target="_blank"><?php _e('Check out the PRO Version', 'themezee_lang'); ?></a></li>
+					<li><a href="<?php echo $pro_url; ?>#PROVersion-1" target="_blank"><?php _e('Check out the PRO Version', 'themezee_lang'); ?></a></li>
 					<li><a href="<?php echo $club_url; ?>" target="_blank"><?php _e('Join the Theme Club and get Support', 'themezee_lang'); ?></a></li>
 				</ul>
 			</dd>
@@ -89,8 +89,8 @@ function themezee_options_sidebar() {
 		
 		<dl><dt><h4><?php _e('About ThemeZee', 'themezee_lang'); ?></h4></dt>
 			<dd>
-				<p><?php _e('ThemeZee is a stunning place of the <b>greatest WordPress Themes</b>.', 'themezee_lang'); ?></p>
-				<p><?php _e('You can download several <b>FREE WordPress Themes</b>, join the <b>Theme Club</b> or browse through the <b>best premium themes</b> from other developers. ', 'themezee_lang'); ?></p>
+				<p><?php _e('ThemeZee provides several stunning <b>Freemium WordPress Themes</b>.', 'themezee_lang'); ?></p>
+				<p><?php _e('That means you can download and use every theme <b>for FREE</b>, and only pay to get more features, better theme tutorials and advanced theme support!', 'themezee_lang'); ?></p>
 				<p><a href="http://themezee.com/" target="_blank"><?php _e('Visit ThemeZee.com now', 'themezee_lang'); ?></a></p>
 			</dd>
 		</dl>
@@ -139,7 +139,7 @@ function themezee_options_welcome_screen() {
 							<li>+ unlimited Font Manager</li>
 							<li>+ and a lot of more..</li>
 						</ul>
-						<a class="welcome_button" href="<?php echo $pro_url; ?>#proversion" target="_blank"><?php _e('Learn more about the PRO Version', 'themezee_lang'); ?></a>
+						<a class="welcome_button" href="<?php echo $pro_url; ?>#PROVersion-1" target="_blank"><?php _e('Learn more about the PRO Version', 'themezee_lang'); ?></a>
 					</p>
 				</div>
 			</div>
@@ -165,7 +165,7 @@ function themezee_options_welcome_screen() {
 		<h3><?php _e('Not happy with', 'themezee_lang'); ?> <?php echo $theme_data->Name; ?>?</h3>
 		<div class="container">
 		<p><?php _e('ThemeZee.com provide several other <b>free WordPress Themes</b>.', 'themezee_lang'); ?>
-		<a href="http://themezee.com/wordpress/free-themes/" target="_blank"><?php _e('Click here to browse through all of my themes.', 'themezee_lang'); ?></a>
+		<a href="http://themezee.com/themes/" target="_blank"><?php _e('Click here to browse through all of my themes.', 'themezee_lang'); ?></a>
 		</p>
 		</div>
 	</div>

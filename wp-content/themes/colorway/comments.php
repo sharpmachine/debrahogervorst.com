@@ -10,17 +10,17 @@ if (post_password_required()) {
 ?>
 <!-- You can start editing here. -->
 <div id="commentsbox">
-<?php if (have_comments()) : ?>
-        <h3 id="comments"><?php comments_number('No Responses', 'One Response', '% Responses'); ?><?php _e('so far.', 'colorway'); ?></h3>
+    <?php if (have_comments()) : ?>
+        <h3 id="comments"><?php comments_number(__('No Responses', 'colorway'), __('One Response', 'colorway'), __('% Responses', 'colorway')); ?><?php _e('so far.', 'colorway'); ?></h3>
         <ol class="commentlist">
-    <?php wp_list_comments(); ?>
+            <?php wp_list_comments(); ?>
         </ol>
         <div class="comment-nav">
             <div class="alignleft">
-    <?php previous_comments_link() ?>
+                <?php previous_comments_link() ?>
             </div>
             <div class="alignright">
-    <?php next_comments_link() ?>
+                <?php next_comments_link() ?>
             </div>
         </div>
     <?php else : // this is displayed if there are no comments so far ?>
@@ -28,9 +28,9 @@ if (post_password_required()) {
             <?php _e('Comments are closed.', 'colorway'); ?>
         <?php endif; ?>
     <?php endif; ?>
-        <?php if (comments_open()) : ?>
+    <?php if (comments_open()) : ?>
         <div id="comment-form">
-        <?php comment_form(); ?>
+            <?php comment_form(); ?>
         </div>
-<?php endif; // if you delete this the sky will fall on your head  ?>
+    <?php endif; // if you delete this the sky will fall on your head  ?>
 </div>

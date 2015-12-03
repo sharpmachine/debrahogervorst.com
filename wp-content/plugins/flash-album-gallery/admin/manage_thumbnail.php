@@ -104,7 +104,7 @@ if ( ($flag_options['thumbFix'] == 1) ) {
 	function updateThumb() {
 		
 		if ( (wT == 0) || (hT == 0) || (wT == undefined) || (hT == undefined) ) {
-			alert("<?php _e('Select with the mouse the area for the new thumbnail.', 'flag'); ?>");
+			alert("<?php _e('Select with the mouse the area for the new thumbnail.', 'flash-album-gallery'); ?>");
 			return false;			
 		}
 				
@@ -118,12 +118,12 @@ if ( ($flag_options['thumbFix'] == 1) ) {
 					newUrl = jQuery("#"+selectedImage).attr("src") + "?" + d.getTime();
 					jQuery("#"+selectedImage).attr("src" , newUrl);
 					
-					jQuery('#thumbMsg').html("<?php _e('Thumbnail updated', 'flag'); ?>");
+					jQuery('#thumbMsg').html("<?php _e('Thumbnail updated', 'flash-album-gallery'); ?>");
 					jQuery('#thumbMsg').css({'display':'block'});
 					setTimeout(function(){ jQuery('#thumbMsg').fadeOut('slow'); }, 1500);
 			},
 		  error: function() {
-		  			jQuery('#thumbMsg').html("<?php _e('Error updating thumbnail.', 'flag'); ?>");
+		  			jQuery('#thumbMsg').html("<?php _e('Error updating thumbnail.', 'flash-album-gallery'); ?>");
 					jQuery('#thumbMsg').css({'display':'block'});
 					setTimeout(function(){ jQuery('#thumbMsg').fadeOut('slow'); }, 1500);
 		    }
@@ -140,7 +140,7 @@ if ( ($flag_options['thumbFix'] == 1) ) {
 			<img src="<?php echo $preview_image; ?>" alt="" id="imageToEdit" />	
 		</td>
 		<td width="300" style="background-color : #DADADA;">
-			<small style="margin-left:6px; display:block;"><?php _e('Select the area for the thumbnail from the picture on the left.', 'flag'); ?></small>
+			<small style="margin-left:6px; display:block;"><?php _e('Select the area for the thumbnail from the picture on the left.', 'flash-album-gallery'); ?></small>
 		</td>		
 	</tr>
 	<tr>
@@ -155,7 +155,7 @@ if ( ($flag_options['thumbFix'] == 1) ) {
 	</tr>
 	<tr style="background-color:#DADADA;">
 		<td>
-			<input type="button" name="update" value="<?php _e('Update', 'flag'); ?>" onclick="updateThumb()" class="button-secondary" style="float:left; margin-left:4px;"/>
+			<input type="button" name="update" value="<?php _e('Update', 'flash-album-gallery'); ?>" onclick="updateThumb()" class="button-secondary" style="float:left; margin-left:4px;"/>
 			<div id="thumbMsg" style="color:#FF0000; display : none;font-size:11px; float:right; width:60%; height:2em; line-height:2em;"></div>
 		</td>
 	</tr>

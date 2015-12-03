@@ -23,7 +23,11 @@ CvgCore::upgrade_plugin();
 	<?php 
 
 		if(isset($_POST['generatexml'])) {
-			CvgCore::xml_sitemap();
+			
+			// wp_nonce_field('cvg_video_sitemap_nonce','cvg_video_sitemap_nonce_csrf');
+			if ( check_admin_referer( 'cvg_video_sitemap_nonce', 'cvg_video_sitemap_nonce_csrf' ) ) {
+				CvgCore::xml_sitemap();
+			}
 		}
 	?>
 	<div id="dashboard-widgets-wrap">
@@ -36,6 +40,7 @@ CvgCore::upgrade_plugin();
 						<div class="inside" style="margin:10px;">
 							Generate your Google XML Video Sitemap here <i style="font-size:10px;"><b>(FFMPEG Library support required)</b></i>. 
 						</div>
+						<?php wp_nonce_field('cvg_video_sitemap_nonce','cvg_video_sitemap_nonce_csrf'); ?>
 						<div class="submit" style="padding-left:15px;">
 							<input type="submit" class="button-primary action" name="generatexml" value="<?php _e("Generate Video Sitemap"); ?>" />
 						</div>

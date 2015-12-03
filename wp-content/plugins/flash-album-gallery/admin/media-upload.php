@@ -5,7 +5,7 @@
 
 function flag_wp_upload_tabs ($tabs) {
 
-	$newtab = array('flag' => __('FlAGallery','flag'));
+	$newtab = array('flash-album-gallery' => __('FlAGallery','flash-album-gallery'));
  
     return array_merge($tabs,$newtab);
 }
@@ -39,7 +39,7 @@ function media_upload_flag() {
 		media_upload_flag_save_image();
 		
 		// Return it to TinyMCE
-		return media_send_to_editor($html);
+		media_send_to_editor($html);
 	}
 	
 	// Save button
@@ -47,7 +47,7 @@ function media_upload_flag() {
 		media_upload_flag_save_image();
 	}
 		
-	return wp_iframe( 'media_upload_flag_form', $errors );
+	wp_iframe( 'media_upload_flag_form' );
 }
 
 add_action('media_upload_flag', 'media_upload_flag');
@@ -60,16 +60,17 @@ function media_upload_flag_save_image() {
 		
 		if ( !empty($_POST['image']) ) foreach ( $_POST['image'] as $image_id => $image ) {
 		
-		// Function save desription
-		$alttext   		= esc_attr($image['alttext']);
-		$description    = esc_attr($image['description']);
-		
-		$wpdb->query("UPDATE $wpdb->flagpictures SET alttext= '$alttext', description = '$description' WHERE pid = '$image_id'");
+			// Function save desription
+			$alttext = esc_html($image['alttext']);
+			$description = esc_html($image['description']);
+			$image_id = intval($image_id);
+
+			$wpdb->query($wpdb->prepare("UPDATE $wpdb->flagpictures SET alttext= '%s', description = '%s' WHERE pid = '%d'", $alttext, $description, $image_id));
 
 	}
 }
 
-function media_upload_flag_form($errors) {
+function media_upload_flag_form() {
 
 	global $wpdb, $wp_query, $wp_locale, $type, $tab, $post_mime_types, $flag;
 	
@@ -83,13 +84,13 @@ function media_upload_flag_form($errors) {
 	$form_action_url = site_url( "wp-admin/media-upload.php?type={$GLOBALS['type']}&tab=flag&post_id=$post_id", 'admin');
 
 	// Get number of images in gallery	
-	if ($_REQUEST['select_gal']){
+	if (isset($_REQUEST['select_gal']) && $_REQUEST['select_gal']){
 		$galleryID = (int) $_REQUEST['select_gal'];
 		$total = $wpdb->get_var("SELECT COUNT(*) FROM $wpdb->flagpictures WHERE galleryid = '$galleryID'");
 	}
 	
 	// Build navigation
-	$_GET['paged'] = intval($_GET['paged']);
+	$_GET['paged'] = isset($_GET['paged'])? intval($_GET['paged']) : 1;
 	if ( $_GET['paged'] < 1 )
 		$_GET['paged'] = 1;
 	$start = ( $_GET['paged'] - 1 ) * 10;
@@ -122,7 +123,7 @@ function media_upload_flag_form($errors) {
 	
 	<div class="alignleft actions">
 		<select id="select_gal" name="select_gal" style="width:200px;">;
-			<option value="0" <?php selected('0', $galleryID); ?> ><?php _e('No gallery',"flag"); ?></option>
+			<option value="0" <?php selected('0', $galleryID); ?> ><?php _e('No gallery',"flash-album-gallery"); ?></option>
 			<?php
 			// Show gallery selection
 			$gallerylist = $wpdb->get_results("SELECT * FROM $wpdb->flaggallery ORDER BY gid ASC");
@@ -134,7 +135,7 @@ function media_upload_flag_form($errors) {
 			}
 			?>
 		</select>
-		<input type="submit" id="show-gallery" value="<?php _e('Select &#187;','flag'); ?>" class="button-secondary" />
+		<input type="submit" id="show-gallery" value="<?php _e('Select &#187;','flash-album-gallery'); ?>" class="button-secondary" />
 	</div>
 	<br style="clear:both;" />
 </div>
@@ -165,24 +166,24 @@ function media_upload_flag_form($errors) {
 			?>
 			<div id='media-item-<?php echo $picid; ?>' class='media-item preloaded'>
 			  <div class='filename'></div>
-			  <a class='toggle describe-toggle-on' href='#'><?php _e('Show', "flag"); ?></a>
-			  <a class='toggle describe-toggle-off' href='#'><?php _e('Hide', "flag"); ?></a>
+			  <a class='toggle describe-toggle-on' href='#'><?php _e('Show', "flash-album-gallery"); ?></a>
+			  <a class='toggle describe-toggle-off' href='#'><?php _e('Hide', "flash-album-gallery"); ?></a>
 			  <div class='filename new'><?php echo ( empty($picture->alttext) ) ? wp_html_excerpt($picture->filename,60): stripslashes( wp_html_excerpt($picture->alttext,60) ); ?></div>
 			  <table class='slidetoggle describe startclosed'><tbody>
 				  <tr>
 					<td rowspan='4'><img class='thumbnail' alt='<?php echo esc_attr( $picture->alttext ); ?>' src='<?php echo esc_attr( $picture->thumbURL ); ?>'/></td>
-					<td><?php _e('Image ID:', "flag"); ?><?php echo $picid; ?></td>
+					<td><?php _e('Image ID:', "flash-album-gallery"); ?><?php echo $picid; ?></td>
 				  </tr>
 				  <tr><td><?php echo esc_attr( $picture->filename ); ?></td></tr>
-				  <tr><td><?php echo esc_attr( stripslashes($picture->alttext) ); ?></td></tr>
+				  <tr><td><?php echo esc_html( stripslashes($picture->alttext) ); ?></td></tr>
 				  <tr><td>&nbsp;</td></tr>
 				  <tr>
-					<td class="label"><label for="image[<?php echo $picid; ?>][alttext]"><?php _e('Alt/Title text', "flag"); ?></label></td>
-					<td class="field"><input id="image[<?php echo $picid; ?>][alttext]" name="image[<?php echo $picid; ?>][alttext]" value="<?php echo esc_attr( stripslashes($picture->alttext) ); ?>" type="text"/></td>
+					<td class="label"><label for="image[<?php echo $picid; ?>][alttext]"><?php _e('Alt/Title text', "flash-album-gallery"); ?></label></td>
+					<td class="field"><input id="image[<?php echo $picid; ?>][alttext]" name="image[<?php echo $picid; ?>][alttext]" value="<?php echo esc_html( stripslashes($picture->alttext) ); ?>" type="text"/></td>
 				  </tr>	
 				  <tr>
-					<td class="label"><label for="image[<?php echo $picid; ?>][description]"><?php _e("Description","flag"); ?></label></td>
-						<td class="field"><textarea name="image[<?php echo $picid; ?>][description]" id="image[<?php echo $picid; ?>][description]"><?php echo esc_attr( stripslashes($picture->description) ); ?></textarea></td>
+					<td class="label"><label for="image[<?php echo $picid; ?>][description]"><?php _e("Description","flash-album-gallery"); ?></label></td>
+						<td class="field"><textarea name="image[<?php echo $picid; ?>][description]" id="image[<?php echo $picid; ?>][description]"><?php echo esc_html( stripslashes($picture->description) ); ?></textarea></td>
 				  </tr>
 					<tr class="align">
 						<td class="label"><label for="image[<?php echo $picid; ?>][align]"><?php _e("Alignment"); ?></label></td>
@@ -222,7 +223,7 @@ function media_upload_flag_form($errors) {
 	?>
 	</div>
 	<p class="ml-submit">
-		<input type="submit" class="button savebutton" name="save" value="<?php _e('Save all changes','flag'); ?>" />
+		<input type="submit" class="button savebutton" name="save" value="<?php _e('Save all changes','flash-album-gallery'); ?>" />
 	</p>
 	<input type="hidden" name="post_id" id="post_id" value="<?php echo (int) $post_id; ?>" />
 	<input type="hidden" name="select_gal" id="select_gal" value="<?php echo (int) $galleryID; ?>" />
@@ -230,4 +231,3 @@ function media_upload_flag_form($errors) {
 
 <?php
 }
-?>

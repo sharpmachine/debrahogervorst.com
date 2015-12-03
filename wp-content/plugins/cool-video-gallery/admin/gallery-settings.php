@@ -20,19 +20,23 @@ CvgCore::upgrade_plugin();
 	//Section to save gallery settings
 	if(isset($_POST['update_Settings'])) {
 		
-		$options['max_cvg_gallery'] = $_POST['max_cvg_gallery'];
-		$options['max_vid_gallery'] = $_POST['max_vid_gallery'];
-		$options['cvg_preview_height'] = $_POST['cvg_preview_height'];
-		$options['cvg_preview_width'] = $_POST['cvg_preview_width'];
-		$options['cvg_slideshow']= intval($_POST['cvg_slideshow']) * 1000;
-		$options['cvg_description']= $_POST['cvg_description'];
-		$options['cvg_ffmpegpath']= $_POST['cvg_ffmpegpath'];
-		$options['cvg_navigation_controls'] = $_POST['cvg_navigation_controls'];
-		$options['cvg_random_video'] = $_POST['cvg_random_video'];
-
-		update_option('cvg_settings', $options);
-		
-		CvgCore::show_video_message(__('Gallery settings successfully updated.'));
+		// wp_nonce_field('cvg_gallery_settings_nonce','cvg_gallery_settings_nonce_csrf');
+		if ( check_admin_referer( 'cvg_gallery_settings_nonce', 'cvg_gallery_settings_nonce_csrf' ) ) {
+			
+			$options['max_cvg_gallery'] = $_POST['max_cvg_gallery'];
+			$options['max_vid_gallery'] = $_POST['max_vid_gallery'];
+			$options['cvg_preview_height'] = $_POST['cvg_preview_height'];
+			$options['cvg_preview_width'] = $_POST['cvg_preview_width'];
+			$options['cvg_slideshow']= intval($_POST['cvg_slideshow']) * 1000;
+			$options['cvg_description']= $_POST['cvg_description'];
+			$options['cvg_ffmpegpath']= $_POST['cvg_ffmpegpath'];
+			$options['cvg_navigation_controls'] = $_POST['cvg_navigation_controls'];
+			$options['cvg_random_video'] = $_POST['cvg_random_video'];
+	
+			update_option('cvg_settings', $options);
+			
+			CvgCore::show_video_message(__('Gallery settings successfully updated.'));
+		}
 	}
 	$options = get_option('cvg_settings');
 	?>
@@ -116,6 +120,7 @@ CvgCore::upgrade_plugin();
 			</div>
 			<div class="clear"></div>	
 			
+			<?php wp_nonce_field('cvg_gallery_settings_nonce','cvg_gallery_settings_nonce_csrf'); ?>
 			<div class="submit">
 				<input class="button-primary" type="submit" name="update_Settings" value="Save Gallery Settings"  />
 			</div>

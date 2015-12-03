@@ -7,6 +7,7 @@
 (function(){
 	
 var d = document, w = window;
+
 /**
  * Get element by id
  */	
@@ -15,6 +16,7 @@ function get(element){
 		element = d.getElementById(element);
 	return element;
 }
+
 /**
  * Attaches event to a dom element
  */
@@ -28,6 +30,8 @@ function addEvent(el, type, fn){
 		el.attachEvent('on' + type, f)
 	}
 }
+
+
 /**
  * Creates and returns element from html chunk
  */
@@ -40,6 +44,7 @@ var toElement = function(){
 		return el;
 	}
 }();
+
 function hasClass(ele,cls){
 	return ele.className.match(new RegExp('(\\s|^)'+cls+'(\\s|$)'));
 }
@@ -50,6 +55,7 @@ function removeClass(ele,cls) {
 	var reg = new RegExp('(\\s|^)'+cls+'(\\s|$)');
 	ele.className=ele.className.replace(reg,' ');
 }
+
 // getOffset function copied from jQuery lib (http://jquery.com/)
 if (document.documentElement["getBoundingClientRect"]){
 	// Get Offset using getBoundingClientRect
@@ -108,6 +114,7 @@ if (document.documentElement["getBoundingClientRect"]){
 		};
 	}
 }
+
 function getBox(el){
 	var left, right, top, bottom;	
 	var offset = getOffset(el);
@@ -124,6 +131,7 @@ function getBox(el){
 		bottom: bottom
 	};
 }
+
 /**
  * Crossbrowser mouse coordinates
  */
@@ -140,6 +148,7 @@ function getMouseCoords(e){
 			var bound = body.getBoundingClientRect();
 			zoom = (bound.right - bound.left)/body.clientWidth;
 		}
+
 		return {
 			x: e.clientX / zoom + d.body.scrollLeft + d.documentElement.scrollLeft,
 			y: e.clientY / zoom + d.body.scrollTop + d.documentElement.scrollTop
@@ -150,6 +159,7 @@ function getMouseCoords(e){
 		x: e.pageX,
 		y: e.pageY
 	};		
+
 }
 /**
  * Function generates unique id
@@ -160,12 +170,15 @@ var getUID = function(){
 		return 'ValumsAjaxUpload' + id++;
 	}
 }();
+
 function fileFromPath(file){
 	return file.replace(/.*(\/|\\)/, "");			
 }
+
 function getExt(file){
 	return (/[.]/.exec(file)) ? /[^.]+$/.exec(file.toLowerCase()) : '';
 }			
+
 /**
  * Cross-browser way to get xhr object  
  */
@@ -193,9 +206,11 @@ var getXhr = function(){
 				} catch (e){}
 			}
 		} 			
+
 		return xhr;
 	}
 }();
+
 // Please use AjaxUpload , Ajax_upload will be removed in the next version
 Ajax_upload = AjaxUpload = function(button, options){
 	if (button.jquery){
@@ -250,6 +265,7 @@ Ajax_upload = AjaxUpload = function(button, options){
 		// WARNING! DO NOT USE "FALSE" STRING AS A RESPONSE!
 		onComplete: function(file, response) {}
 	};
+
 	// Merge the users options with our defaults
 	for (var i in options) {
 		this._settings[i] = options[i];
@@ -313,6 +329,7 @@ AjaxUpload.prototype = {
 		}
 							
 		this._parentDialog.appendChild(input);
+
 		addEvent(input, 'change', function(){
 			// get filename from input
 			var file = fileFromPath(this.value);	
@@ -377,6 +394,7 @@ AjaxUpload.prototype = {
 			}	
 										
 			var c = getMouseCoords(e);
+
 			if ((c.x >= box.left) && (c.x <= box.right) && 
 			(c.y >= box.top) && (c.y <= box.bottom)){
 							
@@ -405,6 +423,7 @@ AjaxUpload.prototype = {
 				
 				}, 25);
 					
+
 				removeClass(self._button, self._settings.hoverClass);
 			}			
 		});			
@@ -440,6 +459,7 @@ AjaxUpload.prototype = {
 										
 		// get filename from input
 		var file = fileFromPath(this._input.value);			
+
 		// execute user event
 		if (! (settings.onSubmit.call(this, file, getExt(file)) == false)) {
 			// Create new iframe for this submission
@@ -448,6 +468,7 @@ AjaxUpload.prototype = {
 			// Do not submit if user function returns false										
 			var form = this._createForm(iframe);
 			form.appendChild(this._input);
+
 			// A pretty little hack to make uploads not hang in Safari. Just call this
 			// immediately before the upload is submitted. This does an Ajax call to
 			// the server, which returns an empty document with the "Connection: close"
@@ -489,6 +510,7 @@ AjaxUpload.prototype = {
 				}				
 				
 				var doc = iframe.contentDocument ? iframe.contentDocument : frames[iframe.id].document;
+
 				// fixing Opera 9.26
 				if (doc.readyState && doc.readyState != 'complete'){
 					// Opera fires load event multiple times

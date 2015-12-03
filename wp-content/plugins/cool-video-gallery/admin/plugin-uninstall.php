@@ -15,13 +15,16 @@
 
 	if(isset($_POST['uninstallplugin'])) {
 		
-		CoolVideoGallery::cvg_uninstall();
-		require_once(ABSPATH . 'wp-admin/includes/plugin.php');
-		deactivate_plugins(dirname(dirname(__FILE__)) . '/cool-video-gallery.php' );
-		?>
-		<script type="text/javascript">
-			location.href= "<?php  echo admin_url('plugins.php');?>";</script>
-		<?php
+		// wp_nonce_field('cvg_plugin_uninstall_nonce','cvg_plugin_uninstall_nonce_csrf');
+		if ( check_admin_referer( 'cvg_plugin_uninstall_nonce', 'cvg_plugin_uninstall_nonce_csrf' ) ) {
+			CoolVideoGallery::cvg_uninstall();
+			require_once(ABSPATH . 'wp-admin/includes/plugin.php');
+			deactivate_plugins(dirname(dirname(__FILE__)) . '/cool-video-gallery.php' );
+			?>
+			<script type="text/javascript">
+				location.href= "<?php  echo admin_url('plugins.php');?>";</script>
+			<?php
+		}
 	}
 ?>
 <style type="text/css">
@@ -43,6 +46,8 @@
 							<div class="inside" style="margin:10px;color:red;">
 								<b>Note:</b> For future use, please backup all your data including database before you uninstall this plugin.
 							</div>
+							
+							<?php wp_nonce_field('cvg_plugin_uninstall_nonce','cvg_plugin_uninstall_nonce_csrf'); ?>
 							<div class="submit" style="padding-left:15px;">
 								<input type="submit" class="button-primary action" name="uninstallplugin" value="<?php _e("Uninstall CVG");?>" />
 							</div>

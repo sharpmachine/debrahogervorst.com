@@ -1,0 +1,165 @@
+.export-import td.date {
+	color: #aaa;
+}
+
+.export-import td a.delete {
+	color: #D54E21;
+}
+
+.export-import td {
+	border-bottom: 1px solid #D8D8D8;
+	padding: 7px;
+}
+
+select.left {
+	margin: -1px 7px 0 0;
+	display: block;
+	float: left;
+}
+
+textarea {
+	width: 100%;
+	height: 100%;
+	resize: none;
+	padding: 10px;
+}
+
+input.short {
+	width: 50px;
+}
+
+select#archive_pages_show {
+	float: left;
+}
+
+.excerpt-limit-wrap {
+	display: inline-block;
+	margin: 0 0 0 10px;
+	float: left;
+}	
+
+.excerpt-limit-wrap.hidden, .hidden.hiding {
+	display: none;
+}
+
+.tribeclear {
+	clear: both;
+}
+
+.tribe-font-selects select, input.fake {
+	float: left;
+	margin: 0 10px 0 0;
+}
+
+.tribe-preview {
+	border: 1px solid #dfdfdf;
+	padding: 10px;
+	border-radius: 3px;
+}	
+
+.clear.padding-bottom {
+	padding-bottom: 10px;
+}
+
+#tribe_settings_form .form-table th, #tribe_settings_form textarea {
+	font-size: 16px;
+}
+
+#tribe_settings_form {
+	margin: 0 0 0 25px;
+}
+
+#tribe_settings_form .form-table {
+	margin: 0;
+}
+
+#tribe_settings_form .submit-buttons {
+	margin: 25px 0;
+	overflow: hidden;
+}
+
+#tribe_settings_form h3 {
+	font-size: 2em;
+	margin: 0;
+}
+
+
+#tribe_settings_form h3 .text {
+	padding: 16px 0 0;
+	display: inline-block;
+}
+
+#tribe_settings_form h3 .image {
+display: inline-block;
+margin: 0 10px 0 -25px;
+width: 50px;
+height: 50px;
+background-repeat: no-repeat;
+background-size: 79%;
+float: left;
+background-position: center;
+border: 2px solid #CCC;
+border-radius: 50%;
+background-color: #f1f1f1;
+}
+
+#tribe_settings_form h3 span.typography {
+	background-image: url(../../images/art/typography.png);
+}
+
+#tribe_settings_form h3 span.colors {
+	background-image: url(../../images/art/colors.png);
+}
+
+#tribe_settings_form h3 span.appearance {
+	background-image: url(../../images/art/appearance.png);
+}
+
+#tribe_settings_form h3 span.scripts {
+	background-image: url(../../images/art/scripts.png);
+}
+
+#tribe_settings_form h3 span.manage {
+	background-image: url(../../images/art/manage.png);
+}
+
+#tribe_settings_form th, #tribe_settings_form p.main {
+border-left: 2px solid #DDD;
+padding-left: 40px;
+}
+
+#tribe_settings_form p.main {
+	margin: 0;
+	font-size: 16px;
+	padding: 1em 0 1.5em 40px;
+}
+
+body #tribe_settings_form input[type="submit"] {
+background: transparent url(../../images/transparent.png);
+padding: .5em 1em;
+display: block;
+border-radius: 8px;
+border: 1px solid;
+font-size: 17px;
+height: auto;
+width: auto;
+-webkit-box-shadow: none;
+box-shadow: none;
+outline: none;
+float: left;
+margin: 0 15px 0 0;
+transition: .3s;
+}
+
+body #tribe_settings_form input[type="submit"][name="reset"] {
+	color: #aaa;
+}
+
+body #tribe_settings_form input[type="submit"]:hover {
+	color: #fff;
+}
+
+body #tribe_settings_form input[type="submit"][name="reset"]:hover {
+	background: #aaa;
+	border: 1px solid #aaa;
+}

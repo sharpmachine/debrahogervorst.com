@@ -1,19 +1,19 @@
 <?php
 /*
-* GRAND FlAGallery Widget
+* Grand Flagallery Widget
 */
 
 /**
- * flagSlideshowWidget - The slideshow widget control for GRAND FlAGallery ( require WP2.8 or higher)
+ * flagSlideshowWidget - The slideshow widget control for Grand Flagallery ( require WP2.8 or higher)
  *
- * @package GRAND FlAGallery
+ * @package Grand Flagallery
  * @access public
  */
 class flagSlideshowWidget extends WP_Widget {
 
-	function flagSlideshowWidget() {
-		$widget_ops = array('classname' => 'widget_grandpages', 'description' => __( 'Show links to GRAND Pages as random images from the galleries', 'flag') );
-		$this->WP_Widget('flag-grandpages', __('FLAGallery GRANDPages', 'flag'), $widget_ops);
+	function __construct() {
+		$widget_ops = array('classname' => 'widget_grandpages', 'description' => __( 'Show links to GRAND Pages as random images from the galleries', 'flash-album-gallery') );
+		parent::__construct('flag-grandpages', __('FLAGallery GRANDPages', 'flash-album-gallery'), $widget_ops);
 	}
 
 	function widget( $args, $instance ) {
@@ -26,15 +26,29 @@ class flagSlideshowWidget extends WP_Widget {
         $pages = array_filter( array_map ( 'intval', explode( ',', $instance['pages'] ) ) );
 		$args = array( 'post_type' => 'flagallery', 'post__in' => $pages, 'orderby' => 'post__in' );
 		$loop = new WP_Query( $args );
+		$imageList = array();
 		while ( $loop->have_posts() ) : $loop->the_post();
 			$gp_ID = get_the_ID();
 			$flag_custom = get_post_custom($gp_ID);
-			$gal_array = array_filter( array_map ( 'intval', explode( ',', $flag_custom["mb_items_array"][0] ) ) );
-			$gid = $gal_array[0];
-			if($gid)
+			if('all' == $flag_custom["mb_items_array"][0]){
+				$gid = 0;
+			}else {
+				$gal_array = array_filter( array_map( 'intval', explode( ',', $flag_custom["mb_items_array"][0] ) ) );
+				if ( empty( $gal_array ) ) {
+					continue;
+				}
+				$gid = $gal_array[0];
+			}
+			if($gid){
+				$galID = (int) $gid;
+				$status = $wpdb->get_var("SELECT status FROM $wpdb->flaggallery WHERE gid={$galID}");
+				if(intval($status)){
+					continue;
+				}
 				$imageList[$gp_ID] = $wpdb->get_results("SELECT t.*, tt.* FROM $wpdb->flaggallery AS t INNER JOIN $wpdb->flagpictures AS tt ON t.gid = tt.galleryid WHERE tt.exclude != 1 AND t.gid = {$gid} ORDER by rand() LIMIT 1");
+			}
 			else if ($gid == 0) {
-				$imageList[$gp_ID] = $wpdb->get_results("SELECT t.*, tt.* FROM $wpdb->flaggallery AS t INNER JOIN $wpdb->flagpictures AS tt ON t.gid = tt.galleryid WHERE tt.exclude != 1 ORDER by rand() LIMIT 1");
+				$imageList[$gp_ID] = $wpdb->get_results("SELECT t.*, tt.* FROM $wpdb->flaggallery AS t INNER JOIN $wpdb->flagpictures AS tt ON t.gid = tt.galleryid WHERE tt.exclude != 1 AND t.status = 0 ORDER by rand() LIMIT 1");
 			} else {
 				return false;
 			}
@@ -44,7 +58,8 @@ class flagSlideshowWidget extends WP_Widget {
 		echo $before_widget . $before_title . $title . $after_title;
 		echo "\n" . '<div class="flag-widget">'. "\n";
 
-		if (is_array($imageList)){
+		if (!empty($imageList)){
+			$wrapper_r = $instance['width']/$instance['height'];
 			foreach($imageList as $key => $image) {
 				// get the URL constructor
 				$image = new flagImage($image[0]);
@@ -56,16 +71,35 @@ class flagSlideshowWidget extends WP_Widget {
 				$alttext      =  $imageList[$key]['title'];
 				$description  =  strip_tags( htmlspecialchars( stripslashes( flagGallery::i18n($image->description, 'pic_' . $image->pid . '_description') )) );
 
-				//TODO:For mixed portrait/landscape it's better to use only the height setting, if widht is 0 or vice versa
-				$out = '<a href="'.$imageList[$key]['link'].'" title="' . $image->title . '" ' . $thumbcode .'>';
-				$out .= '<img src="'.$image->thumbURL.'" width="'.$instance['width'].'" height="'.$instance['height'].'" title="'.$alttext.'" alt="'.$description.'" />';
+				$thumburl = $image->thumbURL;
+				$thumbinfo = @getimagesize($image->thumbPath);
+				if(($thumbinfo[0] - $instance['width']) < -20){
+					$thumburl = $image->webimageURL;
+					$thumbpath = $image->webimagePath;
+					if(!file_exists($image->webimagePath)){
+						$thumburl = $image->imageURL;
+						$thumbpath = $image->imagePath;
+					}
+					$thumbinfo = @getimagesize($thumbpath);
+				}
+				$thumb_r = $thumbinfo[0]/$thumbinfo[1];
+				if($wrapper_r < $thumb_r){
+					$orientation = 'flag_thumb_landscape';
+					$style = 'width:auto;height:100%;margin:0 0 0 -'.floor(($instance['height']*$thumb_r - $instance['width'])/$instance['width']*50).'%;';
+				} else{
+					$orientation = 'flag_thumb_portrait';
+					$style = 'width:100%;height:auto;margin:-'.floor(($instance['width']/$thumb_r - $instance['height'])/$instance['height']*25).'% 0 0 0;';
+				}
+
+				$out = '<a href="'.$imageList[$key]['link'].'" title="' . $image->title . '" ' . $thumbcode .' style="overflow:hidden;display:inline-block;text-align:center;width:'.$instance['width'].'px;height:'.$instance['height'].'px;">';
+				$out .= '<img src="'.$thumburl.'" style="'.$style.'" class="'.$orientation.'" title="'.$alttext.'" alt="'.$description.'" />';
 				echo $out . '</a>'."\n";
 
 			}
 		}
 
 		echo '</div>'."\n";
-		echo '<style type="text/css">.flag_grandpages img { border: 1px solid #A9A9A9; margin: 0 2px 2px 0; padding: 1px; }</style>'."\n";
+		echo '<style type="text/css">.flag_grandpages { box-sizing:border-box; border: 1px solid #A9A9A9; margin: 0 2px 2px 0; padding: 0; } .flag_grandpages img {max-width:none;max-height:none;}</style>'."\n";
 		echo $after_widget;
 
 	}
@@ -90,7 +124,7 @@ class flagSlideshowWidget extends WP_Widget {
             'width' => '75',
             'height'=> '65',
             'pages' =>  '') );
-		$title  = esc_attr( $instance['title'] );
+		$title  = esc_html( $instance['title'] );
 		$width  = esc_attr( $instance['width'] );
         $height = esc_attr( $instance['height'] );
         $pages = esc_attr( $instance['pages'] );
@@ -98,19 +132,19 @@ class flagSlideshowWidget extends WP_Widget {
 		?>
 
 		<p>
-			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title :','flag'); ?>
+			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title :','flash-album-gallery'); ?>
 			<input id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title');?>" type="text" class="widefat" value="<?php echo $title; ?>" />
 			</label>
 		</p>
 
 		<p>
-			<?php _e('Width x Height of thumbs:','flag'); ?><br />
+			<?php _e('Width x Height of thumbs:','flash-album-gallery'); ?><br />
 			<input style="width: 50px; padding:3px;" id="<?php echo $this->get_field_id('width'); ?>" name="<?php echo $this->get_field_name('width'); ?>" type="text" value="<?php echo $width; ?>" /> x
 			<input style="width: 50px; padding:3px;" id="<?php echo $this->get_field_id('height'); ?>" name="<?php echo $this->get_field_name('height'); ?>" type="text" value="<?php echo $height; ?>" /> (px)
 		</p>
 
 		<div>
-			<div><?php _e('Select GRAND Pages:','flag'); ?></div>
+			<div><?php _e('Select GRAND Pages:','flash-album-gallery'); ?></div>
 			<div class="grandGalleries" style="width: 206px; height: auto; max-height: 160px; overflow: auto; margin-bottom: 10px;">
 				<?php
 					$args = array( 'post_type' => 'flagallery' );
@@ -122,7 +156,7 @@ class flagSlideshowWidget extends WP_Widget {
 					endwhile;
 				?>
 			</div>
-			<div class="grand_items_array"><?php _e('galleries order:','flag'); ?><br /><input readonly="readonly" type="text" id="<?php echo $this->get_field_id('pages'); ?>" name="<?php echo $this->get_field_name('pages'); ?>" value="<?php echo $pages; ?>" style="width: 206px; font-size:10px;" /></div>
+			<div class="grand_items_array"><?php _e('galleries order:','flash-album-gallery'); ?><br /><input readonly="readonly" type="text" id="<?php echo $this->get_field_id('pages'); ?>" name="<?php echo $this->get_field_name('pages'); ?>" value="<?php echo $pages; ?>" style="width: 206px; font-size:10px;" /></div>
 		</div>
 
 	<?php
@@ -137,15 +171,15 @@ add_action('widgets_init', create_function('', 'return register_widget("flagSlid
 
 class flagBannerWidget extends WP_Widget {
 
-	function flagBannerWidget() {
-		$widget_ops = array('classname' => 'widget_banner', 'description' => __( 'Show a GRAND FlAGallery Banner', 'flag') );
-		$this->WP_Widget('flag-banner', __('FLAGallery Banner', 'flag'), $widget_ops);
+	function __construct() {
+		$widget_ops = array('classname' => 'widget_banner', 'description' => __( 'Show a Grand Flagallery Banner', 'flash-album-gallery') );
+		parent::__construct('flag-banner', __('FLAGallery Banner', 'flash-album-gallery'), $widget_ops);
 	}
 
 	function widget( $args, $instance ) {
 		extract( $args );
 
-		$title = apply_filters('widget_title', empty( $instance['title'] ) ? __('Banner', 'flag') : $instance['title'], $instance, $this->id_base);
+		$title = apply_filters('widget_title', empty( $instance['title'] ) ? __('Banner', 'flash-album-gallery') : $instance['title'], $instance, $this->id_base);
 
 		$out = $this->render_slideshow($instance['xml'] , $instance['width'] , $instance['height'] , $instance['skin']);
 
@@ -188,8 +222,8 @@ class flagBannerWidget extends WP_Widget {
 		require_once (dirname( dirname(__FILE__) ) . '/admin/banner.functions.php');
 
 		//Defaults
-		$instance = wp_parse_args( (array) $instance, array( 'title' => 'Banner', 'xml' => '', 'width' => '100%', 'height' => '200', 'skin' => 'banner_widget_default') );
-		$title  = esc_attr( $instance['title'] );
+		$instance = wp_parse_args( (array) $instance, array( 'title' => 'Banner', 'xml' => '', 'width' => '100%', 'height' => '200', 'skin' => 'rotator_widget_default') );
+		$title  = esc_html( $instance['title'] );
 		$width  = esc_attr( $instance['width'] );
 		$height = esc_attr( $instance['height'] );
 		$skin  = esc_attr( $instance['skin'] );
@@ -198,7 +232,7 @@ class flagBannerWidget extends WP_Widget {
 ?>
 		<p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label> <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" /></p>
 		<p>
-			<label for="<?php echo $this->get_field_id('xml'); ?>"><?php _e('Select playlist:', 'flag'); ?></label>
+			<label for="<?php echo $this->get_field_id('xml'); ?>"><?php _e('Select playlist:', 'flash-album-gallery'); ?></label>
 				<select size="1" name="<?php echo $this->get_field_name('xml'); ?>" id="<?php echo $this->get_field_id('xml'); ?>" class="widefat">
 <?php
 	foreach((array)$all_playlists as $playlist_file => $playlist_data) {
@@ -210,10 +244,10 @@ class flagBannerWidget extends WP_Widget {
 ?>
 				</select>
 		</p>
-		<p><label for="<?php echo $this->get_field_id('height'); ?>"><?php _e('Height:', 'flag'); ?></label> <input id="<?php echo $this->get_field_id('height'); ?>" name="<?php echo $this->get_field_name('height'); ?>" type="text" style="padding: 3px; width: 45px;" value="<?php echo $height; ?>" /></p>
-		<p><label for="<?php echo $this->get_field_id('width'); ?>"><?php _e('Width:', 'flag'); ?></label> <input id="<?php echo $this->get_field_id('width'); ?>" name="<?php echo $this->get_field_name('width'); ?>" type="text" style="padding: 3px; width: 45px;" value="<?php echo $width; ?>" /></p>
+		<p><label for="<?php echo $this->get_field_id('height'); ?>"><?php _e('Height:', 'flash-album-gallery'); ?></label> <input id="<?php echo $this->get_field_id('height'); ?>" name="<?php echo $this->get_field_name('height'); ?>" type="text" style="padding: 3px; width: 45px;" value="<?php echo $height; ?>" /></p>
+		<p><label for="<?php echo $this->get_field_id('width'); ?>"><?php _e('Width:', 'flash-album-gallery'); ?></label> <input id="<?php echo $this->get_field_id('width'); ?>" name="<?php echo $this->get_field_name('width'); ?>" type="text" style="padding: 3px; width: 45px;" value="<?php echo $width; ?>" /></p>
 		<p>
-			<label for="<?php echo $this->get_field_id('skin'); ?>"><?php _e('Select Skin:', 'flag'); ?></label>
+			<label for="<?php echo $this->get_field_id('skin'); ?>"><?php _e('Select Skin:', 'flash-album-gallery'); ?></label>
 				<select size="1" name="<?php echo $this->get_field_name('skin'); ?>" id="<?php echo $this->get_field_id('skin'); ?>" class="widefat">
 <?php
 				if($all_skins) {
@@ -234,7 +268,7 @@ class flagBannerWidget extends WP_Widget {
 // register it
 add_action('widgets_init', create_function('', 'return register_widget("flagBannerWidget");'));
 
-function flagBannerWidget($xml, $w = '100%', $h = '200', $skin = 'banner_widget_default') {
+function flagBannerWidget($xml, $w = '100%', $h = '200', $skin = 'rotator_widget_default') {
 
 	echo flagBannerWidget::render_slideshow($xml, $w, $h, $skin);
 
@@ -243,22 +277,23 @@ function flagBannerWidget($xml, $w = '100%', $h = '200', $skin = 'banner_widget_
 
 
 /**
- * flagWidget - The widget control for GRAND FlAGallery
+ * flagWidget - The widget control for Grand Flagallery
  *
- * @package GRAND FlAGallery
+ * @package Grand Flagallery
  * @access public
  */
 class flagWidget extends WP_Widget {
 
-   	function flagWidget() {
-		$widget_ops = array('classname' => 'flag_images', 'description' => __( 'Add recent or random images from the galleries', 'flag') );
-		$this->WP_Widget('flag-images', __('FLAGallery Widget', 'flag'), $widget_ops);
+   	function __construct() {
+		$widget_ops = array('classname' => 'flag_images', 'description' => __( 'Add recent or random images from the galleries', 'flash-album-gallery') );
+	    parent::__construct('flag-images', __('FLAGallery Widget', 'flash-album-gallery'), $widget_ops);
 	}
 
 	function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
 
 		$instance['title']	= strip_tags($new_instance['title']);
+		$instance['qty']	= (int) $new_instance['qty'];
 		$instance['type']	= $new_instance['type'];
 		$instance['width']	= (int) $new_instance['width'];
 		$instance['height']	= (int) $new_instance['height'];
@@ -280,6 +315,7 @@ class flagWidget extends WP_Widget {
 		//Defaults
 		$instance = wp_parse_args( (array) $instance, array(
             'title' => 'Galleries',
+            'qty' => '1',
             'type'  => 'random',
             'width' => '75',
             'height'=> '65',
@@ -287,7 +323,8 @@ class flagWidget extends WP_Widget {
             'fheight'=> '480',
             'album' =>  '',
 			'skin'	=> '' ) );
-		$title  = esc_attr( $instance['title'] );
+		$title  = esc_html( $instance['title'] );
+		$qty  = intval( $instance['qty'] );
 		$width  = esc_attr( $instance['width'] );
         $height = esc_attr( $instance['height'] );
 		$fwidth  = esc_attr( $instance['fwidth'] );
@@ -296,41 +333,47 @@ class flagWidget extends WP_Widget {
 		?>
 
 		<p>
-			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title :','flag'); ?>
+			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title :','flash-album-gallery'); ?>
 			<input id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title');?>" type="text" class="widefat" value="<?php echo $title; ?>" />
 			</label>
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id('type'); ?>_random">
-			<input id="<?php echo $this->get_field_id('type'); ?>_random" name="<?php echo $this->get_field_name('type'); ?>" type="radio" value="random" <?php checked("random" , $instance['type']); ?> /> <?php _e('random','flag'); ?>
-			</label>
-            <label for="<?php echo $this->get_field_id('type'); ?>_first">
-            <input id="<?php echo $this->get_field_id('type'); ?>_first" name="<?php echo $this->get_field_name('type'); ?>" type="radio" value="recent" <?php checked("recent" , $instance['type']); ?> /> <?php _e('first in album','flag'); ?>
+			<label for="<?php echo $this->get_field_id('qty'); ?>"><?php _e('Qty of thumbs from each gallery:','flash-album-gallery'); ?>
+			<input id="<?php echo $this->get_field_id('qty'); ?>" name="<?php echo $this->get_field_name('qty');?>" type="text" class="widefat" value="<?php echo $qty; ?>" />
 			</label>
 		</p>
 
 		<p>
-			<?php _e('Width x Height of thumbs:','flag'); ?><br />
+			<label for="<?php echo $this->get_field_id('type'); ?>_random">
+			<input id="<?php echo $this->get_field_id('type'); ?>_random" name="<?php echo $this->get_field_name('type'); ?>" type="radio" value="random" <?php checked("random" , $instance['type']); ?> /> <?php _e('random','flash-album-gallery'); ?>
+			</label>
+            <label for="<?php echo $this->get_field_id('type'); ?>_first">
+            <input id="<?php echo $this->get_field_id('type'); ?>_first" name="<?php echo $this->get_field_name('type'); ?>" type="radio" value="recent" <?php checked("recent" , $instance['type']); ?> /> <?php _e('recent in gallery','flash-album-gallery'); ?>
+			</label>
+		</p>
+
+		<p>
+			<?php _e('Width x Height of thumbs:','flash-album-gallery'); ?><br />
 			<input style="width: 50px; padding:3px;" id="<?php echo $this->get_field_id('width'); ?>" name="<?php echo $this->get_field_name('width'); ?>" type="text" value="<?php echo $width; ?>" /> x
 			<input style="width: 50px; padding:3px;" id="<?php echo $this->get_field_id('height'); ?>" name="<?php echo $this->get_field_name('height'); ?>" type="text" value="<?php echo $height; ?>" /> (px)
 		</p>
 
 		<p>
-			<?php _e('Width x Height of popup:','flag'); ?><br />
+			<?php _e('Width x Height of popup:','flash-album-gallery'); ?><br />
 			<input style="width: 50px; padding:3px;" id="<?php echo $this->get_field_id('fwidth'); ?>" name="<?php echo $this->get_field_name('fwidth'); ?>" type="text" value="<?php echo $fwidth; ?>" /> x
 			<input style="width: 50px; padding:3px;" id="<?php echo $this->get_field_id('fheight'); ?>" name="<?php echo $this->get_field_name('fheight'); ?>" type="text" value="<?php echo $fheight; ?>" /> (px)
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id('album'); ?>"><?php _e('Select Album:','flag'); ?>
+			<label for="<?php echo $this->get_field_id('album'); ?>"><?php _e('Select Album:','flash-album-gallery'); ?>
 			<select id="<?php echo $this->get_field_id('album'); ?>" name="<?php echo $this->get_field_name('album'); ?>" class="widefat">
-				<option value="" ><?php _e('Choose album','flag'); ?></option>
+				<option value="" ><?php _e('Choose album','flash-album-gallery'); ?></option>
 			<?php
 				$albumlist = $flagdb->find_all_albums();
 				if(is_array($albumlist)) {
 					foreach($albumlist as $album) { ?>
-						<option <?php selected( $album->id , $instance['album']); ?> value="<?php echo $album->id; ?>"><?php echo $album->name; ?></option>
+						<option <?php selected( $album->id , $instance['album']); ?> value="<?php echo $album->id; ?>"><?php echo esc_html($album->name); ?></option>
 					<?php }
 				}
 			?>
@@ -339,7 +382,7 @@ class flagWidget extends WP_Widget {
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id('skin'); ?>"><?php _e('Select Skin:', 'flag'); ?></label>
+			<label for="<?php echo $this->get_field_id('skin'); ?>"><?php _e('Select Skin:', 'flash-album-gallery'); ?></label>
 				<select size="1" name="<?php echo $this->get_field_name('skin'); ?>" id="<?php echo $this->get_field_id('skin'); ?>" class="widefat">
 <?php
 				if($all_skins) {
@@ -362,23 +405,40 @@ class flagWidget extends WP_Widget {
 
 		extract( $args );
 
-        $title = apply_filters('widget_title', empty($instance['title']) ? '&nbsp;' : $instance['title'], $instance, $this->id_base);
+		$title = apply_filters('widget_title', empty($instance['title']) ? '&nbsp;' : $instance['title'], $instance, $this->id_base);
 
 		$album = $instance['album'];
 
-       	$gallerylist = $flagdb->get_album($album);
-        $ids = explode( ',', $gallerylist );
-		$gids = str_replace(',','_',$gallerylist);
-   		foreach ($ids as $id) {
-			if ( $instance['type'] == 'random' )
-				$imageList[$id] = $wpdb->get_results("SELECT t.*, tt.* FROM $wpdb->flaggallery AS t INNER JOIN $wpdb->flagpictures AS tt ON t.gid = tt.galleryid WHERE tt.exclude != 1 AND t.gid = {$id} ORDER by rand() LIMIT 1");
-			else
-				$imageList[$id] = $wpdb->get_results("SELECT t.*, tt.* FROM $wpdb->flaggallery AS t INNER JOIN $wpdb->flagpictures AS tt ON t.gid = tt.galleryid WHERE tt.exclude != 1 AND t.gid = {$id} ORDER by tt.sortorder ASC LIMIT 1");
-   		}
+		$qty = (!isset($instance['qty']) || intval($instance['qty']) < 1)? 1 : intval($instance['qty']);
+
+		$gallerylist = $flagdb->get_album($album);
+		$ids = explode( ',', $gallerylist );
+		$imageList = array();
+		foreach ($ids as $id) {
+			$galID = (int) $id;
+			$status = $wpdb->get_var("SELECT status FROM $wpdb->flaggallery WHERE gid={$galID}");
+			if(intval($status)){
+				continue;
+			}
+			if ( $instance['type'] == 'random' ){
+				$imageList[$galID] = $wpdb->get_results("SELECT t.*, tt.* FROM $wpdb->flaggallery AS t INNER JOIN $wpdb->flagpictures AS tt ON t.gid = tt.galleryid WHERE tt.exclude != 1 AND t.gid = {$galID} ORDER by rand() LIMIT 0,{$qty}");
+			}
+			else {
+				$flag_options = get_option('flag_options');
+
+				$order_dir = ( $flag_options['galSortDir'] == 'DESC') ? 'DESC' : 'ASC';
+				if(in_array($flag_options['galSort'], array('sortorder','pid','filename','alttext','imagedate','hitcounter','total_votes','rand()'))){
+					$order_by= 'tt.'.$flag_options['galSort'];
+				} else {
+					$order_by  = 'tt.sortorder';
+				}
+				$imageList[$galID] = $wpdb->get_results("SELECT t.*, tt.* FROM $wpdb->flaggallery AS t INNER JOIN $wpdb->flagpictures AS tt ON t.gid = tt.galleryid WHERE tt.exclude != 1 AND t.gid = {$galID} ORDER by $order_by $order_dir LIMIT 0,{$qty}");
+			}
+		}
 		echo $before_widget . $before_title . $title . $after_title;
 		echo "\n" . '<div class="flag-widget">'. "\n";
 
-		if (is_array($imageList)){
+		if (!empty($imageList)){
 
 			$isMobile = (bool)preg_match('#\b(ip(hone|od|ad)|android|opera m(ob|in)i|windows (phone|ce)|blackberry|tablet'.
                     '|s(ymbian|eries60|amsung)|p(laybook|alm|rofile/midp|laystation portable)|nokia|fennec|htc[\-_]'.
@@ -388,25 +448,46 @@ class flagWidget extends WP_Widget {
 			else 
 				$thumbcode = 'class="flag_newbox"';
 
-			foreach($imageList as $key => $image) {
-				// get the URL constructor
-				$image = new flagImage($image[0]);
+			$wrapper_r = $instance['width']/$instance['height'];
+			foreach($imageList as $gallery_) {
+				foreach($gallery_ as $_image) {
+					// get the URL constructor
+					$image = new flagImage($_image);
+	
+					// enable i18n support for alttext and description
+					$alttext      =  strip_tags( htmlspecialchars( stripslashes( flagGallery::i18n($image->alttext, 'pic_' . $image->pid . '_alttext') )) );
+					$description  =  strip_tags( htmlspecialchars( stripslashes( flagGallery::i18n($image->description, 'pic_' . $image->pid . '_description') )) );
 
-				// enable i18n support for alttext and description
-				$alttext      =  strip_tags( htmlspecialchars( stripslashes( flagGallery::i18n($image->alttext, 'pic_' . $image->pid . '_alttext') )) );
-				$description  =  strip_tags( htmlspecialchars( stripslashes( flagGallery::i18n($image->description, 'pic_' . $image->pid . '_description') )) );
+					$thumburl = $image->thumbURL;
+					$thumbinfo = @getimagesize($image->thumbPath);
+					if(($thumbinfo[0] - $instance['width']) < -20){
+						$thumburl = $image->webimageURL;
+						$thumbpath = $image->webimagePath;
+						if(!file_exists($image->webimagePath)){
+							$thumburl = $image->imageURL;
+							$thumbpath = $image->imagePath;
+						}
+						$thumbinfo = @getimagesize($thumbpath);
+					}
+					$thumb_r = $thumbinfo[0]/$thumbinfo[1];
+					if($wrapper_r < $thumb_r){
+						$orientation = 'flag_thumb_landscape';
+						$style = 'width:auto;height:100%;margin:0 0 0 -'.floor(($instance['height']*$thumb_r - $instance['width'])/$instance['width']*50).'%;';
+					} else{
+						$orientation = 'flag_thumb_portrait';
+						$style = 'width:100%;height:auto;margin:-'.floor(($instance['width']/$thumb_r - $instance['height'])/$instance['height']*25).'% 0 0 0;';
+					}
 
-				//TODO:For mixed portrait/landscape it's better to use only the height setting, if widht is 0 or vice versa
-				$out = '<a href="'.home_url().'/wp-content/plugins/flash-album-gallery/facebook.php?i='.$image->galleryid.'&amp;f='.$instance['skin'].'&amp;h='.$instance['fheight'].'" title="' . $image->title . '" ' . $thumbcode .'>';
-				$out .= '<img src="'.$image->thumbURL.'" width="'.$instance['width'].'" height="'.$instance['height'].'" title="'.$alttext.'" alt="'.$description.'" />';
-				echo $out . '</a>'."\n";
-
+					$out = '<a href="'.plugins_url().'/flash-album-gallery/flagframe.php?i='.$image->galleryid.'&amp;f='.$instance['skin'].'&amp;h='.$instance['fheight'].'" title="' . $image->title . '" ' . $thumbcode .' style="overflow:hidden;display:inline-block;text-align:center;width:'.$instance['width'].'px;height:'.$instance['height'].'px;">';
+					$out .= '<img src="'.$thumburl.'" style="'.$style.'" class="'.$orientation.'" title="'.$alttext.'" alt="'.$description.'" />';
+					echo $out . '</a>'."\n";
+				}
 			}
 		}
 
 		echo '</div>'."\n";
-		echo '<style type="text/css">.flag_fancybox img, .flag_newbox img { border: 1px solid #A9A9A9; margin: 0 2px 2px 0; padding: 1px; }</style>'."\n";
-		echo '<script type="text/javascript">var fbVar = "'.plugins_url('/', dirname(__FILE__)).'"; var fbW = '.$instance['fwidth'].', fbH = '.$instance['fheight'].'; waitJQ(fbVar,fbW,fbH);</script>'."\n";
+		echo '<style type="text/css">.flag_fancybox, .flag_newbox {box-sizing:border-box; border: 1px solid #A9A9A9; margin: 0 2px 2px 0; padding: 0; } .flag_fancybox img, .flag_newbox img {max-width:none;max-height:none;} </style>'."\n";
+		echo '<script type="text/javascript" defer="defer">jQuery(function(){ var fbVar = "'.plugins_url('/', dirname(__FILE__)).'"; var fbW = '.$instance['fwidth'].', fbH = '.$instance['fheight'].'; waitJQ(fbVar,fbW,fbH); });</script>'."\n";
 		echo $after_widget;
 
 	}
@@ -417,16 +498,16 @@ class flagWidget extends WP_Widget {
 add_action('widgets_init', create_function('', 'return register_widget("flagWidget");'));
 
 /**
- * flagVideoWidget - The widget control for GRAND FlAGallery
+ * flagVideoWidget - The widget control for Grand Flagallery
  *
- * @package GRAND FlAGallery
+ * @package Grand Flagallery
  * @access public
  */
 class flagVideoWidget extends WP_Widget {
 
-   	function flagVideoWidget() {
-		$widget_ops = array('classname' => 'flag_video', 'description' => __( 'Add recent or random video from the galleries', 'flag') );
-		$this->WP_Widget('flag-video', __('FLAGallery Video Widget', 'flag'), $widget_ops);
+   	function __construct() {
+		$widget_ops = array('classname' => 'flag_video', 'description' => __( 'Add recent or random video from the galleries', 'flash-album-gallery') );
+	    parent::__construct('flag-video', __('FLAGallery Video Widget', 'flash-album-gallery'), $widget_ops);
 	}
 
 	function update( $new_instance, $old_instance ) {
@@ -455,7 +536,7 @@ class flagVideoWidget extends WP_Widget {
             'fwidth' => '640',
             'fheight'=> '480',
             'vxml' =>  '' ) );
-		$title  = esc_attr( $instance['title'] );
+		$title  = esc_html( $instance['title'] );
 		$width  = esc_attr( $instance['width'] );
         $height = esc_attr( $instance['height'] );
 		$fwidth  = esc_attr( $instance['fwidth'] );
@@ -464,27 +545,27 @@ class flagVideoWidget extends WP_Widget {
 		?>
 
 		<p>
-			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title :','flag'); ?>
+			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title :','flash-album-gallery'); ?>
 			<input id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title');?>" type="text" class="widefat" value="<?php echo $title; ?>" />
 			</label>
 		</p>
 
 		<p>
-			<?php _e('Width x Height of thumbs:','flag'); ?><br />
+			<?php _e('Width x Height of thumbs:','flash-album-gallery'); ?><br />
 			<input style="width: 50px; padding:3px;" id="<?php echo $this->get_field_id('width'); ?>" name="<?php echo $this->get_field_name('width'); ?>" type="text" value="<?php echo $width; ?>" /> x
 			<input style="width: 50px; padding:3px;" id="<?php echo $this->get_field_id('height'); ?>" name="<?php echo $this->get_field_name('height'); ?>" type="text" value="<?php echo $height; ?>" /> (px)
 		</p>
 
 		<p>
-			<?php _e('Width x Height of popup:','flag'); ?><br />
+			<?php _e('Width x Height of popup:','flash-album-gallery'); ?><br />
 			<input style="width: 50px; padding:3px;" id="<?php echo $this->get_field_id('fwidth'); ?>" name="<?php echo $this->get_field_name('fwidth'); ?>" type="text" value="<?php echo $fwidth; ?>" /> x
 			<input style="width: 50px; padding:3px;" id="<?php echo $this->get_field_id('fheight'); ?>" name="<?php echo $this->get_field_name('fheight'); ?>" type="text" value="<?php echo $fheight; ?>" /> (px)
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id('vxml'); ?>"><?php _e('Select Playlist:','flag'); ?>
+			<label for="<?php echo $this->get_field_id('vxml'); ?>"><?php _e('Select Playlist:','flash-album-gallery'); ?>
 			<select id="<?php echo $this->get_field_id('vxml'); ?>" name="<?php echo $this->get_field_name('vxml'); ?>" class="widefat">
-				<option value="" ><?php _e('Choose playlist','flag'); ?></option>
+				<option value="" ><?php _e('Choose playlist','flash-album-gallery'); ?></option>
 			<?php
 				$all_playlists = get_v_playlists();
 				if(is_array($all_playlists)) {
@@ -541,7 +622,7 @@ class flagVideoWidget extends WP_Widget {
 						$description  =  strip_tags( htmlspecialchars( stripslashes( $flv->post_content )) );
 
 						//TODO:For mixed portrait/landscape it's better to use only the height setting, if widht is 0 or vice versa
-						$out = '<a href="'.home_url().'/wp-content/plugins/flash-album-gallery/facebook.php?mv='.$flv->ID.'&amp;w=1&amp;h='.$instance['fheight'].'" title="' . $alttext . '" ' . $thumbcode .'>';
+						$out = '<a href="'.plugins_url().'/flash-album-gallery/flagframe.php?mv='.$flv->ID.'&amp;w=1&amp;h='.$instance['fheight'].'" title="' . $alttext . '" ' . $thumbcode .'>';
 						$out .= '<img src="'.$thumb.'" width="'.$instance['width'].'" height="'.$instance['height'].'" title="'.$alttext.'" alt="'.$description.'" />';
 						echo $out . '</a>'."\n";
 					}
@@ -549,12 +630,12 @@ class flagVideoWidget extends WP_Widget {
 			}
 
 		} else {
-			echo '<p>'.__('Error! No playlist.','flag').'</p>';
+			echo '<p>'.__('Error! No playlist.','flash-album-gallery').'</p>';
 		}
 
 		echo '</div>'."\n";
 		echo '<style type="text/css">.flag_fancyvid img { border: 1px solid #A9A9A9; margin: 0 2px 2px 0; padding: 1px; }</style>'."\n";
-		echo '<script type="text/javascript">var fvVar = "'.plugins_url('/', dirname(__FILE__)).'"; var fvW = '.$instance['fwidth'].', fvH = '.$instance['fheight'].'; waitJQv(fvVar,fvW,fvH);</script>'."\n";
+		echo '<script type="text/javascript" defer="defer">jQuery(function(){ var fvVar = "'.plugins_url('/', dirname(__FILE__)).'"; var fvW = '.$instance['fwidth'].', fvH = '.$instance['fheight'].'; waitJQv(fvVar,fvW,fvH); });</script>'."\n";
 		echo $after_widget;
 	}
 
@@ -565,22 +646,22 @@ add_action('widgets_init', create_function('', 'return register_widget("flagVide
 
 
 /**
- * flagMusicWidget - The widget control for GRAND FlAGallery
+ * flagMusicWidget - The widget control for Grand Flagallery
  *
- * @package GRAND FlAGallery
+ * @package Grand Flagallery
  * @access public
  */
 class flagMusicWidget extends WP_Widget {
 
-	function flagMusicWidget() {
-		$widget_ops = array('classname' => 'widget_music', 'description' => __( 'Show a GRAND FlAGallery Music Player', 'flag') );
-		$this->WP_Widget('flag-music', __('FLAGallery Music', 'flag'), $widget_ops);
+	function __construct() {
+		$widget_ops = array('classname' => 'widget_music', 'description' => __( 'Show a Grand Flagallery Music Player', 'flash-album-gallery') );
+		parent::__construct('flag-music', __('FLAGallery Music', 'flash-album-gallery'), $widget_ops);
 	}
 
 	function widget( $args, $instance ) {
 		extract( $args );
 
-		$title = apply_filters('widget_title', empty( $instance['title'] ) ? __('Music', 'flag') : $instance['title'], $instance, $this->id_base);
+		$title = apply_filters('widget_title', empty( $instance['title'] ) ? __('Music', 'flash-album-gallery') : $instance['title'], $instance, $this->id_base);
 
 		$out = $this->render_music($instance['xml'], $instance['width'], $instance['height'], $instance['skin']);
 
@@ -624,7 +705,7 @@ class flagMusicWidget extends WP_Widget {
 
 		//Defaults
 		$instance = wp_parse_args( (array) $instance, array( 'title' => 'Music', 'xml' => '', 'width' => '100%', 'height' => '200', 'skin' => 'music_default') );
-		$title  = esc_attr( $instance['title'] );
+		$title  = esc_html( $instance['title'] );
 		$width  = esc_attr( $instance['width'] );
 		$height = esc_attr( $instance['height'] );
 		$skin  = esc_attr( $instance['skin'] );
@@ -633,7 +714,7 @@ class flagMusicWidget extends WP_Widget {
 ?>
 		<p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label> <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" /></p>
 		<p>
-			<label for="<?php echo $this->get_field_id('xml'); ?>"><?php _e('Select playlist:', 'flag'); ?></label>
+			<label for="<?php echo $this->get_field_id('xml'); ?>"><?php _e('Select playlist:', 'flash-album-gallery'); ?></label>
 				<select size="1" name="<?php echo $this->get_field_name('xml'); ?>" id="<?php echo $this->get_field_id('xml'); ?>" class="widefat">
 <?php
 	foreach((array)$all_playlists as $playlist_file => $playlist_data) {
@@ -645,10 +726,10 @@ class flagMusicWidget extends WP_Widget {
 ?>
 				</select>
 		</p>
-		<p><label for="<?php echo $this->get_field_id('height'); ?>"><?php _e('Height:', 'flag'); ?></label> <input id="<?php echo $this->get_field_id('height'); ?>" name="<?php echo $this->get_field_name('height'); ?>" type="text" style="padding: 3px; width: 45px;" value="<?php echo $height; ?>" /></p>
-		<p><label for="<?php echo $this->get_field_id('width'); ?>"><?php _e('Width:', 'flag'); ?></label> <input id="<?php echo $this->get_field_id('width'); ?>" name="<?php echo $this->get_field_name('width'); ?>" type="text" style="padding: 3px; width: 45px;" value="<?php echo $width; ?>" /></p>
+		<p><label for="<?php echo $this->get_field_id('height'); ?>"><?php _e('Height:', 'flash-album-gallery'); ?></label> <input id="<?php echo $this->get_field_id('height'); ?>" name="<?php echo $this->get_field_name('height'); ?>" type="text" style="padding: 3px; width: 45px;" value="<?php echo $height; ?>" /></p>
+		<p><label for="<?php echo $this->get_field_id('width'); ?>"><?php _e('Width:', 'flash-album-gallery'); ?></label> <input id="<?php echo $this->get_field_id('width'); ?>" name="<?php echo $this->get_field_name('width'); ?>" type="text" style="padding: 3px; width: 45px;" value="<?php echo $width; ?>" /></p>
 		<p>
-			<label for="<?php echo $this->get_field_id('skin'); ?>"><?php _e('Select Skin:', 'flag'); ?></label>
+			<label for="<?php echo $this->get_field_id('skin'); ?>"><?php _e('Select Skin:', 'flash-album-gallery'); ?></label>
 				<select size="1" name="<?php echo $this->get_field_name('skin'); ?>" id="<?php echo $this->get_field_id('skin'); ?>" class="widefat">
 <?php
 				if($all_skins) {
@@ -674,6 +755,3 @@ function flagMusicWidget($xml, $w = '100%', $h = '200', $skin = 'music_default')
 	echo flagMusicWidget::render_music($xml, $w, $h, $skin);
 
 }
-
-
-?>

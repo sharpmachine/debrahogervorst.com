@@ -28,37 +28,53 @@ class CvgCore{
 		
     	if (isset($_POST['addgallery']) && $_POST['addgallery']){
 
-    		$newgallery = esc_attr( $_POST['galleryname'] );
-    		if(isset($_POST['gallerydesc'])) 
-    			$gallery_desc = esc_attr ( $_POST['gallerydesc'] );
-			else 
-				$gallery_desc = '';
-    		if ( !empty($newgallery) )
-    			CvgCore::create_gallery($newgallery, $gallery_desc);
-    		else
-    			CvgCore::show_video_error( __('No valid gallery name!') );
+			// wp_nonce_field('cvg_add_gallery_nonce','cvg_add_gallery_nonce_csrf');
+			// if this fails, check_admin_referer() will automatically print a "failed" page and die.
+			if ( check_admin_referer( 'cvg_add_gallery_nonce', 'cvg_add_gallery_nonce_csrf' ) ) {
+			
+	    		$newgallery = esc_attr( $_POST['galleryname'] );
+	    		if(isset($_POST['gallerydesc'])) 
+	    			$gallery_desc = esc_attr ( $_POST['gallerydesc'] );
+				else 
+					$gallery_desc = '';
+	    		if ( !empty($newgallery) )
+	    			CvgCore::create_gallery($newgallery, $gallery_desc);
+	    		else
+	    			CvgCore::show_video_error( __('No valid gallery name!') );
+			}
     	}
 		
 		if (isset($_POST['uploadvideo']) && $_POST['uploadvideo']){
-    		if ( $_FILES['videofiles']['error'][0] == 0 ){
-    			$messagetext = CvgCore::upload_videos();
-    		}else{
-    			CvgCore::show_video_error( __('Upload failed! ' . CvgCore::decode_upload_error( $_FILES['videofiles']['error'][0])) );
-    		}	
+			
+			// wp_nonce_field('cvg_upload_video_nonce','cvg_upload_video_nonce_csrf');
+			if ( check_admin_referer( 'cvg_upload_video_nonce', 'cvg_upload_video_nonce_csrf' ) ) {
+	    		if ( $_FILES['videofiles']['error'][0] == 0 ){
+	    			$messagetext = CvgCore::upload_videos();
+	    		}else{
+	    			CvgCore::show_video_error( __('Upload failed! ' . CvgCore::decode_upload_error( $_FILES['videofiles']['error'][0])) );
+	    		}
+			}	
     	}
 		
 		if(isset($_POST['addvideo']) && $_POST['addvideo']) {
 			
-			if(empty($_POST['videourl']))
-				CvgCore::show_video_error( __('Enter a valid Youtube video URL.') );
-			else {
-				CvgCore::add_youtube_videos();
+			// wp_nonce_field('cvg_attach_youtube_nonce','cvg_attach_youtube_nonce_csrf');
+			if ( check_admin_referer( 'cvg_attach_youtube_nonce', 'cvg_attach_youtube_nonce_csrf' ) ) {
+				if(empty($_POST['videourl']))
+					CvgCore::show_video_error( __('Enter a valid Youtube video URL.') );
+				else {
+					CvgCore::add_youtube_videos();
+				}
 			}
 		}
 		
 		if(isset($_POST['addmedia']) && $_POST['addmedia']) {
 			
-			CvgCore::add_media_videos();
+			// wp_nonce_field('cvg_add_media_nonce','cvg_add_media_nonce_csrf');
+			if ( check_admin_referer( 'cvg_add_media_nonce', 'cvg_add_media_nonce_csrf' ) ) {
+				
+				CvgCore::add_media_videos();
+			}
 		}
 	}
 	
@@ -1025,6 +1041,7 @@ class CvgCore{
 				<td><textarea name="gallerydesc" cols="30" rows="3" style="width: 94%" ></textarea></td>
 			</tr>
 			</table>
+			<?php wp_nonce_field('cvg_add_gallery_nonce','cvg_add_gallery_nonce_csrf'); ?>
 			<div class="submit"><input class="button-primary" type="submit" name= "addgallery" value="<?php _e('Add gallery') ;?>"/></div>
 		</form>
     <?php
@@ -1067,6 +1084,7 @@ class CvgCore{
 				</select>
 			</tr> 
 			</table>
+			<?php wp_nonce_field('cvg_upload_video_nonce','cvg_upload_video_nonce_csrf'); ?>
 			<div class="submit">
 				<input type="hidden" value="Upload Videos" name="uploadvideo" />
 				<input class="button-primary" type="button" name="uploadvideo_btn" id="uploadvideo_btn" value="<?php _e('Upload Video(s)') ;?>" />
@@ -1108,6 +1126,8 @@ class CvgCore{
 				</select>
 			</tr> 
 			</table>
+			
+			<?php wp_nonce_field('cvg_attach_youtube_nonce','cvg_attach_youtube_nonce_csrf'); ?>
 			<div class="submit">
 				<input type="hidden" value="Add Videos" name="addvideo" />
 				<input class="button-primary" type="button" name="addvideo_btn" id="addvideo_btn" value="<?php _e('Add Video(s)') ;?>" />
@@ -1182,6 +1202,7 @@ class CvgCore{
 				</select>
 			</tr> 
 			</table>
+			<?php wp_nonce_field('cvg_add_media_nonce','cvg_add_media_nonce_csrf'); ?>
 			<div class="submit">
 				<input type="hidden" value="Add Media" name="addmedia" />
 				<input class="button-primary" type="button" name="addmedia_btn" id="addmedia_btn" value="<?php _e('Add Media') ;?>" />
@@ -1791,8 +1812,6 @@ class CvgCore{
 	function publish_video_post() {
 		
 		global $user_ID;
-		
-		check_admin_referer('publish-post');
 		
 		if(isset($_POST['post_title']) && $_POST['post_title'] == "") {
 			

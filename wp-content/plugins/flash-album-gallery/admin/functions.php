@@ -5,25 +5,35 @@ if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) { die('You 
 /**
  * flagAdmin - Class for admin operation
  */
+if ( ! class_exists( 'flagAdmin' ) ) {
 class flagAdmin{
 
 	/**
 	 * create a new gallery & folder
 	 *
 	 * @class flagAdmin
-	 * @param string $gallerytitle
+	 * @param string $gallery
 	 * @param string $defaultpath
 	 * @param bool $output if the function should show an error messsage or not
 	 * @return bool|int
 	 */
-	static function create_gallery($gallerytitle, $defaultpath, $output = true) {
+	public static function create_gallery($gallery, $defaultpath, $output = true) {
 		global $wpdb, $user_ID;
  
 		// get the current user ID
 		get_currentuserinfo();
 
+		$description = '';
+		$status = 0;
+		if(is_array($gallery)){
+			$gallerytitle = $gallery['title'];
+			$description = $gallery['description'];
+			$status = intval($gallery['status']);
+		} else {
+			$gallerytitle = $gallery;
+		}
 		//cleanup pathname
-		$galleryname = sanitize_file_name( $gallerytitle );
+		$galleryname = sanitize_flagname( $gallerytitle );
 		$galleryname = apply_filters('flag_gallery_name', $galleryname);
 		$galleryname = preg_replace('/[^\w\._-]+/', '', $galleryname);
 		if(!$galleryname) $galleryname = date('y-m-j_h-i-s');
@@ -34,15 +44,15 @@ class flagAdmin{
 		
 		// No gallery name ?
 		if (empty($galleryname)) {	
-			if ($output) flagGallery::show_error( __('No valid gallery name!', 'flag') );
+			if ($output) flagGallery::show_error( __('No valid gallery name!', 'flash-album-gallery') );
 			return false;
 		}
 		
 		// check for main folder
 		if ( !is_dir($flagRoot) ) {
 			if ( !wp_mkdir_p( $flagRoot ) ) {
-				$txt  = __('Directory', 'flag').' <strong>' . $defaultpath . '</strong> '.__('didn\'t exist. Please create first the main gallery folder ', 'flag').'!<br />';
-				$txt .= __('Check this link, if you didn\'t know how to set the permission :', 'flag').' <a href="http://codex.wordpress.org/Changing_File_Permissions">http://codex.wordpress.org/Changing_File_Permissions</a> ';
+				$txt  = __('Directory', 'flash-album-gallery').' <strong>' . $defaultpath . '</strong> '.__('didn\'t exist. Please create first the main gallery folder ', 'flash-album-gallery').'!<br />';
+				$txt .= __('Check this link, if you didn\'t know how to set the permission :', 'flash-album-gallery').' <a href="http://codex.wordpress.org/Changing_File_Permissions">http://codex.wordpress.org/Changing_File_Permissions</a> ';
 				if ($output) flagGallery::show_error($txt);
 				return false;
 			}
@@ -50,8 +60,8 @@ class flagAdmin{
 
 		// check for permission settings, Safe mode limitations are not taken into account. 
 		if ( !is_writeable( $flagRoot ) ) {
-			$txt  = __('Directory', 'flag').' <strong>' . $defaultpath . '</strong> '.__('is not writeable !', 'flag').'<br />';
-			$txt .= __('Check this link, if you didn\'t know how to set the permission :', 'flag').' <a href="http://codex.wordpress.org/Changing_File_Permissions">http://codex.wordpress.org/Changing_File_Permissions</a> ';
+			$txt  = __('Directory', 'flash-album-gallery').' <strong>' . $defaultpath . '</strong> '.__('is not writeable !', 'flash-album-gallery').'<br />';
+			$txt .= __('Check this link, if you didn\'t know how to set the permission :', 'flash-album-gallery').' <a href="http://codex.wordpress.org/Changing_File_Permissions">http://codex.wordpress.org/Changing_File_Permissions</a> ';
 			if ($output) flagGallery::show_error($txt);
 			return false;
 		}
@@ -59,23 +69,29 @@ class flagAdmin{
 		// 1. Create new gallery folder
 		if ( !is_dir(WINABSPATH . $flagpath) ) {
 			if ( !wp_mkdir_p (WINABSPATH . $flagpath) ) 
-				$txt  = __('Unable to create directory ', 'flag').$flagpath.'!<br />';
+				$txt  = __('Unable to create directory ', 'flash-album-gallery').$flagpath.'!<br />';
 		}
 		
 		// 2. Check folder permission
 		if ( !is_writeable(WINABSPATH . $flagpath ) )
-			$txt .= __('Directory', 'flag').' <strong>'.$flagpath.'</strong> '.__('is not writeable !', 'flag').'<br />';
+			$txt .= __('Directory', 'flash-album-gallery').' <strong>'.$flagpath.'</strong> '.__('is not writeable !', 'flash-album-gallery').'<br />';
 
 		// 3. Now create "thumbs" folder inside
 		if ( !is_dir(WINABSPATH . $flagpath . '/thumbs') ) {				
 			if ( !wp_mkdir_p ( WINABSPATH . $flagpath . '/thumbs') ) 
-				$txt .= __('Unable to create directory ', 'flag').' <strong>' . $flagpath . '/thumbs !</strong>';
+				$txt .= __('Unable to create directory ', 'flash-album-gallery').' <strong>' . $flagpath . '/thumbs !</strong>';
 		}
 		
+		// 4. Now create "webview" folder inside
+		if ( !is_dir(WINABSPATH . $flagpath . '/webview') ) {
+			if ( !wp_mkdir_p ( WINABSPATH . $flagpath . '/webview') )
+				$txt .= __('Unable to create directory ', 'flash-album-gallery').' <strong>' . $flagpath . '/webview !</strong>';
+		}
+
 		if (SAFE_MODE) {
-			$help  = __('The server setting Safe-Mode is on !', 'flag');	
-			$help .= '<br />'.__('If you have problems, please create directory', 'flag').' <strong>' . $flagpath . '</strong> ';	
-			$help .= __('and the thumbnails directory', 'flag').' <strong>' . $flagpath . '/thumbs</strong> '.__('with permission 777 manually !', 'flag');
+			$help  = __('The server setting Safe-Mode is on !', 'flash-album-gallery');
+			$help .= '<br />'.__('If you have problems, please create directory', 'flash-album-gallery').' <strong>' . $flagpath . '</strong> ';
+			$help .= __('and the thumbnails directory', 'flash-album-gallery').' <strong>' . $flagpath . '/thumbs</strong> '.__('with permission 777 manually !', 'flash-album-gallery');
 			if ($output) flagGallery::show_message($help);
 		}
 		
@@ -90,23 +106,26 @@ class flagAdmin{
 			return false;
 		}
 		
-		$result = $wpdb->get_var("SELECT name FROM $wpdb->flaggallery WHERE name = '$galleryname' ");
+		$result = $wpdb->get_var($wpdb->prepare("SELECT `name` FROM `{$wpdb->flaggallery}` WHERE `name` = '%s' ", $galleryname));
 		
 		if ($result) {
-			if ($output) flagGallery::show_error( _n( 'Gallery', 'Galleries', 1, 'flag' ) .' <strong>' . $galleryname . '</strong> '.__('already exists', 'flag'));
-			return false;			
-		} else { 
-			$result = $wpdb->query( $wpdb->prepare("INSERT INTO $wpdb->flaggallery (name, path, title, author) VALUES (%s, %s, %s, %s)", $galleryname, $flagpath, $gallerytitle , $user_ID) );
+			if ($output) flagGallery::show_error( _n( 'Gallery', 'Galleries', 1, 'flash-album-gallery' ) .' <strong>' . $galleryname . '</strong> '.__('already exists', 'flash-album-gallery'));
+			return true;
+		} else {
+			if(empty($user_ID)){
+				$user_ID = $wpdb->get_var("SELECT ID FROM $wpdb->users ORDER BY ID");
+			}
+			$result = $wpdb->query( $wpdb->prepare("INSERT INTO $wpdb->flaggallery (name, path, title, galdesc, author, status) VALUES (%s, %s, %s, %s, %s, %d)", $galleryname, $flagpath, $gallerytitle, $description, $user_ID, $status) );
 			// and give me the new id
 			$gallery_id = (int) $wpdb->insert_id;
 			// here you can inject a custom function
 			do_action('flag_created_new_gallery', $gallery_id);
 
 			if ($result) {
-				$message  = __('Gallery \'%1$s\' successfully created.<br/>You can show this gallery with the tag %2$s.<br/>','flag');
-				$message  = sprintf($message, stripcslashes($gallerytitle), '[flagallery gid=' . $gallery_id . ' name="' . stripcslashes($gallerytitle) . '"]');
+				$message  = __('Gallery \'%1$s\' successfully created.<br/>You can show this gallery with the tag %2$s.<br/>','flash-album-gallery');
+				$message  = sprintf($message, esc_html(stripcslashes($gallerytitle)), '[flagallery gid=' . $gallery_id . ']');
 				$message .= '<a href="' . admin_url() . 'admin.php?page=flag-manage-gallery&mode=edit&gid=' . $gallery_id . '" >';
-				$message .= __('Edit gallery','flag');
+				$message .= __('Edit gallery','flash-album-gallery');
 				$message .= '</a>';
 				
 				if ($output) flagGallery::show_message($message); 
@@ -127,7 +146,7 @@ class flagAdmin{
 	 * @param string $galleryfolder contains relative path
 	 * @return void
 	 */
-	static function import_gallery($galleryfolder) {
+	public static function import_gallery($galleryfolder) {
 		
 		global $wpdb, $user_ID;
 
@@ -137,18 +156,19 @@ class flagAdmin{
 		$created_msg = '';
 		
 		// remove trailing slash at the end, if somebody use it
+		$galleryfolder = str_replace('../','', $galleryfolder );
 		$galleryfolder = rtrim($galleryfolder, '/');
 		$gallerypath = WINABSPATH . $galleryfolder;
 		
 		if (!is_dir($gallerypath)) {
-			flagGallery::show_error(__('Directory', 'flag').' <strong>'.$gallerypath.'</strong> '.__('doesn&#96;t exist!', 'flag'));
+			flagGallery::show_error(__('Directory', 'flash-album-gallery').' <strong>'.esc_html($gallerypath).'</strong> '.__('doesn&#96;t exist!', 'flash-album-gallery').' '.__('Or imported folder name contains special characters.', 'flash-album-gallery'));
 			return ;
 		}
 		
 		// read list of images
 		$new_imageslist = flagAdmin::scandir($gallerypath);
 		if (empty($new_imageslist)) {
-			flagGallery::show_message(__('Directory', 'flag').' <strong>'.$gallerypath.'</strong> '.__('contains no pictures', 'flag'));
+			flagGallery::show_message(__('Directory', 'flash-album-gallery').' <strong>'.esc_html($gallerypath).'</strong> '.__('contains no pictures', 'flash-album-gallery'));
 			return;
 		}
 		
@@ -158,23 +178,22 @@ class flagAdmin{
 		
 		// take folder name as gallery name		
 		$galleryname = basename($galleryfolder);
-		$galleryname = apply_filters('flag_gallery_name', $galleryname);
-		
+
 		// check for existing gallery folder
-		$gallery_id = $wpdb->get_var("SELECT gid FROM $wpdb->flaggallery WHERE path = '$galleryfolder' ");
+		$gallery_id = $wpdb->get_var($wpdb->prepare("SELECT gid FROM {$wpdb->flaggallery} WHERE path = '%s' ", $galleryfolder));
 
 		if (!$gallery_id) {
-			$result = $wpdb->query( $wpdb->prepare("INSERT INTO $wpdb->flaggallery (name, path, title, author) VALUES (%s, %s, %s, %s)", $galleryname, $galleryfolder, $galleryname , $user_ID) );
+			$result = $wpdb->query( $wpdb->prepare("INSERT INTO {$wpdb->flaggallery} (name, path, title, author) VALUES (%s, %s, %s, %s)", $galleryname, $galleryfolder, $galleryname , $user_ID) );
 			if (!$result) {
-				flagGallery::show_error(__('Database error. Could not add gallery!','flag'));
+				flagGallery::show_error(__('Database error. Could not add gallery!','flash-album-gallery'));
 				return;
 			}
-			$created_msg = __ngettext( 'Gallery', 'Galleries', 1, 'flag' ) . ' <strong>' . $galleryname . '</strong> ' . __('successfully created!','flag') . '<br />';
+			$created_msg = _n( 'Gallery', 'Galleries', 1, 'flash-album-gallery' ) . ' <strong>' . $galleryname . '</strong> ' . __('successfully created!','flash-album-gallery') . '<br />';
 			$gallery_id  = $wpdb->insert_id;  // get index_id
 		}
 		
 		// Look for existing image list
-		$old_imageslist = $wpdb->get_col("SELECT filename FROM $wpdb->flagpictures WHERE galleryid = '$gallery_id' ");
+		$old_imageslist = $wpdb->get_col($wpdb->prepare("SELECT filename FROM {$wpdb->flagpictures} WHERE galleryid = %d ", $gallery_id));
 		
 		// if no images are there, create empty array
 		if ($old_imageslist == NULL) 
@@ -198,10 +217,10 @@ class flagAdmin{
 		flagAdmin::set_gallery_preview ( $gallery_id );
 
 		// now create thumbnails
-		flagAdmin::do_ajax_operation( 'create_thumbnail' , $image_ids, __('Create new thumbnails','flag') );
+		flagAdmin::do_ajax_operation( 'create_thumbnail' , $image_ids, __('Create new thumbnails','flash-album-gallery') );
 		
 		//TODO:Message will not shown, because AJAX routine require more time, message should be passed to AJAX
-		flagGallery::show_message( $created_msg . count($image_ids) .__(' picture(s) successfully added','flag') );
+		flagGallery::show_message( $created_msg . count($image_ids) .__(' picture(s) successfully added','flash-album-gallery') );
 		
 		return;
 
@@ -214,22 +233,23 @@ class flagAdmin{
 	 * @param string $folder contains relative path
 	 * @return void
 	 */
-	static function import_video($folder) {
+	public static function import_video($folder) {
 
 
 		$created_msg = '';
 		// remove trailing slash at the end, if somebody use it
+		$folder = str_replace(array('../','\'','"','<','>','$','%','='),'', $folder);
 		$folder = rtrim($folder, '/');
 		$path = WINABSPATH . $folder;
 		if (!is_dir($path)) {
-			echo '<p class="message">'.__('Directory', 'flag').' <strong>'.$path.'</strong> '.__('doesn&#96;t exist!', 'flag').'</p>';
+			echo '<p class="message">'.__('Directory', 'flash-album-gallery').' <strong>'.$path.'</strong> '.__('doesn&#96;t exist!', 'flash-album-gallery').' '.__('Or imported folder name contains special characters.', 'flash-album-gallery').'</p>';
 			return ;
 		}
 		// read list of files
 		$ext = array('flv');
 		$new_filelist = flagAdmin::scandir($path, $ext);
 		if (empty($new_filelist)) {
-			echo '<p class="message">'.__('Directory', 'flag').' <strong>'.$path.'</strong> '.__('does not contain flv files', 'flag').'</p>';
+			echo '<p class="message">'.__('Directory', 'flash-album-gallery').' <strong>'.$path.'</strong> '.__('does not contain flv files', 'flash-album-gallery').'</p>';
 			return;
 		}
 		$i=0;
@@ -238,13 +258,13 @@ class flagAdmin{
 			$filename = $path . '/' . $file;
 			$id = flagAdmin::handle_import_file($filename);
 			if ( is_wp_error($id) ) {
-				$created_msg .= '<p>' . sprintf(__('<em>%s</em> was <strong>not</strong> imported due to an error: %s', 'flag'), $file, $id->get_error_message() ) . '</p>';
+				$created_msg .= '<p>' . sprintf(__('<em>%s</em> was <strong>not</strong> imported due to an error: %s', 'flash-album-gallery'), $file, $id->get_error_message() ) . '</p>';
 			} else {
 				$i++;
-				$created_msg .= '<p>' . sprintf(__('<em>%s</em> has been added to Media library', 'flag'), $file) . '</p>';
+				$created_msg .= '<p>' . sprintf(__('<em>%s</em> has been added to Media library', 'flash-album-gallery'), $file) . '</p>';
 			}
 		}
-		$created_msg .= '<p class="message">'.$i.__(' file(s) successfully added','flag').'</p><div class="hidden">'.$created_msg.'</div>';
+		$created_msg .= '<p class="message">'.$i.__(' file(s) successfully added','flash-album-gallery').'</p><div class="hidden">'.$created_msg.'</div>';
 		echo $created_msg;
 	}
 
@@ -255,21 +275,22 @@ class flagAdmin{
 	 * @param string $folder contains relative path
 	 * @return void
 	 */
-	static function import_mp3($folder) {
+	public static function import_mp3($folder) {
 
 		$created_msg = '';
 		// remove trailing slash at the end, if somebody use it
+		$folder = str_replace(array('../','\'','"','<','>','$','%','='),'', $folder);
 		$folder = rtrim($folder, '/');
 		$path = WINABSPATH . $folder;
 		if (!is_dir($path)) {
-			echo '<p class="message">'.__('Directory', 'flag').' <strong>'.$path.'</strong> '.__('doesn&#96;t exist!', 'flag').'</p>';
+			echo '<p class="message">'.__('Directory', 'flash-album-gallery').' <strong>'.$path.'</strong> '.__('doesn&#96;t exist!', 'flash-album-gallery').' '.__('Or imported folder name contains special characters.', 'flash-album-gallery').'</p>';
 			return ;
 		}
 		// read list of files
 		$ext = array('mp3');
 		$new_filelist = flagAdmin::scandir($path, $ext);
 		if (empty($new_filelist)) {
-			echo '<p class="message">'.__('Directory', 'flag').' <strong>'.$path.'</strong> '.__('does not contain mp3 files', 'flag').'</p>';
+			echo '<p class="message">'.__('Directory', 'flash-album-gallery').' <strong>'.$path.'</strong> '.__('does not contain mp3 files', 'flash-album-gallery').'</p>';
 			return;
 		}
 		$i=0;
@@ -278,13 +299,13 @@ class flagAdmin{
 			$filename = $path . '/' . $file;
 			$id = flagAdmin::handle_import_file($filename);
 			if ( is_wp_error($id) ) {
-				$created_msg .= '<p>' . sprintf(__('<em>%s</em> was <strong>not</strong> imported due to an error: %s', 'flag'), $file, $id->get_error_message() ) . '</p>';
+				$created_msg .= '<p>' . sprintf(__('<em>%s</em> was <strong>not</strong> imported due to an error: %s', 'flash-album-gallery'), $file, $id->get_error_message() ) . '</p>';
 			} else {
 				$i++;
-				$created_msg .= '<p>' . sprintf(__('<em>%s</em> has been added to Media library', 'flag'), $file) . '</p>';
+				$created_msg .= '<p>' . sprintf(__('<em>%s</em> has been added to Media library', 'flash-album-gallery'), $file) . '</p>';
 			}
 		}
-		$created_msg .= '<p class="message">'.$i.__(' file(s) successfully added','flag').'</p><div class="hidden">'.$created_msg.'</div>';
+		$created_msg .= '<p class="message">'.$i.__(' file(s) successfully added','flash-album-gallery').'</p><div class="hidden">'.$created_msg.'</div>';
 		echo $created_msg;
 	}
 
@@ -295,29 +316,30 @@ class flagAdmin{
 	 * @param string $folder contains relative path
 	 * @return array
 	 */
-	static function import_banner($folder) {
+	public static function import_banner($folder) {
 
 		$created_msg = '';
 		// remove trailing slash at the end, if somebody use it
+		$folder = str_replace(array('../','\'','"','<','>','$','%','='),'', $folder);
 		$folder = rtrim($folder, '/');
 		$path = WINABSPATH . $folder;
 		if (!is_dir($path)) {
-			echo '<p class="message">'.__('Directory', 'flag').' <strong>'.$path.'</strong> '.__('doesn&#96;t exist!', 'flag').'</p>';
+			echo '<p class="message">'.__('Directory', 'flash-album-gallery').' <strong>'.$path.'</strong> '.__('doesn&#96;t exist!', 'flash-album-gallery').' '.__('Or imported folder name contains special characters.', 'flash-album-gallery').'</p>';
 			return false;
 		}
 		// read list of files
 		$new_filelist = flagAdmin::scandir($path);
 		if (empty($new_filelist)) {
-			echo '<p class="message">'.__('Directory', 'flag').' <strong>'.$path.'</strong> '.__('does not contain image files', 'flag').'</p>';
+			echo '<p class="message">'.__('Directory', 'flash-album-gallery').' <strong>'.$path.'</strong> '.__('does not contain image files', 'flash-album-gallery').'</p>';
 			return false;
 		}
-		$created_msg .= '<div class="message"><p>'.count($new_filelist).' '.__('image(s) in the folder','flag').':</p><div class="flag_crunching"><div class="flag_progress"><span class="flag_complete"></span><span class="txt">'.__('Crunching...','flag').'</span></div></div></div>';
+		$created_msg .= '<div class="message"><p>'.count($new_filelist).' '.__('image(s) in the folder','flash-album-gallery').':</p><div class="flag_crunching"><div class="flag_progress"><span class="flag_complete"></span><span class="txt">'.__('Crunching...','flash-album-gallery').'</span></div></div></div>';
 		echo $created_msg;
 		return $new_filelist;
 	}
 
 	//Handle an individual file import.
-	function handle_import_file($file, $post_id = 0) {
+	public static function handle_import_file($file, $post_id = 0) {
 		set_time_limit(120);
 		$time = current_time('mysql');
 		if ( $post = get_post($post_id) ) {
@@ -367,7 +389,7 @@ class flagAdmin{
 			// copy the file to the uploads dir
 			$new_file = $uploads['path'] . '/' . $filename;
 			if ( false === @copy( $file, $new_file ) )
-				wp_die(sprintf( __('The selected file could not be copied to %s.', 'flag'), $uploads['path']));
+				wp_die(sprintf( __('The selected file could not be copied to %s.', 'flash-album-gallery'), $uploads['path']));
 
 			// Set correct file permissions
 			$stat = stat( dirname( $new_file ));
@@ -433,7 +455,7 @@ class flagAdmin{
 	 * @param array $ext
 	 * @return array
 	 */
-	function scandir($dirname = '.', $ext = array()) { 
+	public static function scandir($dirname = '.', $ext = array()) {
 		// thx to php.net :-)
 		if(empty($ext))
 			$ext = array('jpeg', 'jpg', 'png', 'gif'); 
@@ -455,31 +477,38 @@ class flagAdmin{
 	 * @param object | int $image contain all information about the image or the id
 	 * @return string result code
 	 */
-	static function create_thumbnail($image) {
+	public static function create_thumbnail($image) {
 		
 		global $flag;
-		
-		if(! class_exists('flag_Thumbnail'))
-			require_once( flagGallery::graphic_library() );
-		
+
 		if ( is_numeric($image) )
 			$image = flagdb::find_image( $image );
 
-		if ( !is_object($image) ) 
-			return __('Object didn\'t contain correct data','flag');
+		if ( !is_object($image) )
+			return __('Object didn\'t contain correct data','flash-album-gallery');
+
+		$dest_path = dirname($image->webimagePath);
+		if(!is_dir($dest_path)){
+			flagGallery::create_webview_folder(dirname($image->imagePath));
+			@chmod( $dest_path, 0755 );
+		}
+
+		if(! class_exists('flag_Thumbnail'))
+			require_once( flagGallery::graphic_library() );
 		
 		// check for existing thumbnail
 		if (file_exists($image->thumbPath))
 			if (!is_writable($image->thumbPath))
-				return $image->filename . __(' is not writeable ','flag');
+				return $image->filename . __(' is not writeable ','flash-album-gallery');
 
 		$thumb = new flag_Thumbnail($image->imagePath, TRUE);
+		$img_size = @getimagesize ( $image->imagePath );
 
 		// skip if file is not there
 		if (!$thumb->error) {
 			if ($flag->options['thumbFix'])  {
 				// check for portrait format
-				if ($thumb->currentDimensions['height'] > $thumb->currentDimensions['width']) {
+				if ( ($flag->options['thumbWidth']/$flag->options['thumbHeight'] > $img_size[0]/$img_size[1]) ) {
 					// first resize to the wanted width
 					$thumb->resize($flag->options['thumbWidth'], 0);
 					// get optimal y startpos
@@ -499,7 +528,7 @@ class flagAdmin{
 			
 			// save the new thumbnail
 			$thumb->save($image->thumbPath, $flag->options['thumbQuality']);
-			flagAdmin::chmod ($image->thumbPath); 
+			flagAdmin::chmod ($image->thumbPath);
 
 			//read the new sizes
 			$new_size = @getimagesize ( $image->thumbPath );
@@ -508,13 +537,17 @@ class flagAdmin{
 			
 			// add them to the database
 			flagdb::update_image_meta($image->pid, array( 'thumbnail' => $size) );
-} 
+		}
 				
 		$thumb->destruct();
 		
 		if ( !empty($thumb->errmsg) )
-			return ' <strong>' . $image->filename . ' (Error : '.$thumb->errmsg .')</strong>';
-		
+			return $image->filename . ' (Error : '.$thumb->errmsg .')';
+
+		do_action('flag_thumbnail_created', $image);
+
+		flagAdmin::webview_image($image);
+
 		// success
 		return '1'; 
 	}
@@ -528,7 +561,7 @@ class flagAdmin{
 	 * @param integer $height optional
 	 * @return string result code
 	 */
-	static function resize_image($image, $width = 0, $height = 0) {
+	public static function resize_image($image, $width = 0, $height = 0) {
 		
 		global $flag;
 		
@@ -539,7 +572,7 @@ class flagAdmin{
 			$image = flagdb::find_image( $image );
 		
 		if ( !is_object($image) ) 
-			return __('Object didn\'t contain correct data','flag');	
+			return __('Object didn\'t contain correct data','flash-album-gallery');
 
 		// before we start we import the meta data to database (required for uploads before V0.40)
 		flagAdmin::maybe_import_meta( $image->pid );
@@ -549,7 +582,7 @@ class flagAdmin{
 		$height = ($height == 0) ? $flag->options['imgHeight'] : $height;
 		
 		if (!is_writable($image->imagePath))
-			return ' <strong>' . $image->filename . __(' is not writeable','flag') . '</strong>';
+			return ' <strong>' . $image->filename . __(' is not writeable','flash-album-gallery') . '</strong>';
 		
 		$file = new flag_Thumbnail($image->imagePath, TRUE);
 
@@ -567,6 +600,58 @@ class flagAdmin{
 			return ' <strong>' . $image->filename . ' (Error : ' . $file->errmsg . ')</strong>';
 		}
 
+		do_action('flag_image_resized', $image);
+
+		return '1';
+	}
+
+	/**
+	 * flagAdmin::webview_image() - create a new image, based on the height /width
+	 *
+	 * @class flagAdmin
+	 * @param object | int $image contain all information about the image or the id
+	 * @return string result code
+	 */
+	public static function webview_image($image) {
+
+		global $flag;
+
+		if ( is_numeric($image) )
+			$image = flagdb::find_image( $image );
+
+		if ( !is_object($image) )
+			return __('Object didn\'t contain correct data','flash-album-gallery');
+
+		$img_size = @getimagesize ( $image->imagePath );
+		$dest_path = dirname($image->webimagePath);
+		if(flagGallery::create_webview_folder(dirname($image->imagePath))){
+			if (! is_writable( $dest_path ) ) {
+				@chmod( $dest_path, 0755 );
+			}
+
+			if (file_exists($image->webimagePath)){
+				return '1';
+			}
+
+			$imgquality = $flag->options['imgQuality'];
+			$max_width = ($img_size[0] < 1200)? $img_size[0] : 1200;
+			$max_height = ($img_size[1] < 1200)? $img_size[1] : 1200;
+			if( function_exists('wp_get_image_editor') ) {
+				$editor = wp_get_image_editor( $image->imagePath );
+				$editor->set_quality( $imgquality );
+				$editor->resize( $max_width, $max_height, 0 );
+				$editor->save( $image->webimagePath );
+				if(@filesize($image->webimagePath) > @filesize($image->imagePath)) {
+					@copy($image->imagePath, $image->webimagePath);
+				}
+				$webviewsize = @getimagesize ( $image->webimagePath );
+				flagdb::update_image_meta($image->pid, array( 'webview' => $webviewsize) );
+
+				do_action('flag_image_optimized', $image);
+
+			}
+		}
+
 		return '1';
 	}
 
@@ -579,7 +664,7 @@ class flagAdmin{
 	 * @param bool $name2alt
 	 * @return array $image_ids Id's which are sucessful added
 	 */
-	function add_Images($galleryID, $imageslist, $name2alt = false) {
+	public static function add_Images($galleryID, $imageslist, $name2alt = false) {
 		global $wpdb;
 		
 		$alttext = '';
@@ -620,7 +705,7 @@ class flagAdmin{
 	 * @param array|int $imagesIds
 	 * @return bool
 	 */
-	static function import_MetaData($imagesIds) {
+	public static function import_MetaData($imagesIds) {
 			
 		global $wpdb;
 		
@@ -642,18 +727,18 @@ class flagAdmin{
 				// get the file date/time from exif
 				$timestamp = $meta['timestamp'];
 				// update database
-				$result = $wpdb->query( $wpdb->prepare("UPDATE $wpdb->flagpictures SET alttext = %s, description = %s, imagedate = %s WHERE pid = %d", esc_attr($alttext), esc_attr($description), $timestamp, $image->pid) );
+				$result = $wpdb->query( $wpdb->prepare("UPDATE $wpdb->flagpictures SET alttext = %s, description = %s, imagedate = %s WHERE pid = %d", $alttext, $description, $timestamp, $image->pid) );
 				if ($result === false)
-					return ' <strong>' . $image->filename . ' ' . __('(Error : Couldn\'t not update data base)', 'flag') . '</strong>';		
+					return ' <strong>' . $image->filename . ' ' . __('(Error : Couldn\'t not update data base)', 'flash-album-gallery') . '</strong>';
 				
 				//this flag will inform us the import is already one time performed
 				$meta['common']['saved']  = true; 
 				$result = flagdb::update_image_meta($image->pid, $meta['common']);
 				
 				if ($result === false)
-					return ' <strong>' . $image->filename . ' ' . __('(Error : Couldn\'t not update meta data)', 'flag') . '</strong>';
+					return ' <strong>' . $image->filename . ' ' . __('(Error : Couldn\'t not update meta data)', 'flash-album-gallery') . '</strong>';
 			} else
-				return ' <strong>' . $image->filename . ' ' . __('(Error : Couldn\'t not find image)', 'flag') . '</strong>';// error check
+				return ' <strong>' . $image->filename . ' ' . __('(Error : Couldn\'t not find image)', 'flash-album-gallery') . '</strong>';// error check
 		}
 		
 		return '1';
@@ -667,7 +752,7 @@ class flagAdmin{
 	 * @param array|int $imagesIds
 	 * @return bool
 	 */
-	static function copy_MetaData($imagesIds) {
+	public static function copy_MetaData($imagesIds) {
 			
 		global $wpdb;
 
@@ -695,12 +780,12 @@ class flagAdmin{
 				// get the file date/time from exif
 				$makedescription = $alttext.$description.$makedescription;
 				// update database
-				$result = $wpdb->query( $wpdb->prepare("UPDATE $wpdb->flagpictures SET alttext = %s, description = %s, imagedate = %s WHERE pid = %d", '', esc_attr($makedescription), $timestamp, $image->pid) );
+				$result = $wpdb->query( $wpdb->prepare("UPDATE $wpdb->flagpictures SET alttext = %s, description = %s, imagedate = %s WHERE pid = %d", '', $makedescription, $timestamp, $image->pid) );
 				if ($result === false)
-					return ' <strong>' . $image->filename . ' ' . __('(Error : Couldn\'t not update data base)', 'flag') . '</strong>';		
+					return ' <strong>' . $image->filename . ' ' . __('(Error : Couldn\'t not update data base)', 'flash-album-gallery') . '</strong>';
 				
 			} else
-				return ' <strong>' . $image->filename . ' ' . __('(Error : Couldn\'t not find image)', 'flag') . '</strong>';// error check
+				return ' <strong>' . $image->filename . ' ' . __('(Error : Couldn\'t not find image)', 'flash-album-gallery') . '</strong>';// error check
 		}
 		
 		return '1';
@@ -715,7 +800,7 @@ class flagAdmin{
 	 * @param $id
 	 * @return array metadata
 	 */
-	function get_MetaData($id) {
+	public static function get_MetaData($id) {
 		
 		require_once(FLAG_ABSPATH . 'lib/meta.php');
 		
@@ -741,16 +826,17 @@ class flagAdmin{
 	 * @param int $id
 	 * @return mixed  result
 	 */
-	function maybe_import_meta( $id ) {
+	public static function maybe_import_meta( $id ) {
 				
 		require_once(FLAG_ABSPATH . 'lib/meta.php');
-				
-		$image = new flagMeta( $id );
+
+		$meta_obj = new flagMeta( $id );
 		
-		if ( $image->meta_data['saved'] != true ) {
-			//this flag will inform us the import is already one time performed
-			$meta['saved']  = true; 
-			$result = flagdb::update_image_meta($image->pid, $meta['common']);
+		if ( $meta_obj->image->meta_data['saved'] != true ) {
+			$common = $meta_obj->get_common_meta();
+			//this flag will inform us that the import is already one time performed
+			$common['saved']  = true;
+			$result = flagdb::update_image_meta($id, $common);
 		} else
 			return false;
 		
@@ -766,7 +852,7 @@ class flagAdmin{
 	 * @param mixed $p_header
 	 * @return bool
 	 */
-	function getOnlyImages($p_event, $p_header)	{
+	public static function getOnlyImages($p_event, $p_header)	{
 		
 		$info = pathinfo($p_header['filename']);
 		// check for extension
@@ -790,7 +876,7 @@ class flagAdmin{
 	 * @class flagAdmin
 	 * @return void
 	 */
-	static function upload_images() {
+	public static function upload_images() {
 		
 		global $wpdb;
 		
@@ -805,7 +891,7 @@ class flagAdmin{
 		$galleryID = (int) $_POST['galleryselect'];
 
 		if ($galleryID == 0) {
-			flagGallery::show_error(__('No gallery selected !','flag'));
+			flagGallery::show_error(__('No gallery selected !','flash-album-gallery'));
 			return;	
 		}
 
@@ -813,7 +899,7 @@ class flagAdmin{
 		$gallery = flagdb::find_gallery($galleryID);
 
 		if ( empty($gallery->path) ){
-			flagGallery::show_error(__('Failure in database, no gallery path set !','flag'));
+			flagGallery::show_error(__('Failure in database, no gallery path set !','flash-album-gallery'));
 			return;
 		} 
 				
@@ -835,9 +921,9 @@ class flagAdmin{
 					$filename = $filepart['basename'];
 						
 					// check for allowed extension and if it's an image file
-					$ext = array('jpg', 'png', 'gif'); 
-					if ( !in_array($filepart['extension'], $ext) || !@getimagesize($temp_file) ){ 
-						flagGallery::show_error('<strong>' . $imagefiles['name'][$key] . ' </strong>' . __('is no valid image file!','flag'));
+					$ext = array('jpg', 'jpeg', 'png', 'gif');
+					if ( !in_array(strtolower($filepart['extension']), $ext) || !@getimagesize($temp_file) ){
+						flagGallery::show_error('<strong>' . $imagefiles['name'][$key] . ' </strong>' . __('is no valid image file!','flash-album-gallery'));
 						continue;
 					}
 	
@@ -851,19 +937,21 @@ class flagAdmin{
 					
 					//check for folder permission
 					if ( !is_writeable($gallery->abspath) ) {
-						$message = sprintf(__('Unable to write to directory %s. Is this directory writable by the server?', 'flag'), $gallery->abspath);
+						$message = sprintf(__('Unable to write to directory %s. Is this directory writable by the server?', 'flash-album-gallery'), $gallery->abspath);
 						flagGallery::show_error($message);
 						return;				
 					}
 					
 					// save temp file to gallery
 					if ( !@move_uploaded_file($temp_file, $dest_file) ){
-						flagGallery::show_error(__('Error, the file could not moved to : ','flag') . $dest_file);
-						flagAdmin::check_safemode( $gallery->abspath );		
-						continue;
+						if( !file_exists($dest_file)){
+							flagGallery::show_error(__('Error, the file could not moved to : ','flash-album-gallery') . $dest_file);
+							flagAdmin::check_safemode( $gallery->abspath );
+							continue;
+						}
 					} 
 					if ( !flagAdmin::chmod($dest_file) ) {
-						flagGallery::show_error(__('Error, the file permissions could not set','flag'));
+						flagGallery::show_error(__('Error, the file permissions could not set','flash-album-gallery'));
 						continue;
 					}
 					
@@ -880,11 +968,11 @@ class flagAdmin{
 			$image_ids = flagAdmin::add_Images($galleryID, $imageslist);
 
 			//create thumbnails
-			flagAdmin::do_ajax_operation( 'create_thumbnail' , $image_ids, __('Create new thumbnails','flag') );
+			flagAdmin::do_ajax_operation( 'create_thumbnail' , $image_ids, __('Create new thumbnails','flash-album-gallery') );
 			//add the preview image if needed
 			flagAdmin::set_gallery_preview ( $galleryID );
 			
-			flagGallery::show_message( count($image_ids) . __(' Image(s) successfully added','flag'));
+			flagGallery::show_message( count($image_ids) . __(' Image(s) successfully added','flash-album-gallery'));
 		}
 		
 		return;
@@ -900,11 +988,11 @@ class flagAdmin{
 	 */
 	static function swfupload_image($galleryID = 0) {
 
-		global $wpdb;
-		
+		global $wpdb, $flag;
+
 		if ($galleryID == 0) {
 			//@unlink($temp_file);
-			return __('No gallery selected!','flag');
+			return __('No gallery selected!','flash-album-gallery');
 		}
 
 		// WPMU action
@@ -912,25 +1000,27 @@ class flagAdmin{
 			return '0';
 
 		// Check the upload
-		if (!isset($_FILES['Filedata']) || !is_uploaded_file($_FILES["Filedata"]["tmp_name"]) || $_FILES["Filedata"]["error"] === UPLOAD_ERR_OK) 
-			flagAdmin::file_upload_error_message($_FILES['Filedata']['error']); 
+		if (!isset($_FILES['file']) || !is_uploaded_file($_FILES["file"]["tmp_name"]) || $_FILES["file"]["error"] === UPLOAD_ERR_OK)
+			flagAdmin::file_upload_error_message($_FILES['file']['error']);
 
 		// get the filename and extension
-		$temp_file = $_FILES["Filedata"]['tmp_name'];
+		$temp_file = $_FILES["file"]['tmp_name'];
 
-		$filepart = flagGallery::fileinfo( $_FILES['Filedata']['name'] );
+		$filepart = flagGallery::fileinfo( $_FILES['file']['name'] );
 		$filename = $filepart['basename'];
 
 		// check for allowed extension
 		$ext = array('jpeg', 'jpg', 'png', 'gif'); 
-		if (!in_array($filepart['extension'], $ext))
-			return $filename . __('is no valid image file!','flag');
+		if (!in_array(strtolower($filepart['extension']), $ext)){
+			if(!@getimagesize($temp_file))
+				return $filename . ' '. __('is no valid image file!','flash-album-gallery');
+		}
 
-		// get the path to the gallery	
-		$gallerypath = $wpdb->get_var("SELECT path FROM $wpdb->flaggallery WHERE gid = '$galleryID' ");
+		// get the path to the gallery
+		$gallerypath = $wpdb->get_var($wpdb->prepare("SELECT path FROM {$wpdb->flaggallery} WHERE gid = %d ", $galleryID));
 		if (!$gallerypath){
-			@unlink($temp_file);		
-			return __('Failure in database, no gallery path set !','flag');
+			@unlink($temp_file);
+			return __('Failure in database, no gallery path set !','flash-album-gallery');
 		} 
 
 		// read list of images
@@ -945,15 +1035,36 @@ class flagAdmin{
 		$dest_file = WINABSPATH . $gallerypath . '/' . $filename;
 				
 		// save temp file to gallery
-		if ( !@move_uploaded_file($_FILES["Filedata"]['tmp_name'], $dest_file) ){
-			flagAdmin::check_safemode(WINABSPATH.$gallerypath);	
-			return __('Error, the file could not moved to : ','flag').$dest_file;
-		} 
+		if ( !@move_uploaded_file($temp_file, $dest_file) ){
+			if( !file_exists($dest_file)){
+				flagAdmin::check_safemode(WINABSPATH.$gallerypath);
+				return __('Error, the file could not moved to : ','flash-album-gallery').$dest_file;
+			}
+		}
 		
 		if ( !flagAdmin::chmod($dest_file) )
-			return __('Error, the file permissions could not set','flag');
-		
-		return '0';
+			return __('Error, the file permissions could not set','flash-album-gallery');
+
+		// add images to database
+		$image_ids = flagAdmin::add_Images($galleryID, array($filename));
+		$return = '';
+		//create thumbnails
+
+		//save the thumb size values
+		$flag->options['thumbWidth']  = intval($_POST['thumbw'])? intval($_POST['thumbw']) : 100;
+		$flag->options['thumbHeight'] = intval($_POST['thumbh'])? intval($_POST['thumbh']) : 100;
+		$flag->options['thumbFix']    = ('true' == $_POST['thumbf'])? 1 : 0;
+		update_option('flag_options', $flag->options);
+
+		foreach($image_ids as $picture){
+			$return = flagAdmin::create_thumbnail($picture);
+		}
+		//add the preview image if needed
+		if(intval($_POST['last']) == 1)
+			flagAdmin::set_gallery_preview ( $galleryID );
+
+		return (intval($return) == 1)? '' : $return;
+
 	}
 
 	/**
@@ -966,21 +1077,21 @@ class flagAdmin{
 	function file_upload_error_message($error_code) {
 		switch ($error_code) {
 			case UPLOAD_ERR_INI_SIZE:
-				return __('The uploaded file exceeds the upload_max_filesize directive in php.ini','flag');
+				return __('The uploaded file exceeds the upload_max_filesize directive in php.ini','flash-album-gallery');
 			case UPLOAD_ERR_FORM_SIZE:
-				return __('The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form','flag');
+				return __('The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form','flash-album-gallery');
 			case UPLOAD_ERR_PARTIAL:
-				return __('The uploaded file was only partially uploaded','flag');
+				return __('The uploaded file was only partially uploaded','flash-album-gallery');
 			case UPLOAD_ERR_NO_FILE:
-				return __('No file was uploaded','flag');
+				return __('No file was uploaded','flash-album-gallery');
 			case UPLOAD_ERR_NO_TMP_DIR:
-				return __('Missing a temporary folder','flag');
+				return __('Missing a temporary folder','flash-album-gallery');
 			case UPLOAD_ERR_CANT_WRITE:
-				return __('Failed to write file to disk','flag');
+				return __('Failed to write file to disk','flash-album-gallery');
 			case UPLOAD_ERR_EXTENSION:
-				return __('File upload stopped by extension','flag');
+				return __('File upload stopped by extension','flash-album-gallery');
 			default:
-				return __('Unknown upload error','flag');
+				return __('Unknown upload error','flash-album-gallery');
 		}
 	}
 
@@ -990,11 +1101,11 @@ class flagAdmin{
 	 * @class flagAdmin
 	 * @return bool $result
 	 */
-	function check_quota() {
+ public static function check_quota() {
 
 			if ( (IS_WPMU) && flagGallery::flag_wpmu_enable_function('wpmuQuotaCheck'))
 				if( $error = upload_is_user_over_quota( false ) ) {
-					flagGallery::show_error( __( 'Sorry, you have used your space allocation. Please delete some files to upload more files.','flag' ) );
+					flagGallery::show_error( __( 'Sorry, you have used your space allocation. Please delete some files to upload more files.','flash-album-gallery' ) );
 					return true;
 				}
 			return false;
@@ -1007,7 +1118,7 @@ class flagAdmin{
 	 * @param string $filename
 	 * @return bool $result
 	 */
-	function chmod($filename = '') {
+	public static function chmod($filename = '') {
 
 		$stat = @ stat(dirname($filename));
 		$perms = $stat['mode'] & 0007777;
@@ -1026,7 +1137,7 @@ class flagAdmin{
 	 * @param string $foldername
 	 * @return bool $result
 	 */
-	static function check_safemode($foldername) {
+	public static function check_safemode($foldername) {
 
 		if ( SAFE_MODE ) {
 			
@@ -1034,8 +1145,8 @@ class flagAdmin{
 			$folder_uid = fileowner($foldername);
 
 			if ($script_uid != $folder_uid) {
-				$message  = sprintf(__('SAFE MODE Restriction in effect! You need to create the folder <strong>%s</strong> manually','flag'), $foldername);
-				$message .= '<br />' . sprintf(__('When safe_mode is on, PHP checks to see if the owner (%s) of the current script matches the owner (%s) of the file to be operated on by a file function or its directory','flag'), $script_uid, $folder_uid );
+				$message  = sprintf(__('SAFE MODE Restriction in effect! You need to create the folder <strong>%s</strong> manually','flash-album-gallery'), $foldername);
+				$message .= '<br />' . sprintf(__('When safe_mode is on, PHP checks to see if the owner (%s) of the current script matches the owner (%s) of the file to be operated on by a file function or its directory','flash-album-gallery'), $script_uid, $folder_uid );
 				flagGallery::show_error($message);
 				return false;
 			}
@@ -1051,7 +1162,7 @@ class flagAdmin{
 	 * @param int $check_ID is the user_id
 	 * @return bool $result
 	 */
-	static function can_manage_this_gallery($check_ID) {
+	public static function can_manage_this_gallery($check_ID) {
 
 		global $user_ID, $wp_roles;
 		
@@ -1072,7 +1183,7 @@ class flagAdmin{
 	 * @param int $dest_gid destination gallery
 	 * @return void
 	 */
-	static function move_images($pic_ids, $dest_gid) {
+	public static function move_images($pic_ids, $dest_gid) {
 
 		$errors = '';
 		$count = 0;
@@ -1085,13 +1196,13 @@ class flagAdmin{
 		$dest_abspath = WINABSPATH . $destination->path;
 		
 		if ( $destination == null ) {
-			flagGallery::show_error(__('The destination gallery does not exist','flag'));
+			flagGallery::show_error(__('The destination gallery does not exist','flash-album-gallery'));
 			return;
 		}
 		
 		// Check for folder permission
 		if ( !is_writeable( $dest_abspath ) ) {
-			$message = sprintf(__('Unable to write to directory %s. Is this directory writable by the server?', 'flag'), $dest_abspath );
+			$message = sprintf(__('Unable to write to directory %s. Is this directory writable by the server?', 'flash-album-gallery'), $dest_abspath );
 			flagGallery::show_error($message);
 			return;				
 		}
@@ -1116,7 +1227,7 @@ class flagAdmin{
 
 			// Move files
 			if ( !@rename($image->imagePath, $destination_path) ) {
-				$errors .= sprintf(__('Failed to move image %1$s to %2$s','flag'), 
+				$errors .= sprintf(__('Failed to move image %1$s to %2$s','flash-album-gallery'),
 					'<strong>' . $image->filename . '</strong>', $destination_path) . '<br />';
 				continue;				
 			}
@@ -1134,7 +1245,7 @@ class flagAdmin{
 			flagGallery::show_error($errors);
 
 		$link = '<a href="' . admin_url() . 'admin.php?page=flag-manage-gallery&mode=edit&gid=' . $destination->gid . '" >' . $destination->title . '</a>';
-		$messages  = sprintf(__('Moved %1$s picture(s) to gallery : %2$s .','flag'), $count, $link);
+		$messages  = sprintf(__('Moved %1$s picture(s) to gallery : %2$s .','flash-album-gallery'), $count, $link);
 		flagGallery::show_message($messages);
 
 		return;
@@ -1148,7 +1259,7 @@ class flagAdmin{
 	 * @param int $dest_gid destination gallery
 	 * @return void
 	 */
-	static function copy_images($pic_ids, $dest_gid) {
+	public static function copy_images($pic_ids, $dest_gid) {
 		
 		$errors = $messages = '';
 		
@@ -1158,13 +1269,13 @@ class flagAdmin{
 		// Get destination gallery
 		$destination = flagdb::find_gallery( $dest_gid );
 		if ( $destination == null ) {
-			flagGallery::show_error(__('The destination gallery does not exist','flag'));
+			flagGallery::show_error(__('The destination gallery does not exist','flash-album-gallery'));
 			return;
 		}
 		
 		// Check for folder permission
 		if (!is_writeable(WINABSPATH.$destination->path)) {
-			$message = sprintf(__('Unable to write to directory %s. Is this directory writable by the server?', 'flag'), WINABSPATH.$destination->path);
+			$message = sprintf(__('Unable to write to directory %s. Is this directory writable by the server?', 'flash-album-gallery'), WINABSPATH.$destination->path);
 			flagGallery::show_error($message);
 			return;				
 		}
@@ -1191,7 +1302,7 @@ class flagAdmin{
 
 			// Copy files
 			if ( !@copy($image->imagePath, $destination_file_path) ) {
-				$errors .= sprintf(__('Failed to copy image %1$s to %2$s','flag'), 
+				$errors .= sprintf(__('Failed to copy image %1$s to %2$s','flash-album-gallery'),
 					$image->filename, $destination_file_path) . '<br />';
 				continue;				
 			}
@@ -1203,15 +1314,15 @@ class flagAdmin{
 			$new_pid = flagdb::insert_image( $destination->gid, $destination_file_name, $image->alttext, $image->description, $image->exclude);
 
 			if (!isset($new_pid)) {				
-				$errors .= sprintf(__('Failed to copy database row for picture %s','flag'), $image->pid) . '<br />';
+				$errors .= sprintf(__('Failed to copy database row for picture %s','flash-album-gallery'), $image->pid) . '<br />';
 				continue;				
 			}
 				
 			if ( $tmp_prefix != '' ) {
-				$messages .= sprintf(__('Image %1$s (%2$s) copied as image %3$s (%4$s) &raquo; The file already existed in the destination gallery.','flag'),
+				$messages .= sprintf(__('Image %1$s (%2$s) copied as image %3$s (%4$s) &raquo; The file already existed in the destination gallery.','flash-album-gallery'),
 					 $image->pid, $image->filename, $new_pid, $destination_file_name) . '<br />';
 			} else {
-				$messages .= sprintf(__('Image %1$s (%2$s) copied as image %3$s (%4$s)','flag'),
+				$messages .= sprintf(__('Image %1$s (%2$s) copied as image %3$s (%4$s)','flash-album-gallery'),
 					 $image->pid, $image->filename, $new_pid, $destination_file_name) . '<br />';
 			}
 
@@ -1220,7 +1331,7 @@ class flagAdmin{
 		// Finish by showing errors or success
 		if ( $errors == '' ) {
 			$link = '<a href="' . admin_url() . 'admin.php?page=flag-manage-gallery&mode=edit&gid=' . $destination->gid . '" >' . $destination->title . '</a>';
-			$messages .= '<hr />' . sprintf(__('Copied %1$s picture(s) to gallery: %2$s .','flag'), count($images), $link);
+			$messages .= '<hr />' . sprintf(__('Copied %1$s picture(s) to gallery: %2$s .','flash-album-gallery'), count($images), $link);
 		} 
 
 		if ( $messages != '' )
@@ -1241,7 +1352,7 @@ class flagAdmin{
 	 * @param string $title name of the operation
 	 * @return string the javascript output
 	 */
-	static function do_ajax_operation( $operation, $image_array, $title = '' ) {
+	public static function do_ajax_operation( $operation, $image_array, $title = '' ) {
 		
 		if ( !is_array($image_array) || empty($image_array) )
 			return;
@@ -1279,17 +1390,17 @@ class flagAdmin{
 	 * @param int $galleryID
 	 * @return void
 	 */
-	function set_gallery_preview( $galleryID ) {
-		
-		global $wpdb;
-		
+	public static function set_gallery_preview( $galleryID ) {
+  	global $wpdb;
+
+		$galleryID = intval($galleryID);
 		$gallery = flagdb::find_gallery( $galleryID );
 		
 		// in the case no preview image is setup, we do this now
 		if ($gallery->previewpic == 0) {
-			$firstImage = $wpdb->get_var("SELECT pid FROM $wpdb->flagpictures WHERE exclude != 1 AND galleryid = '$galleryID' ORDER by pid DESC limit 0,1");
+			$firstImage = $wpdb->get_var($wpdb->prepare("SELECT `pid` FROM `{$wpdb->flagpictures}` WHERE `exclude` != 1 AND `galleryid` = '%d' ORDER by `pid` DESC limit 0,1", $galleryID));
 			if ($firstImage) {
-				$wpdb->query("UPDATE $wpdb->flaggallery SET previewpic = '$firstImage' WHERE gid = '$galleryID'");
+				$wpdb->query($wpdb->prepare("UPDATE `{$wpdb->flaggallery}` SET `previewpic` = '%s' WHERE `gid` = '%d'", $firstImage, $galleryID));
 				wp_cache_delete($galleryID, 'flag_gallery');
 			}
 		}
@@ -1303,7 +1414,7 @@ class flagAdmin{
 	 * @param int $galleryID
 	 * @return array (JSON)
 	 */
-	static function get_image_ids( $galleryID ) {
+	public static function get_image_ids( $galleryID ) {
 		
 		if ( !function_exists('json_encode') )
 			return(-2);
@@ -1317,5 +1428,4 @@ class flagAdmin{
 	}
 	
 } // END class flagAdmin
-
-?>
+}

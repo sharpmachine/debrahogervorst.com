@@ -1,0 +1,1182 @@
+/*
+	Theme Name: Tribe
+	Description: Tribe Theme is a standalone theme focused on exceptional typography, built for writers who are serious with their art.
+	Author: Goins Writer
+	Author URI: http://tribetheme.com
+	Version: 1.3.1
+	License: GNU General Public License v2.0
+	License URI: http://www.gnu.org/licenses/gpl-2.0.html
+*/
+
+/* General _____________________ */
+
+h1, h2, h3, h4 {
+	font-weight: 300;
+}
+
+h1 {
+	font-size: 30px;
+	margin: 0 0 30px 0;
+	line-height: 35px;
+}
+
+h2 {
+	font-size: 24px;
+	margin: 0 0 28px 0;
+	line-height: 30px;
+}
+
+h3 {
+	font-size: 20px;
+	margin: 0 0 25px 0;
+	line-height: 28px;
+}
+
+h4 {
+	font-size: 18px;
+	margin: 0 0 10px 0;
+}
+
+p {
+	margin: 0 0 25px 0;
+}
+
+a {
+	text-decoration: none;
+	transition: .3s;
+}
+
+body a:hover {
+	color: #000;
+}
+
+/* Can't include iFrame because that messes up #wpadminbar iframes */
+img, div {
+	max-width: 100%;
+}
+
+#wpadminbar, #wpadminbar div {
+	max-width: 1000%;
+}
+
+.tribeclear {
+	clear: both;
+}
+
+.overflowhidden {
+	overflow: hidden;
+}
+
+ul, ol {
+	margin: 0 0 25px 30px;
+}
+
+/* Centered Styling _____________________ */
+
+.centered.no-sidebar h1, .centered.no-sidebar .entry-title {
+	margin-left: -100px;
+	margin-right: -100px;
+}
+
+.centered.no-sidebar h1, .centered.no-sidebar .post-meta-data, .centered.no-sidebar .entry-content h2, .centered.no-sidebar .entry-content h3, .centered.no-sidebar .entry-title, .centered header.tribe-header, .centered .navigation, .no-sidebar.centered .center-me, .no-sidebar.centered .pagination, .no-sidebar.centered .post-edit-link {
+	text-align: center;
+}
+
+.centered .navigation ul, .centered .navigation li {
+	float: none;
+}
+
+.centered .navigation li
+{
+	display: inline-block;
+}
+
+/* Sticky Bar _____________________ */
+
+.sticky-bar  {
+background: #111;
+color: #FFF;
+position: fixed;
+width: 100%;
+text-align: center;
+z-index: 999;
+top: 0;
+}
+
+.sticky-bar .widget {
+padding: 10px;
+}
+
+.sticky-bar input[type="submit"], .sticky-bar input[type="text"] {
+display: inline;
+margin: 0;
+}
+
+.sticky-bar input[type="submit"] {
+padding: 5px 20px;
+margin: 0 10px 0;
+color: #fff;
+}
+
+.sticky-bar .widget div, .sticky-bar .widget p {
+    display: inline;
+}
+
+.sticky-bar .widget p, .sticky-bar .widget form, .sticky-bar .widget input {
+    margin: 0;
+}
+
+/* header.tribe-header _____________________ */
+
+body.tribe_logo header.tribe-header {
+	margin: 0 auto;
+	text-indent: -9999px;
+}
+
+body.custom.tribe_logo header.tribe-header a {
+	background-repeat: no-repeat;
+	background-position: center;
+/**
+ * We do this next argument to handle situations where the
+ * image is wider than 960px.
+ */
+	background-size: 100% auto;
+}
+
+header.tribe-header {
+	overflow: hidden;
+}
+
+.tribe_text header.tribe-header {
+
+}
+
+body header.tribe-header h2, body header.tribe-header h1 {
+	margin: 0;
+}
+
+.tribe_logo .tagline {
+	display:none;
+}
+
+.tribe_text .header-wrap a {
+	display: block;
+	width: 960px;
+	height: 100%;
+	color: #111;
+	font-size: 54px;
+	line-height: 49px;
+}
+
+body.tribe_text .header-wrap a, body.tribe_text .tagline {
+	width: 720px;
+	padding: 19px 0 20px 0;
+	margin: 0 auto;
+}
+
+header.tribe-header h1, header.tribe-header h2 {
+	margin: 0 0 10px 0;
+}
+
+body.tribe_text header.tribe-header > div {
+	padding: 30px 0;
+}
+
+body.tribe_text.showing_description header.tribe-header > div {
+	padding: 12px 0 38px;
+}
+
+body.tribe_text .tagline {
+	color: #777;
+	font-size: 28px;
+	line-height: 32px;
+	padding: 0;
+	border-bottom: none;
+	padding: 14px 20px 0;
+	width: 680px;
+	opacity: .7;
+}
+
+body.tribe_text .border {
+	background: rgba( 255,255,255,.3);
+	height: 2px;
+	max-width: 720px;
+	margin: 0 auto;
+}
+
+body.tribe_text.white_header_background_color .border {
+	background: rgba( 0,0,0,.1);
+}
+
+body.tribe_text.white_header_background_color .tagline {
+	opacity: .5;
+}
+
+body.not_has_nav_menu_tribe_below header.tribe-header {
+	margin-bottom: 30px;
+}
+
+/* Primary menu _____________________ */
+
+.navigation {
+	margin: 0 auto;
+	padding: 10px 0;
+}
+
+.navigation:after {
+	clear: both;
+}
+
+.navigation ul {
+	list-style: none;
+	float: right;
+	margin: 0;
+}
+
+.navigation li {
+	float: left;
+}
+
+.navigation a {
+	display: block;
+	padding: 13px 20px;
+	color: #777;
+	text-transform: uppercase;
+}
+
+.navigation .current-menu-item a {
+	color: #000;
+}
+
+.navigation li ul {
+	display: none;
+}
+
+/* secondary menu _____________________ */
+
+.subnav {
+	border-bottom: 1px solid #EDEDED;
+	margin-bottom: 30px;
+}
+
+body.has_feature_box .subnav {
+	border: none;
+	margin-bottom: 0;
+}
+
+.subnav ul {
+	float: left;
+	margin: 0;
+}
+
+/* Universal non-mobile dropdown experience _____________________ */
+
+.navigation.dropdown ul ul {
+	background: white;
+	padding: 0;
+	border: 1px solid #C4C4C4;
+}
+
+.navigation.dropdown li a .sf-sub-indicator {
+	display: block;
+	text-indent: -9999px;
+	overflow: hidden;
+	position: absolute;
+}
+
+.navigation.dropdown li li {
+	border: none;
+	float: none;
+	position: relative;
+}
+
+.navigation.dropdown li li a {
+	width: 158px;
+	font-size: 14px;
+	margin: 0;
+	padding: 10px 10px;
+	text-transform: none;
+	position: relative;
+	display: block;
+}
+
+.navigation.dropdown li ul {
+	z-index: 9999;
+	position: absolute;
+	left: -999em;
+	height: auto;
+	width: 180px;
+	padding: 0;
+}
+
+.navigation.dropdown li li a:hover {
+	color: white;
+	background: #3a6ff3;
+}
+
+.navigation.dropdown li ul a {
+	width: 160px;
+}
+
+.navigation.dropdown li:hover ul ul, .navigation.dropdown li:hover ul ul ul, .navigation.dropdown li.sfHover ul ul, .navigation.dropdown li.sfHover ul ul ul{
+	left: -999em;
+}
+
+.navigation.dropdown li:hover ul, .navigation.dropdown li li:hover ul, .navigation.dropdown li li li:hover ul, .navigation.dropdown li.sfHover ul, .navigation.dropdown li li.sfHover ul, .navigation.dropdown li li li.sfHover ul {
+	left: auto;
+}
+
+.navigation.dropdown ul ul ul {
+	margin: 0 0 0 180px;
+	top: -1px;
+}
+
+/* main blocks _____________________ */
+
+#inner {
+	width: 960px;
+	margin: 0 auto 30px;
+}
+
+/* pagination _____________________ */
+
+.pagination {
+	overflow: hidden;
+	margin-top: 40px;
+}
+
+.pagination .page-numbers {
+	display: inline-block;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	padding: 5px 14px;
+	margin: 0 10px 0 0;
+}
+
+
+.pagination a.page-numbers:hover {
+	color: white;
+}
+
+/* Images --------------------------------------- */
+img.frame {
+	background:#eee;
+	border:1px solid #ddd
+}
+
+.wp-caption {
+	background:#f5f5f5;
+	margin:0 0 25px;
+	padding:10px
+}
+
+.alignleft,img.alignleft, .left, img.left {
+	float:left;
+	margin:0 20px 20px 0
+}
+
+.alignright,img.alignright {
+	float:right;
+	margin:0 0 20px 20px
+}
+
+.aligncenter,img.aligncenter {
+	display:block;
+	margin:0 auto 25px
+}
+
+.wp-caption p {
+	margin: 7px 0 0;
+	text-align: center;
+}
+
+.wp-caption img {
+	display:block;
+	margin:0 auto
+}
+
+#content p.wp-caption-text {
+	text-align:center;
+	font-size:14px;
+	text-shadow:1px 1px #fff;
+	margin:7px 0 0
+}
+
+/* blockquote, special boxes, and other chrome _____________________ */
+
+blockquote:before {
+	content: '“';
+	font-size: 110px;
+	display: block;
+	float: left;
+	width: 40px;
+	margin: 45px 24px 0px -75px;
+	color: #cacaca;
+}
+
+blockquote.one-liner:before {
+	line-height: 0;
+}
+
+blockquote {
+	background: #f5f5f5;
+	padding: 20px 20px 20px 88px;
+	margin: 0 0 25px;
+	color: #6D6D6D;
+}
+
+blockquote *:last-child, .content-box-yellow *:last-child, .content-box-blue *:last-child, .feature-box ul, #content .bio *:last-child {
+	margin-bottom: 0;
+}
+
+pre {
+	box-shadow: 0 0 30px #EEE inset;
+	border: 1px solid #DDD;
+	margin: 0 0 25px;
+	padding: 20px;
+	overflow-y: scroll;
+}
+
+code {
+	border: 1px solid #ddd;
+	padding: 4px;
+	box-shadow: 0 0 30px #EEE inset;
+}
+
+sup {
+	font-size: 75%;
+	line-height: 0;
+	position: relative;
+	vertical-align: baseline;
+	top: -0.5em;
+	padding:0 5px;
+}
+
+.footnote {
+	color: #B1B1B1;
+	padding: 10px 20px;
+	border-top: 1px solid #EEE;
+	margin: 0 0 30px;
+	font-size: 16px;
+	line-height: 23px;
+}
+
+.content-box-yellow, .content-box-blue  {
+	margin: 0 0 25px 0;
+	padding: 20px;
+}
+
+.content-box-yellow {
+	background-color: #FEF5C4;
+}
+
+.content-box-blue {
+	background-color: #D8ECF7;
+}
+
+.special, .end-of-post-widget .widget {
+	margin: 0 0 25px 0;
+	padding: 20px;
+}
+
+.links {
+	overflow: hidden;
+	margin: 0 0 25px;
+}
+
+.links > div {
+	width: 40%;
+	display: block;
+	border: 1px solid #fff;
+}
+
+.links .previous {
+	float: right;
+	text-align: right;
+}
+
+.links .next {
+	float: left;
+}
+
+.links.mutex > div {
+	float: none;
+	text-align: center;
+	width: auto;
+}
+
+/* Bio --------------------------------------- */
+
+#content .bio {
+	overflow: hidden;
+	margin: 0 0 25px 0;
+	border-top: 1px solid #DDD;
+	border-bottom: 1px solid #DDD;
+	padding: 20px 0;
+}
+
+#content .bio img {
+	float: left;
+	margin: 0 20px 20px 0
+}
+
+#content .bio h3 {
+	margin-bottom: 4px;
+}
+
+.bio-copy {
+	float: left;
+	width: 530px;
+	font-size: smaller;
+	line-height: 146%;
+}
+
+
+#about-author {
+	font-size: 12px;
+	line-height: 14px;
+	text-transform: uppercase;
+	color: #666;
+}
+
+/* Popular Articles shortcode _____________________ */
+
+.popular-article li {
+	list-style: none;
+}
+
+.popular-article a {
+	display: block;
+	padding: 10px 0;
+	border-bottom: 1px solid #e5e5e5;
+}
+
+.popular-article .comment-number {
+	padding: 0px 3px;
+	display: inline-block;
+	color: #888;
+}
+
+/* Share Quote shortcode _____________________ */
+
+.share-quote{
+	background: #f4f4f4;
+	padding: 35px 100px;
+	position: relative;
+}
+
+.share-quote-quote{
+	background: #dd3333;
+	color: #fff;
+	font-size: 48px;
+	height: 65px;
+	position: absolute;
+	left: 0px;
+	line-height: 90px;
+	text-align: center;
+	top: 0px;
+	width: 65px;
+}
+
+.share-quote-text{
+	color: #1e1e1e;
+	font-size: 24px;
+	line-height: 36px;
+}
+
+.share-quote-author{
+	color: #808080;
+	font-size: 14px;
+	margin-top: 5px;
+	text-transform: uppercase;
+}
+
+.share-quote-shares{
+	background: #eae9e9;
+	height: 32px;
+	margin: 0 0 25px 0;
+	padding: 10px;
+	text-align: right;
+}
+
+.share-quote-shares-block{
+	color: #999;
+	display: inline-block;
+	font-size: 15px;
+	max-height: 32px;
+	padding-left: 10px;
+	vertical-align: middle;
+}
+
+.share-quote-twitter{
+	background-image: url('images/icons/social-share-shortcode-twitter.png');
+	display: inline-block;
+	height: 32px;
+	text-align: left;
+	text-indent:-9999px;
+	width: 32px;
+}
+
+@media only screen and (-Webkit-min-device-pixel-ratio: 1.5),
+only screen and (-moz-min-device-pixel-ratio: 1.5),
+only screen and (-o-min-device-pixel-ratio: 3/2),
+only screen and (min-device-pixel-ratio: 1.5) {
+		.share-quote-twitter {
+				background-image: url('images/icons/social-share-shortcode-twitter-x2.png');
+				background-size: 32px 32px;
+				background-repeat: no-repeat;
+		}
+}
+
+/* Post Meta Data _____________________ */
+
+.post-meta-data {
+	margin: -10px 0 30px;
+}
+
+.post-meta-data, .post-meta-data a {
+	color: #A8A8A8;
+}
+
+.post-meta-data a {
+	border-bottom-style: dotted;
+	border-width: 1px;
+}
+
+/* Comments Section _____________________ */
+
+
+.comment-reply-link {
+	color: #888;
+	border: 1px solid #DDD;
+	padding: 2px 10px;
+	font-size: 14px;
+	border-radius: 5px;
+	display: inline-block;
+	margin: -11px 0 20px;
+	text-transform: lowercase;
+}
+
+.comment-reply-link:hover {
+	color: white;
+	background: #BEBEBE;
+	border-color: #BEBEBE;
+}
+
+ol.commentlist {
+	margin: 0;
+}
+
+ol.children, ol.commentlist {
+	list-style:none;
+}
+
+ol.children, li #respond  {
+	margin-left: 80px;
+}
+
+#respond {
+	padding: 30px 0 0;
+	border-top: 1px solid #DDD;
+}
+
+#respond input {
+	margin: 0;
+}
+
+li #respond {
+	margin-bottom: 55px;
+	padding: 0;
+	border: none;
+}
+
+.avatar {
+	border-radius: 50%;
+}
+
+.comment-body {
+	overflow: hidden;
+	margin: 0 0 20px 0;
+	position: relative;
+	padding-left: 80px;
+}
+
+.comment-body .left {
+	position: absolute;
+	left: 0;
+}
+
+#comments {
+	clear: both;
+}
+
+#comments .publish_date {
+	margin: 0 0 10px 0;
+}
+
+#comments .publish_date a, #comments .publish_date {
+	color: #999;
+	font-size: 14px;
+}
+
+.comment-author {
+	font-weight: bold;
+}
+
+.commentlist > .comment {
+	overflow: hidden;
+	border-top: 1px solid #ddd;
+	padding: 30px 0 0;
+	margin: -10px 0 0;
+}
+
+.reply-headline {
+	padding: 0 0 30px 0;
+}
+
+/* Buttons, inputs, and form controls _____________________ */
+
+a.more-link {
+	display: inline-block;
+}
+
+form {
+	margin: 0 0 30px 0;
+}
+
+input, button, textarea {
+	font-size; inherit;
+	font-family: inherit;
+}
+
+input[type="password"], input[type="email"], input[type="text"], input[type="url"], textarea, button, input[type="submit"] {
+	-webkit-appearance: none;
+}
+
+input[type="submit"]::-moz-focus-inner {
+    border:0;
+}
+
+input[type="password"], input[type="email"], input[type="text"], input[type="url"], textarea {
+	padding: 6px 10px 4px;
+	border: 1px solid #c7c7c7;
+	width: 250px;
+	max-width: 90%;
+	margin: 0 0 20px 0;
+	line-height: 30px;
+	font-size: inherit;
+	border-radius: 9px;
+}
+
+input[type="password"].error, input[type="email"].error, input[type="text"].error, input[type="url"].error, textarea.error{
+	border: 1px solid red;
+}
+
+textarea {
+	width: 95%;
+}
+
+input[type="password"]:focus, input[type="url"]:focus, input[type="email"]:focus, input[type="text"]:focus, textarea:focus {
+	border: 1px solid rgb(190, 190, 190);
+}
+
+input[type="submit"], button, .more-link, .btn {
+	background: #fff;
+	padding: .5em 1em;
+	display: block;
+	border-radius: 8px;
+	border: 1px solid;
+	font-size: inherit;
+	transition: .3s;
+}
+
+.btn {
+	display: inline-block;
+	margin: 0 0 25px;
+}
+
+input[type="submit"]:hover, button:hover, .more-link:hover, .btn:hover {
+	background: #5E5E5E;
+	color: white;
+}
+
+
+textarea {
+	height: 60px;
+	resize: none;
+}
+
+#respond label {
+	display: block;
+}
+
+#respond #url {
+	margin-bottom: 15px;
+}
+
+/* Feature Box _____________________ */
+
+.feature-box {
+	padding: 30px;
+	overflow: hidden;
+	background: #f7f7f7;
+	margin: 0 0 40px;
+}
+
+.feature-box .wrap {
+	max-width: 960px;
+	margin: 0px auto;
+}
+
+.end-of-post-widget {
+	background: #f7f7f7;
+}
+
+.newsletter-signup label{
+	display: inline-block;
+	width: 140px;
+}
+
+.newsletter-signup input[type="submit"]{
+	margin-left: 140px;
+}
+
+/* Squeeze  _____________________ */
+
+body.page-template-squeeze-template header.tribe-header {
+	margin-bottom: 0;
+}
+
+.page-template-squeeze-template #inner, .page-template-squeeze-template #content{
+	padding: 0;
+	width: 100%;
+}
+
+.page-template-squeeze-template .feature-box, .page-template-squeeze-template .navigation {
+	display: none;
+}
+
+.page-template-squeeze-template .squeeze-avatar{
+	border-radius: 50%;
+	float: left;
+	margin: 100px 20px 20px 0;
+}
+
+.page-template-squeeze-template .squeeze-info{
+	float: right;
+	max-width: 525px;
+}
+
+.page-template-squeeze-template .squeeze-info h1{
+	margin: 50px 0 30px 0;
+}
+
+.page-template-squeeze-template .squeeze-banner-wrap{
+	margin: 0 auto 50px;
+	overflow: hidden;
+}
+
+.page-template-squeeze-template .squeeze-banner-wrap .squeeze-inner-wrap{
+	color: white;
+	margin: 0 auto;
+	max-width: 900px;
+}
+
+.page-template-squeeze-template .squeeze-quotes{
+	margin: 0 auto;
+	max-width: 700px;
+}
+
+.page-template-squeeze-template .squeeze-quotes h3{
+	text-align: center;
+}
+
+.page-template-squeeze-template .squeeze-social-wrap{
+	margin-top: 45px;
+	text-align: center;
+}
+
+.page-template-squeeze-template .squeeze-social-wrap a{
+	display: inline-block;
+	width: 70px;
+}
+
+/* Sidebar _____________________ */
+
+#sidebar {
+	width: 280px;
+}
+
+#sidebar .widget {
+	margin: 0 0 30px 0;
+	overflow: hidden;
+}
+
+.social-widget-wrap {
+	overflow: hidden;
+}
+
+.social-widget-wrap a {
+	margin-right: 10px;
+	width: 40px;
+}
+
+/* Footer _____________________ */
+
+.clear-pre-footer {
+	clear: both;
+	height: 40px;
+}
+
+footer {
+	background: #f7f7f7;;
+	padding: 40px 20px 20px;
+	clear: both;
+}
+
+body.no_footer_widgets footer {
+	padding: 20px;
+}
+
+.footer-widgets-wrap {
+	width: 960px;
+	margin: 0 auto 25px;
+	overflow: hidden;
+}
+
+.footer-left, .footer-right {
+	width: 45%;
+}
+
+.footer-left {
+	float: left;
+}
+
+.footer-right {
+	float: right;
+}
+
+.footer-text {
+	color: #A2A2A2;
+	text-align: center;
+	font-size: 14px;
+}
+
+
+/* Sidebar variations and general structuring _____________________ */
+
+#content {
+	width: 650px;
+}
+
+.left-sidebar #sidebar {
+	float: left;
+}
+
+.right-sidebar #sidebar {
+	float: right;
+}
+
+body.no-sidebar .comment-body .right {
+	width: auto;
+}
+
+body.no-sidebar #content {
+	float: none;
+	margin: 0 auto;
+}
+
+body.left-sidebar #content {
+	float: right;
+}
+
+body.right-sidebar #content {
+	float: left;
+}
+
+.archive .post {
+	margin: 0 0 30px 0;
+	border-bottom: 1px solid #DDD;
+	padding: 0 0 12px 0;
+}
+
+.archive .post.last {
+	border-bottom: none;
+	padding: 0;
+}
+
+/* Responsive Design _____________________ */
+
+@media all and (max-width: 960px)
+{
+	* {
+		max-width: 100%;
+	}
+
+	body.centered.no-sidebar h1, body.centered.no-sidebar h2, .centered.no-sidebar .entry-title {
+		margin-left: 0;
+		margin-right: 0;
+	}
+
+	#inner {
+		width: auto;
+		padding: 0 15px;
+	}
+
+	body.tribe_text .header-wrap {
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+
+	body.custom .tagline {
+		width: auto;
+	}
+
+	body.tribe_text .tagline {
+		padding-left: 32px;
+	}
+
+	body.custom .feature-box img {
+		float: none;
+		margin-left: auto;
+		display: block;
+		margin-right: auto;
+	}
+
+ body.custom #content {
+    float: none;
+ 		margin-left: auto;
+ 		margin-right: auto;
+   }
+
+	body.custom #sidebar {
+		width: auto;
+		margin-left: auto;
+		margin-right: auto;
+		float: none;
+	}
+
+	body.custom .pagination {
+		margin-top: 0;
+		margin-bottom: 30px;
+		border-bottom: 1px solid #ddd;
+		padding-bottom: 30px;
+	}
+
+	/* Squeeze Page */
+	.page-template-squeeze-template .squeeze-banner-wrap{
+		padding: 0 30px;
+	}
+	.page-template-squeeze-template .squeeze-avatar{
+		margin-top: 50px;
+	}
+	.page-template-squeeze-template .squeeze-info h1{
+		margin-top: 30px;
+	}
+	.page-template-squeeze-template .squeeze-info{
+		clear: both;
+		max-width: 100%;
+	}
+
+	/* mobile menu _____________________ */
+
+	.toggle-bar {
+		cursor: pointer;
+		width: 40px;
+		margin: 0 auto;
+	}
+
+	.bar {
+		width: 40px;
+		height: 5px;
+		background: #B8B8B8;
+		border-radius: 10px;
+		margin: 0 0 6px 0;
+	}
+
+	.bar + .bar + .bar {
+		margin: 0;
+	}
+
+	body .navigation.toggled ul, .subnav.toggled ul {
+		float: none;
+	}
+
+	.navigation.toggled.mobile li {
+		float: none;
+		width: 100%;
+		clear: both;
+		text-align: center;
+	}
+
+	.navigation.dropdown.toggled li ul {
+		width: 100%;
+	}
+
+	.navigation.dropdown.toggled li ul a {
+		width: 100%;
+		padding: 0;
+		text-align: center;
+	}
+}
+
+
+@media all and (max-width: 780px)
+{
+
+	.wp-caption {
+		padding: 0;
+	}
+
+	.sticky-bar-wrap {
+		display: none;
+	}
+
+	.sticky-bar .widget {
+		padding: 0;
+	}
+
+	body.tribe_text .tagline {
+		padding-left: 0;
+	}
+
+	.footer-widgets-wrap > div {
+		float: none;
+		width: auto;
+		margin: 0 0 20px 0;
+	}
+
+	ol.children, li #respond {
+		margin-left: 30px;
+	}
+
+	.share-quote{
+		padding-right: 20px;
+	}
+}
+
+@media all and (max-width: 780px)
+{
+	.newsletter-signup label{
+		display: block;
+	}
+	.newsletter-signup input[type="submit"] {
+		margin-left: 0px;
+	}
+}
+
+@media screen and (max-width: 320px) and (orientation:portrait) { /*--- iPhone --- */
+
+	.links a {
+		width: auto;
+	}
+
+	.comment-body {
+		padding-left: 0;
+	}
+
+	.comment-body .left {
+		position: static;
+		margin: 0 0 10px 0;
+	}
+}

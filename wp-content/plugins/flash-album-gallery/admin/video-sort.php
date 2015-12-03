@@ -5,35 +5,36 @@
  * @copyright 2009
  */
 
-function flag_v_playlist_order($playlist){
+function flag_v_playlist_order($playlist = 'deprecated'){
 	global $wpdb;
 	
 	//this is the url without any presort variable
-	$base_url = admin_url() . 'admin.php?page=' . $_GET['page'];
+	$base_url = admin_url() . 'admin.php?page=' . urlencode($_GET['page']);
 	$flag_options = get_option('flag_options');
-	$playlistPath = $flag_options['galleryPath'].'playlists/video/'.$_GET['playlist'].'.xml';
+	$filename = sanitize_flagname($_GET['playlist']);
+	$playlistPath = $flag_options['galleryPath'].'playlists/video/'.$filename.'.xml';
 	$playlist = get_v_playlist_data(ABSPATH.$playlistPath);
 	$items_a = $playlist['items'];
 	$items = implode(',',$playlist['items']);
 ?>
 <script type="text/javascript" src="<?php echo FLAG_URLPATH; ?>admin/js/jquery.tablednd_0_5.js"></script>
 <script type="text/javascript" src="<?php echo FLAG_URLPATH; ?>admin/js/jquery.tablesorter.js"></script>
-<div class="wrap">
-			<h2><?php _e('Sort Gallery', 'flag'); ?></h2>
+<div class="flag-wrap">
+			<h2><?php _e('Sort Gallery', 'flash-album-gallery'); ?></h2>
 
 	<div class="alignright tablenav" style="margin-bottom: -36px;">
-		<a href="<?php echo $base_url.'&amp;playlist='.$_GET['playlist'].'&amp;mode=edit'; ?>" class="button-secondary action"><?php _e('Back to playlist', 'flag'); ?></a>
+		<a href="<?php echo esc_url($base_url."&playlist=".$filename.'&mode=edit'); ?>" class="button-secondary action"><?php _e('Back to playlist', 'flash-album-gallery'); ?></a>
 	</div>
-	<form id="sortPlaylist" method="POST" action="<?php echo $base_url.'&amp;playlist='.$_GET['playlist'].'&amp;mode=edit'; ?>" accept-charset="utf-8">
+	<form id="sortPlaylist" method="POST" action="<?php echo esc_url($base_url."&playlist=".$filename.'&mode=edit'); ?>" accept-charset="utf-8">
 		<div class="alignleft tablenav">
-			<?php wp_nonce_field('flag_updatesortorder'); ?>
-			<input class="button-primary action" type="submit" name="updatePlaylist" value="<?php _e('Update Sort Order', 'flag'); ?>" />
+			<?php wp_nonce_field('flag_update'); ?>
+			<input class="button-primary action" type="submit" name="updatePlaylist" value="<?php _e('Update Sort Order', 'flash-album-gallery'); ?>" />
 		</div>
 		<br clear="all" />
-		<input type="hidden" name="playlist_title" value="<?php echo $playlist['title']; ?>" />
-		<input type="hidden" name="skinname" value="<?php echo $playlist['skin']; ?>" />
-		<input type="hidden" name="skinaction" value="<?php echo $playlist['skin']; ?>" />
-		<textarea style="display: none;" name="playlist_descr" cols="40" rows="1"><?php echo $playlist['description']; ?></textarea>
+		<input type="hidden" name="playlist_title" value="<?php echo esc_html($playlist['title']); ?>" />
+		<input type="hidden" name="skinname" value="<?php echo sanitize_flagname($playlist['skin']); ?>" />
+		<input type="hidden" name="skinaction" value="<?php echo sanitize_flagname($playlist['skin']); ?>" />
+		<textarea style="display: none;" name="playlist_descr" cols="40" rows="1"><?php echo esc_html($playlist['description']); ?></textarea>
 <script type="text/javascript">
 /*<![CDATA[*/
 jQuery(document).ready(function($) {
@@ -63,22 +64,22 @@ jQuery(document).ready(function($) {
 });
 /*]]>*/
 </script>
-<table id="flag-listitems" class="widefat fixed" cellspacing="0" >
+<table id="flag-listitems" class="widefat fixed flag-table" cellspacing="0" >
 
 	<thead>
 	<tr>
-			<th class="header" width="54"><p style="margin-right:-10px;"><?php _e('ID', 'flag'); ?></p></th>
-			<th width="260"><div><?php _e('Play', 'flag'); ?></div></th>
-			<th class="header"><p><?php _e('Filename', 'flag'); ?></p></th>
-			<th class="header"><p><?php _e('Title', 'flag'); ?></p></th>
+			<th class="header" width="54"><p style="margin-right:-10px;"><?php _e('ID', 'flash-album-gallery'); ?></p></th>
+			<th width="260"><p><?php _e('Play', 'flash-album-gallery'); ?></p></th>
+			<th class="header"><p><?php _e('Filename', 'flash-album-gallery'); ?></p></th>
+			<th class="header"><p><?php _e('Title', 'flash-album-gallery'); ?></p></th>
 	</tr>
 	</thead>
 	<tfoot>
 	<tr>
-			<th><?php _e('ID', 'flag'); ?></th>
-			<th><?php _e('Play', 'flag'); ?></th>
-			<th><?php _e('Filename', 'flag'); ?></th>
-			<th><?php _e('Title', 'flag'); ?></th>
+			<th><p><?php _e('ID', 'flash-album-gallery'); ?></p></th>
+			<th><p><?php _e('Play', 'flash-album-gallery'); ?></p></th>
+			<th><p><?php _e('Filename', 'flash-album-gallery'); ?></p></th>
+			<th><p><?php _e('Title', 'flash-album-gallery'); ?></p></th>
 	</tr>
 	</tfoot>
 	<tbody id="listitems">
@@ -98,23 +99,22 @@ if(count($items_a)) {
 		?>
 		<tr id="$flv-<?php echo $flv->ID; ?>" class="<?php echo $alternate; ?> iedit"  valign="top">
 				<td scope="row"><input type="hidden" name="item_a[<?php echo $flv->ID; ?>][ID]" value="<?php echo $flv->ID; ?>" /><strong><?php echo $flv->ID; ?></strong></td>
-				<td width="50"><a class="thickbox" title="<?php echo basename($url); ?>" href="<?php echo FLAG_URLPATH; ?>admin/flv_preview.php?vid=<?php echo $flv->ID; ?>&amp;TB_iframe=1&amp;width=490&amp;height=293"><img id="thumb-<?php echo $flv->ID; ?>" src="<?php echo $thumb; ?>" width="20" height="20" alt="" /></a></td>
+				<td width="50"><a class="thickbox" title="<?php echo basename($url); ?>" href="<?php echo FLAG_URLPATH; ?>admin/flv_preview.php?vid=<?php echo $flv->ID; ?>&amp;TB_iframe=1&amp;width=490&amp;height=293"><img id="thumb-<?php echo $flv->ID; ?>" src="<?php echo esc_url($thumb); ?>" width="20" height="20" alt="" /></a></td>
 				<td><?php echo basename($url); ?></td>
-				<td><?php echo $flv->post_title; ?></td>
+				<td><?php echo esc_html(stripslashes($flv->post_title)); ?></td>
 		</tr>
 		<?php
 	}
 } else {
-	echo '<tr><td colspan="4" align="center"><strong>'.__('No entries found','flag').'</strong></td></tr>';
+	echo '<tr><td colspan="4" align="center"><strong>'.__('No entries found','flash-album-gallery').'</strong></td></tr>';
 }
 ?>
 		</tbody>
 	</table>
-	<p class="actions"><input type="submit" class="button-primary action"  name="updatePlaylist" value="<?php _e('Update Sort Order', 'flag'); ?>" /></p>
+	<p class="actions"><input type="submit" class="button-primary action"  name="updatePlaylist" value="<?php _e('Update Sort Order', 'flash-album-gallery'); ?>" /></p>
 </form>	
 <br class="clear"/>
 </div><!-- /#wrap -->
 
 <?php
 }
-?>

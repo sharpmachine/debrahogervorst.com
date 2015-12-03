@@ -7,9 +7,6 @@
  *
  * Learn more: http://codex.wordpress.org/Template_Hierarchy
  *
- * @package WordPress
- * @subpackage Colorway
- * @since Colorway 1.0
  */
 ?>
 <?php get_header(); ?>
@@ -18,7 +15,8 @@
     <div class="grid_16 alpha">
         <div class="content-wrap">
             <div class="content-info">
-                <?php if (function_exists('inkthemes_breadcrumbs'))
+                <?php
+                if (function_exists('inkthemes_breadcrumbs'))
                     inkthemes_breadcrumbs();
                 ?>
             </div>

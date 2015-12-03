@@ -7,9 +7,6 @@
  *
  * Learn more: http://codex.wordpress.org/Template_Hierarchy
  *
- * @package WordPress
- * @subpackage Colorway
- * @since Colorway 1.0
  */
 ?>
 <?php get_header(); ?>
@@ -23,7 +20,7 @@
             <div class="blog" id="blogmain">
                 <h2>
                     <?php
-                    printf('Category Archives: %s', '' . single_cat_title('', false) . '');
+                    printf(__('Category Archives: %s','colorway'), '' . single_cat_title('', false) . '');
                     ?>
                 </h2>
                 <?php
@@ -41,7 +38,7 @@
             <?php inkthemes_content_nav('nav-below'); ?>
         </div>
     </div>
-<?php get_sidebar(); ?>
+    <?php get_sidebar(); ?>
 </div>
 <div class="clear"></div>
 <!--End Content Grid-->

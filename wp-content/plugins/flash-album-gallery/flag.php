@@ -1,12 +1,13 @@
 <?php
 /*
 Plugin Name: GRAND Flash Album Gallery
-Plugin URI: http://codeasily.com/wordpress-plugins/flash-album-gallery/flag/
-Description: The GRAND FlAGallery plugin - provides a comprehensive interface for managing photos and images through a set of admin pages, and it displays photos in a way that makes your web site look very professional.
-Version: 2.54
+Plugin URI: http://codeasily.com/wordpress-plugins/flag/
+Description: The Grand Flagallery plugin - provides a comprehensive interface for managing photos and images through a set of admin pages, and it displays photos in a way that makes your web site look very professional.
+Version: 4.37
 Author: Rattus
 Author URI: http://codeasily.com/
-
+Text Domain: flash-album-gallery
+Domain Path: /lang
 -------------------
 
 		Copyright 2009  Sergey Pasyuk  (email : pasyuk@gmail.com)
@@ -23,8 +24,8 @@ if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) { die('You 
 if (!class_exists('flagLoad')) {
 class flagLoad {
 
-	var $version     = '2.54';
-	var $dbversion   = '1.24';
+	var $version = '4.37';
+	var $dbversion   = '2.75';
 	var $minium_WP   = '3.0';
 	var $minium_WPMU = '3.0';
 	var $flagAdminPanel;
@@ -32,7 +33,7 @@ class flagLoad {
 	var $manage_page;
 	var $add_PHP5_notice = false;
 
-	function flagLoad() {
+	function __construct() {
 
 		// Load the language file
 		$this->load_textdomain();
@@ -46,26 +47,26 @@ class flagLoad {
 		$this->define_constant();
 		$this->define_tables();
 		$this->load_dependencies();
-		
+
 		$this->plugin_name = plugin_basename(__FILE__);
 
 		// Init options & tables during activation & deregister init option
 		register_activation_hook( $this->plugin_name, array(&$this, 'activate') );
 		add_action( 'init', array(&$this, 'wp_flag_tune_messages') );
-		register_deactivation_hook( $this->plugin_name, array(&$this, 'deactivate') );	
+		register_deactivation_hook( $this->plugin_name, array(&$this, 'deactivate') );
 
 		// Register a uninstall hook to remove all tables & option automatic
 		register_uninstall_hook( $this->plugin_name, array('flagLoader', 'uninstall') );
 
 		// Start this plugin once all other plugins are fully loaded
 		add_action( 'plugins_loaded', array(&$this, 'start_plugin') );
-		
+
 		// Add a message for PHP4 Users, can disable the update message later on
 		if (version_compare(PHP_VERSION, '5.0.0', '<'))
 			add_filter('transient_update_plugins', array(&$this, 'disable_upgrade'));
-		
+
 		//Add some message on the plugin page
-		add_action( 'after_plugin_row', array(&$this, 'flag_check_message_version') );
+		//add_action( 'after_plugin_row', array(&$this, 'flag_check_message_version') );
 
 		add_action( 'init', array(&$this, 'flag_fullwindow_page_init') );
 		add_action( 'add_meta_boxes', array(&$this, 'flag_fullwindow_page_add_meta_box') );
@@ -75,6 +76,13 @@ class flagLoad {
 		add_action('admin_print_scripts-widgets.php', array(&$this, 'flag_widgets_scripts') );
 		add_filter( 'posts_orderby', 'sort_query_by_post_in', 10, 2 );
 
+		add_action( 'wp_enqueue_scripts', array( &$this, 'register_scripts_frontend' ), 3 );
+
+		add_action('activated_plugin', array(&$this, 'save_error') );
+	}
+
+	function save_error(){
+		update_option('flag_plugin_error',  ob_get_contents());
 	}
 
 	function start_plugin() {
@@ -83,29 +91,30 @@ class flagLoad {
 		add_filter('flag_gallery_name', 'sanitize_title');
 
 		// Load the admin panel or the frontend functions
-		if ( is_admin() ) {	
-			
+		if ( is_admin() ) {
+
 			// Pass the init check or show a message
 			if (get_option( "flag_init_check" ) != false )
 				add_action( 'admin_notices', create_function('', 'echo \'<div id="message" class="error"><p><strong>' . get_option( "flag_init_check" ) . '</strong></p></div>\';') );
-				
-		} else {			
-			
+
+		} else {
+
 			// Add MRSS to wp_head
 			if ( $this->options['useMediaRSS'] )
 				add_action('wp_head', array('flagMediaRss', 'add_mrss_alternate_link'));
-			
+
 			// Add the script and style files
 			add_action('wp_print_scripts', array(&$this, 'load_scripts') );
+			add_action( 'flag_footer_scripts', array( &$this, 'load_scripts' ) );
 
 			// Add a version number to the header
-			add_action('wp_head', create_function('', 'echo "\n<meta name=\'GRAND FlAGallery\' content=\'' . $this->version . '\' />\n";') );
+			add_action('wp_head', create_function('', 'echo "\n<!-- <meta name=\'Grand Flagallery\' content=\'' . $this->version . '\' /> -->\n";') );
 
-		}	
+		}
 	}
 
 	function wp_flag_tune_messages() {
-		if($this->options['flagVersion'] != $this->version) {
+		if(get_option('flagVersion') != $this->version) {
 			// upgrade plugin
 			require_once(FLAG_ABSPATH . 'admin/tuning.php');
 			$ok = flag_tune($show_error=false);
@@ -113,85 +122,102 @@ class flagLoad {
 			include_once (dirname (__FILE__) . '/admin/flag_install.php');
 			// check for tables
 			flag_capabilities();
+			update_option("flagVersion", FLAGVERSION);
+		}
+		// check for upgrade
+		if( get_option( 'flag_db_version' ) < FLAG_DBVERSION ) {
+			include_once ( dirname (__FILE__) . '/admin/functions.php' );
+			include_once ( dirname (__FILE__) . '/admin/upgrade.php' );
+			flag_upgrade();
+			add_action( 'admin_notices', create_function('', 'echo \'<div id="message" class="updated"><p>\' . __(\'Grand Flagallery database upgraded\', "flash-album-gallery" ) . \'</p></div>\';') );
 		}
 	}
 
 	function required_version() {
-		
+
 		global $wp_version, $wpmu_version;
-		
+
 		// Check for WPMU installation
 		if (!defined ('IS_WPMU'))
 			define('IS_WPMU', version_compare($wpmu_version, $this->minium_WPMU, '>=') );
 
  		// Check for WP version installation
 		$wp_ok  =  version_compare($wp_version, $this->minium_WP, '>=');
-		
+
 		if ( ($wp_ok == FALSE) and (IS_WPMU == FALSE) ) {
-			add_action('admin_notices', create_function('', 'global $flag; printf (\'<div id="message" class="error"><p><strong>\' . __(\'Sorry,GRAND Flash Album Gallery works only under WordPress %s or higher\', "flag" ) . \'</strong></p></div>\', $flag->minium_WP );'));
+			add_action('admin_notices', create_function('', 'global $flag; printf (\'<div id="message" class="error"><p><strong>\' . __(\'Sorry,GRAND Flash Album Gallery works only under WordPress %s or higher\', "flash-album-gallery" ) . \'</strong></p></div>\', $flag->minium_WP );'));
 			return false;
 		}
 		return true;
-		
+
 	}
-	
+
 	function check_memory_limit() {
-		
+
 		$memory_limit = (int) substr( ini_get('memory_limit'), 0, -1);
 		//This works only with enough memory, 8MB is silly, wordpress requires already 7.9999
 		if ( ($memory_limit != 0) && ($memory_limit < 12 ) ) {
-			add_action('admin_notices', create_function('', 'echo \'<div id="message" class="error"><p><strong>' . __('Sorry, GRAND Flash Album Gallery works only with a Memory Limit of 16 MB higher', 'flag') . '</strong></p></div>\';'));
+			add_action('admin_notices', create_function('', 'echo \'<div id="message" class="error"><p><strong>' . __('Sorry, GRAND Flash Album Gallery works only with a Memory Limit of 16 MB higher', 'flash-album-gallery') . '</strong></p></div>\';'));
 			return false;
 		}
-		
+
 		return true;
-		
+
 	}
-	
-	function define_tables() {		
+
+	function define_tables() {
 		global $wpdb;
-		
-		// add database pointer 
+
+		// add database pointer
 		$wpdb->flagpictures					= $wpdb->prefix . 'flag_pictures';
 		$wpdb->flaggallery					= $wpdb->prefix . 'flag_gallery';
 		$wpdb->flagcomments					= $wpdb->prefix . 'flag_comments';
 		$wpdb->flagalbum					= $wpdb->prefix . 'flag_album';
-		
+
 	}
-	
+
 	function define_constant() {
-		
+
 		define('FLAGVERSION', $this->version);
 		// Minimum required database version
 		define('FLAG_DBVERSION', $this->dbversion);
 
 		// required for Windows & XAMPP
-		define('WINABSPATH', str_replace("\\", "/", ABSPATH) );
-			
+		if ( !defined('WINABSPATH') ) {
+			define('WINABSPATH', str_replace("\\", "/", ABSPATH) );
+		}
+
 		// define URL
 		define('FLAGFOLDER', plugin_basename( dirname(__FILE__)) );
-		
+
 		define('FLAG_ABSPATH', str_replace("\\","/", WP_PLUGIN_DIR . '/' . plugin_basename( dirname(__FILE__) ) . '/' ));
-		define('FLAG_URLPATH', WP_PLUGIN_URL . '/' . plugin_basename( dirname(__FILE__) ) . '/' );
-		
+		define('FLAG_URLPATH', plugins_url() . '/' . plugin_basename( dirname(__FILE__) ) . '/' );
+
 		// get value for safe mode
-		if ( (gettype( ini_get('safe_mode') ) == 'string') ) {
-			// if sever did in in a other way
-			if ( ini_get('safe_mode') == 'off' ) define('SAFE_MODE', FALSE);
-			else define( 'SAFE_MODE', ini_get('safe_mode') );
-		} else
-		define( 'SAFE_MODE', ini_get('safe_mode') );
-		
+		if ( !defined('SAFE_MODE') ) {
+			if ( (gettype( ini_get('safe_mode') ) == 'string') ) {
+				// if sever did in in a other way
+				if ( ini_get('safe_mode') == 'off' ) define('SAFE_MODE', FALSE);
+				else define( 'SAFE_MODE', ini_get('safe_mode') );
+			} else
+			define( 'SAFE_MODE', ini_get('safe_mode') );
+		}
+
 	}
-	
+
 	function load_dependencies() {
 		global $flagdb;
-	
-		// Load global libraries												
+
+		// Load global libraries
 		require_once (dirname (__FILE__) . '/lib/core.php');
 		require_once (dirname (__FILE__) . '/lib/flag-db.php');
 		require_once (dirname (__FILE__) . '/lib/image.php');
 		require_once (dirname (__FILE__) . '/widgets/widgets.php');
+
+		$current_plugins = get_option('active_plugins');
+		if (in_array('wordpress-seo/wp-seo.php', $current_plugins)) {
+			require_once (dirname (__FILE__) . '/lib/sitemap.php');
+		}
 
 		// We didn't need all stuff during a AJAX operation
 		if ( defined('DOING_AJAX') )
@@ -202,39 +228,53 @@ class flagLoad {
 			include_once (dirname (__FILE__) . '/admin/tinymce/tinymce.php');
 
 			// Load backend libraries
-			if ( is_admin() ) {	
+			if ( is_admin() ) {
 				require_once (dirname (__FILE__) . '/admin/admin.php');
 				require_once (dirname (__FILE__) . '/admin/media-upload.php');
 				$this->flagAdminPanel = new flagAdminPanel();
-				
-			// Load frontend libraries							
+
+			// Load frontend libraries
 			} else {
 				require_once (dirname (__FILE__) . '/lib/swfobject.php');
 				require_once (dirname (__FILE__) . '/lib/shortcodes.php');
-			}	
+			}
 		}
 	}
-	
+
 	function load_textdomain() {
-		
-		load_plugin_textdomain('flag', false, dirname( plugin_basename(__FILE__) ) . '/lang');
+
+		load_plugin_textdomain('flash-album-gallery', false, dirname( plugin_basename(__FILE__) ) . '/lang');
 
 	}
-	
+
+	function register_scripts_frontend() {
+		wp_register_style('fancybox-1.3.4', plugins_url('/flash-album-gallery/admin/js/jquery.fancybox-1.3.4.css') );
+		wp_register_script('fancybox-1.3.4', plugins_url('/flash-album-gallery/admin/js/jquery.fancybox-1.3.4.pack.js'), array('jquery'), '1.3.4', true );
+
+		wp_register_style('photoswipe', plugins_url('/flash-album-gallery/admin/js/photoswipe/photoswipe.css') );
+		wp_register_script('klass.photoswipe', plugins_url('/flash-album-gallery/admin/js/photoswipe/klass.min.js'), array('jquery'), '1.0', true );
+		wp_register_script('photoswipe', plugins_url('/flash-album-gallery/admin/js/photoswipe/code.photoswipe.jquery-3.0.5.min.js'), array('jquery', 'klass.photoswipe'), '3.0.5', true );
+
+		wp_deregister_script('swfobject');
+		wp_register_script('swfobject', plugins_url('/flash-album-gallery/admin/js/swfobject.js'), array('jquery'), '2.2');
+
+		wp_register_script('swfaddress', plugins_url('/flash-album-gallery/admin/js/swfaddress.js'), array(), '2.4');
+
+		wp_register_script('flagscroll', plugins_url('/flash-album-gallery/admin/js/flagscroll.js'), array('jquery'), '1.0', true );
+		wp_register_script('swfmousewheel', plugins_url('/flash-album-gallery/admin/js/swfmousewheel.js'), false, '2.0', true );
+
+		wp_register_script('flagscript', plugins_url('/flash-album-gallery/admin/js/script.js'), array('jquery','swfobject'), '2.0', true );
+		wp_register_style('flagallery', plugins_url('/flash-album-gallery/admin/css/flagallery.css') );
+
+	}
+
 	function load_scripts() {
 
 		wp_enqueue_script('jquery');
-		// Let's override WP's bundled swfobject, cause as of WP 2.9, it's still using 2.1
-		wp_deregister_script('swfobject');
-		// and register our own.
-		wp_register_script('swfobject', plugins_url('/flash-album-gallery/admin/js/swfobject.js'), array('jquery'), '2.2');
 		wp_enqueue_script('swfobject');
 		if($this->options['deepLinks']){
-			wp_register_script('swfaddress', plugins_url('/flash-album-gallery/admin/js/swfaddress.js'), array(), '2.4');
 			wp_enqueue_script('swfaddress');
 		}
-		wp_register_style('fancybox', plugins_url('/flash-album-gallery/admin/js/jquery.fancybox-1.3.4.css') );
-		wp_register_script('fancybox', plugins_url('/flash-album-gallery/admin/js/jquery.fancybox-1.3.4.pack.js'), array(), '1.3.4', true );
 
 	}
 
@@ -250,19 +290,13 @@ class flagLoad {
 	}
 
 	function activate() {
-		//Since version 0.40 it's tested only with PHP5.2, currently we keep PHP4 support a while
-        //if (version_compare(PHP_VERSION, '5.2.0', '<')) { 
-        //        deactivate_plugins(plugin_basename(__FILE__)); // Deactivate ourself
-        //        wp_die("Sorry, but you can't run this plugin, it requires PHP 5.2 or higher."); 
-		//		return; 
-        //} 
 		include_once (dirname (__FILE__) . '/admin/flag_install.php');
 		// check for tables
 		flag_install();
 		$this->flag_fullwindow_page_init();
 		flush_rewrite_rules();
 	}
-	
+
 	function deactivate() {
 		// remove & reset the init check option
 		delete_option( 'flag_init_check' );
@@ -276,15 +310,15 @@ class flagLoad {
 	function disable_upgrade($option){
 
 	 	$this_plugin = plugin_basename(__FILE__);
-	 	
-		// PHP5.2 is required for FlAG V0.40 
+
+		// PHP5.2 is required for FlAG V0.40
 		if ( version_compare($option->response[ $this_plugin ]->new_version, '0.40', '>=') )
 			return $option;
 
 	    if( isset($option->response[ $this_plugin ]) ){
 	        //TODO:Clear its download link, not now but maybe later
 	        //$option->response[ $this_plugin ]->package = '';
-	        
+
 	        //Add a notice message
 	        if ($this->add_PHP5_notice == false){
    	    		add_action( "in_plugin_update_message-$this->plugin_name", create_function('', 'echo \'<br /><span style="color:red">Please update to PHP5.2 as soon as possible, the plugin is not tested under PHP4 anymore</span>\';') );
@@ -293,7 +327,7 @@ class flagLoad {
 		}
 	    return $option;
 	}
-	
+
 	// PLUGIN MESSAGE ON PLUGINS PAGE
 	function flag_check_message_version($file)
 	{
@@ -309,7 +343,7 @@ class flagLoad {
 			if($message)
 			{
 				preg_match( '|flag040:(.*)$|mi', $message, $theMessage );
-				
+
 				$columns = substr($wp_version, 0, 3) == "2.8" ? 3 : 5;
 
 				if ( !empty( $theMessage ) )
@@ -324,29 +358,34 @@ class flagLoad {
 	}
 
 	function flag_fullwindow_page_init() {
+		if(current_user_can('FlAG Use TinyMCE')){
+			$visibility = true;
+		} else {
+			$visibility = false;
+		}
 	  $labels = array(
-	    'name' => _x('GRAND Galleries', 'post type general name', 'flag'),
-	    'singular_name' => __('FlAGallery Page', 'flag'),
-	    'add_new' => __('Add New Gallery Page', 'flag'),
-	    'add_new_item' => __('Add New Gallery Page', 'flag'),
-	    'edit_item' => __('Edit Gallery Page', 'flag'),
-	    'new_item' => __('New Gallery Page', 'flag'),
-	    'all_items' => __('All GRAND Galleries', 'flag'),
-	    'view_item' => __('View Gallery Page', 'flag'),
-	    'search_items' => __('Search GRAND Galleries', 'flag'),
-	    'not_found' =>  __('No GRAND Galleries found', 'flag'),
-	    'not_found_in_trash' => __('No GRAND Galleries found in Trash', 'flag'),
+	    'name' => _x('GRAND Galleries', 'post type general name', 'flash-album-gallery'),
+	    'singular_name' => __('FlAGallery Page', 'flash-album-gallery'),
+	    'add_new' => __('Add New Gallery Page', 'flash-album-gallery'),
+	    'add_new_item' => __('Add New Gallery Page', 'flash-album-gallery'),
+	    'edit_item' => __('Edit Gallery Page', 'flash-album-gallery'),
+	    'new_item' => __('New Gallery Page', 'flash-album-gallery'),
+	    'all_items' => __('All GRAND Galleries', 'flash-album-gallery'),
+	    'view_item' => __('View Gallery Page', 'flash-album-gallery'),
+	    'search_items' => __('Search GRAND Galleries', 'flash-album-gallery'),
+	    'not_found' =>  __('No GRAND Galleries found', 'flash-album-gallery'),
+	    'not_found_in_trash' => __('No GRAND Galleries found in Trash', 'flash-album-gallery'),
 	    'parent_item_colon' => '',
 	    'menu_name' => 'GRAND Pages'
 
 	  );
 	  $args = array(
 	    'labels' => $labels,
-	    'description' => __('This is the page template for displaing GRAND FlAGallery galleries in full width and height of browser window.', 'flag'),
+	    'description' => __('This is the page template for displaing Grand Flagallery galleries in full width and height of browser window.', 'flash-album-gallery'),
 	    'public' => true,
 	    'publicly_queryable' => true,
 	    'show_ui' => true,
-	    'show_in_menu' => true,
+	    'show_in_menu' => $visibility,
 	    'menu_position' => 20,
 	    'menu_icon' => FLAG_URLPATH .'admin/images/flag.png',
 	    'capability_type' => 'post',
@@ -356,12 +395,12 @@ class flagLoad {
 		'rewrite' => array( 'slug' => 'flagallery','with_front' => FALSE),
 	    'query_var' => true,
 	  );
-	  register_post_type('flagallery',$args);
+		  register_post_type('flagallery',$args);
 	}
 
 	/* Adds a meta box to the main column on the flagallery edit screens */
 	function flag_fullwindow_page_add_meta_box() {
-	    add_meta_box( 'flag_gallery', __( 'Photo Gallery Page Generator', 'flag' ), array(&$this, 'flag_fullwindow_page_meta_box'), 'flagallery', 'normal', 'high' );
+	    add_meta_box( 'flag_gallery', __( 'Photo Gallery Page Generator', 'flash-album-gallery' ), array(&$this, 'flag_fullwindow_page_meta_box'), 'flagallery', 'normal', 'high' );
 	}
 
 	/* Prints the meta box content */
@@ -383,7 +422,7 @@ class flagLoad {
 	  // verify this came from the our screen and with proper authorization,
 	  // because save_post can be triggered at other times
 
-	  if ( !wp_verify_nonce( $_POST['flag_meta_box'], plugin_basename( __FILE__ ) ) )
+	  if ( !isset($_POST['flag_meta_box']) || !wp_verify_nonce( $_POST['flag_meta_box'], plugin_basename( __FILE__ ) ) )
 	      return;
 
 	  // Check permissions
@@ -398,16 +437,20 @@ class flagLoad {
 	        return;
 	  }
 	  // OK, we're authenticated: we need to find and save the data
+	  /*
 	  $items_array = $_POST["mb_items_array"];
 	  $skinname = $_POST["mb_skinname"];
+	  $playlist = $_POST["mb_playlist"];
 	  $scode = $_POST["mb_scode"];
 	  $button_text = $_POST["mb_button"];
 	  $button_link = $_POST["mb_button_link"];
 	  $bg_link = $_POST["mb_bg_link"];
 	  $bg_pos = $_POST["mb_bg_pos"];
 	  $bg_repeat = $_POST["mb_bg_repeat"];
+	  */
 	  update_post_meta($post_id, "mb_items_array", $_POST["mb_items_array"]);
 	  update_post_meta($post_id, "mb_skinname", $_POST["mb_skinname"]);
+	  update_post_meta($post_id, "mb_playlist", $_POST["mb_playlist"]);
 	  update_post_meta($post_id, "mb_scode", $_POST["mb_scode"]);
 	  update_post_meta($post_id, "mb_button", $_POST["mb_button"]);
 	  update_post_meta($post_id, "mb_button_link", $_POST["mb_button_link"]);
@@ -421,7 +464,7 @@ class flagLoad {
 	function flag_fullwindow_page_template_redirect() {
 		global $wp;
 		global $wp_query;
-		if ($wp->query_vars["post_type"] == "flagallery")
+		if (isset($wp->query_vars["post_type"]) && $wp->query_vars["post_type"] == "flagallery")
 		{
 			// Let's look for the full_window_template.php template file
 			if (have_posts())
@@ -438,10 +481,15 @@ class flagLoad {
 
 	function addFlAGMediaIcon($context){
 	    global $post_ID, $temp_ID, $wpdb;
-		$flag_upload_iframe_src = FLAG_URLPATH."admin/tinymce/window.php?media_button=true&riched=false";
-		$flag_iframe_src = apply_filters('flag_iframe_src', "$flag_upload_iframe_src&amp;tab=flagallery");
-		$title = __('Add GRAND FlAGallery');
-	    return $context.'<a href="'.$flag_upload_iframe_src.'&amp;TB_iframe=1&amp;width=360&amp;height=210" class="thickbox" id="add_flagallery" title="'.$title.'"><span style="margin:0 5px;">FlAGallery</span></a>';
+		if(current_user_can('FlAG Use TinyMCE')){
+			$flag_upload_iframe_src = FLAG_URLPATH."admin/tinymce/window.php?media_button=true&riched=false";
+			$flag_iframe_src = apply_filters('flag_iframe_src', "$flag_upload_iframe_src&amp;tab=flagallery");
+			$title = __('Add Grand Flagallery');
+			$button = '<a href="'.$flag_upload_iframe_src.'&amp;TB_iframe=1&amp;width=360&amp;height=210" class="thickbox button" id="add_flagallery" title="'.$title.'"><span style="margin:0 5px;">FlAGallery</span></a>';
+		} else {
+			$button = '';
+		}
+	  return $context.$button;
 	}
 
 
@@ -459,4 +507,18 @@ if(!function_exists('sort_query_by_post_in')){
 		return $sortby;
 	}
 }
-?>
+if(!function_exists('sanitize_flagname')){
+	function sanitize_flagname( $filename ) {
+
+		$filename = wp_strip_all_tags( $filename );
+		$filename = remove_accents( $filename );
+		// Kill octets
+		$filename = preg_replace( '|%([a-fA-F0-9][a-fA-F0-9])|', '', $filename );
+		$filename = preg_replace( '/&.+?;/', '', $filename ); // Kill entities
+		$filename = preg_replace( '|[^a-zA-Z0-9 _.\-]|i', '', $filename );
+		$filename = preg_replace('/[\s-]+/', '-', $filename);
+		$filename = trim($filename, '.-_ ');
+
+		return $filename;
+	}
+}

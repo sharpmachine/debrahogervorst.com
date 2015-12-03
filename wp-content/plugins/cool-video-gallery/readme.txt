@@ -2,8 +2,8 @@
 Contributors: Praveen Rajan
 Tags: video gallery,playlist,tinymce,videos,gallery,media,player,flash player,flash-player,skins,flash player skins,admin,post,pages,pictures,widgets,picture,video,cool-video-gallery,cool video gallery,ffmpeg,showcase,fancybox,preview image,upload,flv,mp4,mov,m4v,mp3,H.264,shortcode
 Requires at least: 3.0.1
-Tested up to: 3.5
-Stable tag: 1.8
+Tested up to: 3.9.1
+Stable tag: 1.9
 License: GPLv2
 
 Cool Video Gallery is a Video Gallery plugin for WordPress with option to upload videos, add Youtube videos and manage them in multiple galleries. 
@@ -47,7 +47,7 @@ Option provided to upload images for video previews. Supports '.flv', '.mp4', '.
 * Admin bar menu added for easy navigation.
 * Exclude video in a gallery during playback option provided.
 * Sort videos by Added Date integrated.
-* Move video(s) from one gallery to another impletmented.
+* Move video(s) from one gallery to another implemented.
 * Randomize videos in a gallery through admin panel.
 
 
@@ -82,6 +82,9 @@ If you find this plugin useful please provide your valuable ratings.
 8. Screenshot - CVG Fancybox playback feature
 
 == Changelog ==
+
+= 1.9 =
+* CSRF Vulnerability Fix.
 
 = 1.8 =
 * Admin bar menu added for easy navigation.

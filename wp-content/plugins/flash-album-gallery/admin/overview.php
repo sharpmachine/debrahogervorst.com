@@ -7,10 +7,11 @@ if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) { die('You 
  * Add the admin overview in wp2.7 style 
  * @return mixed content
  */
-function flag_admin_overview()  {	
+function flag_admin_overview()  {
+	echo get_option('flag_plugin_error');
 ?>
-<div class="wrap flag-wrap">
-	<h2><?php _e('GRAND FlAGallery Overview', 'flag'); echo ' v'.FLAGVERSION; ?></h2>
+<div class="flag-wrap">
+	<h2 class="overview-title"><?php _e('Grand Flagallery Overview', 'flash-album-gallery'); echo ' v'.FLAGVERSION; ?></h2>
 	<div id="flag-overview" class="metabox-holder">
 		<div id="post-body" class="has-sidebar">
 			<div class="has-sidebar-content">
@@ -103,11 +104,11 @@ function flag_overview_setup(){
 		include_once( dirname (__FILE__). '/tuning.php');
 		
 		flag_default_options();
-		flag_tune();
+		flag_tune(true,true);
 		$flag->define_constant();
 		$flag->load_options();
 		
-		flagGallery::show_message(__('Reset all settings to default parameter','flag'));
+		flagGallery::show_message(__('Reset all settings to default parameter','flash-album-gallery'));
 	}
 
 	if (isset($_POST['uninstall'])) {	
@@ -118,7 +119,7 @@ function flag_overview_setup(){
 
 		flag_uninstall();
 			 	
-	 	flagGallery::show_message(__('Uninstall sucessful ! Now delete the plugin and enjoy your life ! Good luck !','flag'));
+	 	flagGallery::show_message(__('Uninstall sucessful ! Now delete the plugin and enjoy your life ! Good luck !','flash-album-gallery'));
 	}
 ?>
 		<div class="submitbox" id="submitpost">
@@ -126,27 +127,22 @@ function flag_overview_setup(){
 				<div id="misc-publishing-actions">
 					<div class="misc-pub-section">
 						<span id="plugin-home" class="icon">
-							<strong><a href="http://codeasily.com/wordpress-plugins/flash-album-gallery/flag" style="text-decoration: none;"><?php _e('Plugin Home','flag'); ?></a></strong>
+							<strong><a href="http://codeasily.com/wordpress-plugins/flag/" style="text-decoration: none;"><?php _e('Plugin Home','flash-album-gallery'); ?></a></strong>
 						</span>
 					</div>
 					<div class="misc-pub-section">
 						<span id="plugin-comments" class="icon">
-							<a href="http://codeasily.com/wordpress-plugins/flash-album-gallery/flag#comments" style="text-decoration: none;"><?php _e('Plugin Comments','flag'); ?></a>
+							<a href="http://codeasily.com/community/forum/flagallery-wordpress-plugin/" style="text-decoration: none;"><?php _e('Plugin Forum','flash-album-gallery'); ?></a>
 						</span>
 					</div>
 					<div class="misc-pub-section">
 						<span id="rate-plugin" class="icon">
-							<a href="http://wordpress.org/extend/plugins/flash-album-gallery" style="text-decoration: none;"><?php _e('Rate Plugin','flag'); ?></a>
+							<a href="http://wordpress.org/extend/plugins/flash-album-gallery/" style="text-decoration: none;"><?php _e('Rate Plugin','flash-album-gallery'); ?></a>
 						</span>
 					</div>
-					<!-- <div class="misc-pub-section">
-						<span id="my-plugins" class="icon">
-							<a href="http://codeasily.com/category/wordpress-plugins" style="text-decoration: none;"><?php _e('My Plugins','flag'); ?></a>
-						</span>
-					</div> -->
 					<div class="misc-pub-section curtime misc-pub-section-last">
 						<span id="contact-me" class="icon">
-							<a href="http://codeasily.com/about" style="text-decoration: none;"><?php _e('Contact Me','flag'); ?></a>
+							<a href="http://codeasily.com/support/contact/" style="text-decoration: none;"><?php _e('Contact Me','flash-album-gallery'); ?></a>
 						</span>
 					</div>
 				</div>
@@ -157,10 +153,10 @@ function flag_overview_setup(){
 	<form id="resetsettings" name="resetsettings" method="post">
 		<?php wp_nonce_field('flag_uninstall'); ?>
 			<div id="save-action" class="alignleft">
-				<input class="button" id="save-post" type="submit" name="resetdefault" value="<?php _e('Reset settings', 'flag'); ?>" onclick="javascript:check=confirm('<?php _e('Reset all options to default settings ?\n\nChoose [Cancel] to Stop, [OK] to proceed.\n','flag'); ?>');if(check==false) return false;" />
+				<input class="button" id="save-post" type="submit" name="resetdefault" value="<?php _e('Reset settings', 'flash-album-gallery'); ?>" onclick="javascript:check=confirm('<?php _e('Reset all options to default settings ?\n\nChoose [Cancel] to Stop, [OK] to proceed.\n','flash-album-gallery'); ?>');if(check==false) return false;" />
 			</div>
 			<div id="preview-action" class="alignright">
-				<input type="submit" name="uninstall" class="button delete" value="<?php _e('Uninstall plugin', 'flag'); ?>" onclick="javascript:check=confirm('<?php _e('You are about to Uninstall this plugin from WordPress.\nThis action is not reversible.\n\nChoose [Cancel] to Stop, [OK] to Uninstall.\n','flag'); ?>');if(check==false) return false;" />
+				<input type="submit" name="uninstall" class="button delete" value="<?php _e('Uninstall plugin', 'flash-album-gallery'); ?>" onclick="javascript:check=confirm('<?php _e('You are about to Uninstall this plugin from WordPress.\nThis action is not reversible.\n\nChoose [Cancel] to Stop, [OK] to Uninstall.\n','flash-album-gallery'); ?>');if(check==false) return false;" />
 			</div>
 			<br class="clear" />
 	</form>
@@ -182,40 +178,40 @@ function flag_overview_right_now() {
 ?>
 
 <div class="table table_content">
-<p class="sub"><?php _e('At a Glance', 'flag'); ?></p>
+	<strong><?php _e('At a Glance', 'flash-album-gallery'); ?>:</strong>
 	<table>
-		<tbody>
 			<tr class="first">
-				<td class="first b"><a href="admin.php?page=flag-manage-gallery&tabs=1"><?php echo $images; ?></a></td>
-				<td class="t"><?php echo _n( 'Image', 'Images', $images, 'flag' ); ?></td>
-				<td class="b"></td>
-				<td class="last"></td>
+				<td class="t"><?php echo _n( 'Image', 'Images', $images, 'flash-album-gallery' ); ?></td>
+				<td>:</td>
+				<td class="b"><a href="admin.php?page=flag-manage-gallery&tabs=1"><?php echo $images; ?></a></td>
 			</tr>
 			<tr>
-				<td class="first b"><a href="admin.php?page=flag-manage-gallery&tabs=0"><?php echo $galleries; ?></a></td>
-				<td class="t"><?php echo _n( 'Gallery', 'Galleries', $galleries, 'flag' ); ?></td>
-				<td class="b"></td>
-				<td class="last"></td>
+				<td class="t"><?php echo _n( 'Gallery', 'Galleries', $galleries, 'flash-album-gallery' ); ?></td>
+				<td>:</td>
+				<td class="b"><a href="admin.php?page=flag-manage-gallery&tabs=0"><?php echo $galleries; ?></a></td>
 			</tr>
-		</tbody>
 	</table>
 </div>
 <div class="versions">
-    <p>
-			<?php if(current_user_can('FlAG Upload images')): ?><a class="button rbutton" href="admin.php?page=flag-manage-gallery&tabs=1"><strong><?php _e('Upload pictures', 'flag'); ?></strong></a><?php endif; ?>
-			<?php _e('Here you can control your images and galleries.', 'flag'); ?></p>
-		<span><?php
-			$userlevel = '<span class="b">' . (current_user_can('manage_options') ? __('Gallery Administrator', 'flag') : __('Gallery Editor', 'flag')) . '</span>';
-        printf(__('You currently have %s rights.', 'flag'), $userlevel);
+	<?php if(current_user_can('FlAG Upload images')): ?>
+	<p>
+		<?php _e('Here you can control your images and galleries', 'flash-album-gallery'); ?>
+		&nbsp;
+		<a class="button rbutton" href="admin.php?page=flag-manage-gallery&tabs=1"><strong><?php _e('Upload pictures', 'flash-album-gallery'); ?></strong></a>
+	</p>
+	<?php endif; ?>
+	<span><?php
+		$userlevel = '<span class="b">' . (current_user_can('manage_options') ? __('Gallery Administrator', 'flash-album-gallery') : __('Gallery Editor', 'flash-album-gallery')) . '</span>';
+        printf(__('You currently have %s rights.', 'flash-album-gallery'), $userlevel);
     ?></span>
 </div>
 <?php
 }
 
-add_meta_box('dashboard_right_now', __('Welcome to FlAGallery !', 'flag'), 'flag_overview_right_now', 'flag-overview', 'normal', 'default');
-add_meta_box('flag_server', __('Server Settings', 'flag'), 'flag_overview_server', 'flag-overview', 'normal', 'default');
-add_meta_box('flag_gd_lib', __('Graphic Library', 'flag'), 'flag_overview_graphic_lib', 'flag-overview', 'normal', 'default');
-add_meta_box('dashboard_primary', __('Setup Box', 'flag'), 'flag_overview_setup', 'flag-overview', 'side', 'core');
+add_meta_box('flag_dashboard_right_now', __('Welcome to FlAGallery !', 'flash-album-gallery'), 'flag_overview_right_now', 'flag-overview', 'normal', 'default');
+add_meta_box('flag_server', __('Server Settings', 'flash-album-gallery'), 'flag_overview_server', 'flag-overview', 'normal', 'default');
+add_meta_box('flag_gd_lib', __('Graphic Library', 'flash-album-gallery'), 'flag_overview_graphic_lib', 'flag-overview', 'normal', 'default');
+add_meta_box('dashboard_primary', __('Setup Box', 'flash-album-gallery'), 'flag_overview_setup', 'flag-overview', 'side', 'core');
 
 /**
  * Show GD Library version information
@@ -235,7 +231,7 @@ function flag_GD_info() {
 		}
 	}
 	else {
-		echo '<h4>'.__('No GD support', 'flag').'!</h4>';
+		echo '<h4>'.__('No GD support', 'flash-album-gallery').'!</h4>';
 	}
 }
 
@@ -247,9 +243,9 @@ function flag_GD_info() {
  */
 function flag_GD_Support($bool){
 	if($bool) 
-		return __('Yes', 'flag');
+		return __('Yes', 'flash-album-gallery');
 	else 
-		return __('No', 'flag');
+		return __('No', 'flash-album-gallery');
 }
 
 /**
@@ -265,57 +261,57 @@ function get_serverinfo() {
 	// GET SQL Mode
 	$mysqlinfo = $wpdb->get_results("SHOW VARIABLES LIKE 'sql_mode'");
 	if (is_array($mysqlinfo)) $sql_mode = $mysqlinfo[0]->Value;
-	if (empty($sql_mode)) $sql_mode = __('Not set', 'flag');
+	if (empty($sql_mode)) $sql_mode = __('Not set', 'flash-album-gallery');
 	// Get PHP Safe Mode
-	if(ini_get('safe_mode')) $safe_mode = __('On', 'flag');
-	else $safe_mode = __('Off', 'flag');
+	if(ini_get('safe_mode')) $safe_mode = __('On', 'flash-album-gallery');
+	else $safe_mode = __('Off', 'flash-album-gallery');
 	// Get PHP allow_url_fopen
-	if(ini_get('allow_url_fopen')) $allow_url_fopen = __('On', 'flag');
-	else $allow_url_fopen = __('Off', 'flag'); 
+	if(ini_get('allow_url_fopen')) $allow_url_fopen = __('On', 'flash-album-gallery');
+	else $allow_url_fopen = __('Off', 'flash-album-gallery');
 	// Get PHP Max Upload Size
 	if(ini_get('upload_max_filesize')) $upload_max = ini_get('upload_max_filesize');	
-	else $upload_max = __('N/A', 'flag');
+	else $upload_max = __('N/A', 'flash-album-gallery');
 	// Get PHP Output buffer Size
 	if(ini_get('output_buffering')) $output_buffer = ini_get('output_buffering');	
-	else $output_buffer = __('N/A', 'flag');
+	else $output_buffer = __('N/A', 'flash-album-gallery');
 	// Get PHP Max Post Size
 	if(ini_get('post_max_size')) $post_max = ini_get('post_max_size');
-	else $post_max = __('N/A', 'flag');
+	else $post_max = __('N/A', 'flash-album-gallery');
 	// Get PHP Max execution time
 	if(ini_get('max_execution_time')) $max_execute = ini_get('max_execution_time');
-	else $max_execute = __('N/A', 'flag');
+	else $max_execute = __('N/A', 'flash-album-gallery');
 	// Get PHP Memory Limit 
 	if(ini_get('memory_limit')) $memory_limit = ini_get('memory_limit');
-	else $memory_limit = __('N/A', 'flag');
+	else $memory_limit = __('N/A', 'flash-album-gallery');
 	// Get actual memory_get_usage
-	if (function_exists('memory_get_usage')) $memory_usage = round(memory_get_usage() / 1024 / 1024, 2) . __(' MByte', 'flag');
-	else $memory_usage = __('N/A', 'flag');
+	if (function_exists('memory_get_usage')) $memory_usage = round(memory_get_usage() / 1024 / 1024, 2) . __(' MByte', 'flash-album-gallery');
+	else $memory_usage = __('N/A', 'flash-album-gallery');
 	// required for EXIF read
-	if (is_callable('exif_read_data')) $exif = __('Yes', 'flag'). " ( V" . substr(phpversion('exif'),0,4) . ")" ;
-	else $exif = __('No', 'flag');
+	if (is_callable('exif_read_data')) $exif = __('Yes', 'flash-album-gallery'). " ( V" . substr(phpversion('exif'),0,4) . ")" ;
+	else $exif = __('No', 'flash-album-gallery');
 	// required for meta data
-	if (is_callable('iptcparse')) $iptc = __('Yes', 'flag');
-	else $iptc = __('No', 'flag');
+	if (is_callable('iptcparse')) $iptc = __('Yes', 'flash-album-gallery');
+	else $iptc = __('No', 'flash-album-gallery');
 	// required for meta data
-	if (is_callable('xml_parser_create')) $xml = __('Yes', 'flag');
-	else $xml = __('No', 'flag');
+	if (is_callable('xml_parser_create')) $xml = __('Yes', 'flash-album-gallery');
+	else $xml = __('No', 'flash-album-gallery');
 ?>
-	<li><?php _e('Operating System', 'flag'); ?> : <span><?php echo PHP_OS; ?>&nbsp;(<?php echo (PHP_INT_SIZE * 8); ?>&nbsp;Bit)</span></li>
-	<li><?php _e('Server', 'flag'); ?> : <span><?php echo $_SERVER["SERVER_SOFTWARE"]; ?></span></li>
-	<li><?php _e('Memory usage', 'flag'); ?> : <span><?php echo $memory_usage; ?></span></li>
-	<li><?php _e('MYSQL Version', 'flag'); ?> : <span><?php echo $sqlversion; ?></span></li>
-	<li><?php _e('SQL Mode', 'flag'); ?> : <span><?php echo $sql_mode; ?></span></li>
-	<li><?php _e('PHP Version', 'flag'); ?> : <span><?php echo PHP_VERSION; ?></span></li>
-	<li><?php _e('PHP Safe Mode', 'flag'); ?> : <span><?php echo $safe_mode; ?></span></li>
-	<li><?php _e('PHP Allow URL fopen', 'flag'); ?> : <span><?php echo $allow_url_fopen; ?></span></li>
-	<li><?php _e('PHP Memory Limit', 'flag'); ?> : <span><?php echo $memory_limit; ?></span></li>
-	<li><?php _e('PHP Max Upload Size', 'flag'); ?> : <span><?php echo $upload_max; ?></span></li>
-	<li><?php _e('PHP Max Post Size', 'flag'); ?> : <span><?php echo $post_max; ?></span></li>
-	<li><?php _e('PHP Output Buffer Size', 'flag'); ?> : <span><?php echo $output_buffer; ?></span></li>
-	<li><?php _e('PHP Max Script Execute Time', 'flag'); ?> : <span><?php echo $max_execute; ?>s</span></li>
-	<li><?php _e('PHP Exif support', 'flag'); ?> : <span><?php echo $exif; ?></span></li>
-	<li><?php _e('PHP IPTC support', 'flag'); ?> : <span><?php echo $iptc; ?></span></li>
-	<li><?php _e('PHP XML support', 'flag'); ?> : <span><?php echo $xml; ?></span></li>
+	<li><?php _e('Operating System', 'flash-album-gallery'); ?> : <span><?php echo PHP_OS; ?>&nbsp;(<?php echo (PHP_INT_SIZE * 8); ?>&nbsp;Bit)</span></li>
+	<li><?php _e('Server', 'flash-album-gallery'); ?> : <span><?php echo $_SERVER["SERVER_SOFTWARE"]; ?></span></li>
+	<li><?php _e('Memory usage', 'flash-album-gallery'); ?> : <span><?php echo $memory_usage; ?></span></li>
+	<li><?php _e('MYSQL Version', 'flash-album-gallery'); ?> : <span><?php echo $sqlversion; ?></span></li>
+	<li><?php _e('SQL Mode', 'flash-album-gallery'); ?> : <span><?php echo $sql_mode; ?></span></li>
+	<li><?php _e('PHP Version', 'flash-album-gallery'); ?> : <span><?php echo PHP_VERSION; ?></span></li>
+	<li><?php _e('PHP Safe Mode', 'flash-album-gallery'); ?> : <span><?php echo $safe_mode; ?></span></li>
+	<li><?php _e('PHP Allow URL fopen', 'flash-album-gallery'); ?> : <span><?php echo $allow_url_fopen; ?></span></li>
+	<li><?php _e('PHP Memory Limit', 'flash-album-gallery'); ?> : <span><?php echo $memory_limit; ?></span></li>
+	<li><?php _e('PHP Max Upload Size', 'flash-album-gallery'); ?> : <span><?php echo $upload_max; ?></span></li>
+	<li><?php _e('PHP Max Post Size', 'flash-album-gallery'); ?> : <span><?php echo $post_max; ?></span></li>
+	<li><?php _e('PHP Output Buffer Size', 'flash-album-gallery'); ?> : <span><?php echo $output_buffer; ?></span></li>
+	<li><?php _e('PHP Max Script Execute Time', 'flash-album-gallery'); ?> : <span><?php echo $max_execute; ?>s</span></li>
+	<li><?php _e('PHP Exif support', 'flash-album-gallery'); ?> : <span><?php echo $exif; ?></span></li>
+	<li><?php _e('PHP IPTC support', 'flash-album-gallery'); ?> : <span><?php echo $iptc; ?></span></li>
+	<li><?php _e('PHP XML support', 'flash-album-gallery'); ?> : <span><?php echo $xml; ?></span></li>
 <?php
 }
 
@@ -373,16 +369,16 @@ class flag_SpaceManager {
 		$percentremain = 100 - $percentused;
 
 		$out = '';
-		$out .= '<div id="spaceused"> <h3>'.__('Storage Space','flag').'</h3>';
+		$out .= '<div id="spaceused"> <h3>'.__('Storage Space','flash-album-gallery').'</h3>';
 
 		if ($settings['used']['display']) {
-			$out .= __('Upload Space Used:','flag') . "\n";
+			$out .= __('Upload Space Used:','flash-album-gallery') . "\n";
 			$out .= flag_SpaceManager::buildGraph($settings['used'], $used,$quota,$percentused);
 			$out .= "<br />";
 		}
 
 		if($settings['remain']['display']) {
-			$out .= __('Upload Space Remaining:','flag') . "\n";
+			$out .= __('Upload Space Remaining:','flash-album-gallery') . "\n";
 			$out .= flag_SpaceManager::buildGraph($settings['remain'], $remaining,$quota,$percentremain);
 
 		}
@@ -465,4 +461,3 @@ function get_phpinfo() {
 	    
 	return $phpinfo;
 }
-?>

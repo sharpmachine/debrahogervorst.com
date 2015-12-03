@@ -1,5 +1,30 @@
 /* This query is applied for protait Tablet ipad
 */
+@media only screen and (min-width: 960px) and (max-width: 1260px) {
+    .sl-slider-wrapper {
+        min-height: 400px;
+        height: 400px;
+    }
+    .bg-img img{
+        width: 888px;
+        height: 400px;
+    }
+    .sl-slide-inner {
+        bottom:27%;
+    }
+    .container_24 .grid_12.blog_slider{
+        width:408px;
+    }
+    .flexslider_blog .slides li {
+        width:360px !important;;
+    }
+    .testimonial_item_content .testimonial_item{
+        margin-right: 2.68%;
+    }
+    .right-navi {
+        padding-right: 32px;
+    }
+}
 @media only screen and (min-width: 768px) and (max-width: 960px) {
     .menu_wrap { width: 100% !important; }
     .menu_wrap { width: 748px; }                           
@@ -19,19 +44,13 @@
         width:698px;
         height:300px;
     }
-    #slides .slide-img {
-        width:698px;
-        height:300px;
+    .sl-slider-wrapper {
+        min-height: 300px;
+        height: 300px;
     }
-    #slider_pag {
-        width: 698px !important;
-    }
-    #slider_pag ul {
-        max-width: 698px;
-    }
-    .slide .slide-content.entry {
-        bottom: 30px !important;
-        position: absolute;
+    .bg-img img{
+        width: 698px;
+        height: 300px;
     }
     #searchform {
         position:relative;
@@ -65,6 +84,16 @@
         background:none;
         margin-bottom:58px !important;
     }    
+    .flexslider_blog .slides li {
+        width:295px !important;;
+    }
+    .testimonial_item_content .testimonial_item{
+        margin-right: 2%;
+        width: 24%;
+    }
+    .right-navi {
+        padding-right: 32px;
+    }
 }
 
 @media only screen and ( max-width: 767px ) {
@@ -79,6 +108,20 @@
     }
     .footer-navi .navigation ul.footer_des{
     }
+    .sl-slide-horizontal .sl-slide-inner{
+        display:none;
+    }
+    .blog_slider_wrapper {
+        margin-left:0;
+    }
+    .container_24 .grid_12.blog_slider{
+        margin-left:0;
+    }
+    .testimonial_item_content .testimonial_item{
+        margin-right: 0;
+        width: 87%;
+    }
+
 }
 /* This query is applied for landscape ipad, Mobile
 */
@@ -95,31 +138,13 @@
     #content .columns .one_fourth.middle{
         margin-right:0 !important;
     }
-    .slider-container {
-        height:250px !important;
+    .sl-slider-wrapper {
+        min-height: 210px;
+        height: 210px;
     }
-    .slide-image {
-        height:206px;
-        margin-top:13px;
-        background: url("../images/bg-slider-pro.png") no-repeat bottom center !important;
-        padding-bottom:15px;
-    }
-    #slides iframe {
+    .bg-img img{
         width:410px;
         height:210px;
-    }
-    #slides .slide-img {
-        width:410px;
-        height:210px;
-    }
-    #slider_pag {
-        width: 410px !important;
-    }
-    #slider_pag ul {
-        max-width: 410px;
-    }
-    .slide .slide-content.entry {
-        visibility:hidden;
     }
     .folio-content ul.thumbnail {
         width: 100% !important;
@@ -183,20 +208,21 @@
         padding-right:0;
         margin-left:0;
     }
+    .flexslider_blog .slides li {
+        width:410px !important;
+        margin-right: 0;
+    }
+    .footer-navi .social-icons {
+        text-align: center;
+    }
 }
 /* This query is applied for protait ipad, Mobile
 */
 @media only screen and (max-width: 480px) {
     .menu_wrap { width: 100% !important; }
-    .slider{
-        visibility:hidden;
-        height:0;
-        width:0;
-    }
-    .slider-container{
-        visibility:hidden;
-        height:0;
-        width:0;
+    .menu-bar, .slider-container, .logo, .content-wrapper, .footer-wrapper{
+        margin-left: 15px;
+        margin-right: 9px;
     }
     .content-wrapper .content-info {
         margin-bottom:0 !important;
@@ -218,33 +244,26 @@
     .content-wrap{
         padding-right:30px !important;
     }
-    .slider-container {
-        height:0 !important;
+    .sl-slider-wrapper {
+        min-height: 150px;
+        height: 150px;
+        margin: 25px 18px 34px 18px;
     }
-    .slide-image {
-        height:0 !important;
-        margin-top:13px;
-        background: url("../images/bg-slider-pro.png") no-repeat bottom center !important;
+    .bg-img img{
+        width:280px;
+        height:150px;
     }
-    #slides iframe {
-        width:0 !important;
-        height:0;
+    .sl-slider-wrapper .nav-arrows span{
+        bottom:35%;
     }
-    #slides .slide-img {
-        width:0 !important;
-        height:0 !important;
+    .nav-dots{
+        margin-top: -88px;
     }
-    #slider_pag {
-        width: 0px !important;
+    .grid_12.testimonial_div{
+        margin-right:0;
     }
-    #slider_pag ul {
-        max-width: 0px;
-    }
-    .slide .slide-content.entry {
-        bottom: 10px !important;
-        position: absolute;
-        visibility:hidden;
-        width:0 !important;
+    .feature_widget {
+        margin-right:0;
     }
     .folio-content ul.thumbnail {
         width: 100% !important;
@@ -333,6 +352,9 @@
         overflow:hidden;
         text-align:center !important;
     }
+    .footer-navi .social-icons {
+        text-align: center;
+    }
     .post img, .content-wrap #blogmain img.postimg{
         visibility:hidden;  
         height:0;
@@ -344,5 +366,12 @@
         padding-top: 10px;
         margin-right: 0 !important;
         text-align: center;
+    }
+    .flexslider_blog .slides li {
+        width:259px !important;
+    }
+    .testimonial_item_content .testimonial_item {
+        margin-right: 0;
+        width: 80%;
     }
 }

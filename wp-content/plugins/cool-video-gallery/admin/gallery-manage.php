@@ -19,21 +19,28 @@ $title = __('Manage Video Gallery');
 
 //Section to delete list of galleries
 if(isset($_POST['TB_gallerylist']) && !empty($_POST['TB_gallerylist'])) {
-	$gids = explode(',', $_POST['TB_gallerylist']);
-	foreach($gids as $gid) {
-		CvgCore::delete_video_gallery($gid);
-		videoDB::delete_gallery($gid);
+	
+	// wp_nonce_field('cvg_manage_delete_gallery_nonce','cvg_manage_delete_gallery_nonce_csrf');
+	if ( check_admin_referer( 'cvg_manage_delete_gallery_nonce', 'cvg_manage_delete_gallery_nonce_csrf' ) ) {
+		$gids = explode(',', $_POST['TB_gallerylist']);
+		foreach($gids as $gid) {
+			CvgCore::delete_video_gallery($gid);
+			videoDB::delete_gallery($gid);
+		}
+		_e('<div class="clear"><div class="wrap"><div id="message" class="updated fade below-h2"><p>Galleries deleted successfully.</p></div></div></div>');
 	}
-	_e('<div class="clear"><div class="wrap"><div id="message" class="updated fade below-h2"><p>Galleries deleted successfully.</p></div></div></div>');
 }
 
 //Section to delete a single gallery
 if(isset($_POST['TB_gallerysingle']) && !empty($_POST['TB_gallerysingle'])) {
 	
-	$gid = $_POST['TB_gallerysingle'];
-	CvgCore::delete_video_gallery($gid);
-	videoDB::delete_gallery($gid);
-	_e('<div class="clear"><div class="wrap"><div id="message" class="updated fade below-h2"><p>Gallery ' . $gid . ' deleted successfully.</p></div></div></div>');
+	// wp_nonce_field('cvg_manage_delete_single_gallery_nonce','cvg_manage_delete_single_gallery_nonce_csrf');
+	if ( check_admin_referer( 'cvg_manage_delete_single_gallery_nonce', 'cvg_manage_delete_single_gallery_nonce_csrf' ) ) { 
+		$gid = $_POST['TB_gallerysingle'];
+		CvgCore::delete_video_gallery($gid);
+		videoDB::delete_gallery($gid);
+		_e('<div class="clear"><div class="wrap"><div id="message" class="updated fade below-h2"><p>Gallery ' . $gid . ' deleted successfully.</p></div></div></div>');
+	}
 }
 
 //Build the pagination for more than 25 galleries
@@ -258,6 +265,7 @@ $gallerylist = videoDB::find_all_galleries('gid', 'asc', TRUE ,$per_page, $start
 						<td><strong><?php _e('Delete Gallery?'); ?></strong></td>
 					</tr>
 				  	<tr align="center">
+				  		<?php wp_nonce_field('cvg_manage_delete_gallery_nonce','cvg_manage_delete_gallery_nonce_csrf'); ?>
 				    	<td colspan="2" class="submit">
 				    		<input class="button-primary" type="submit" name="TB_DeleteGallery" value="<?php _e('OK'); ?>" />
 				    		&nbsp;
@@ -278,6 +286,7 @@ $gallerylist = videoDB::find_all_galleries('gid', 'asc', TRUE ,$per_page, $start
 						<td><strong><?php _e('Delete Gallery?'); ?></strong></td>
 					</tr>
 				  	<tr align="center">
+				  		<?php wp_nonce_field('cvg_manage_delete_single_gallery_nonce','cvg_manage_delete_single_gallery_nonce_csrf'); ?>
 				    	<td colspan="2" class="submit">
 				    		<input class="button-primary" type="submit" name="TB_DeleteSingle" value="<?php _e('OK'); ?>" />
 				    		&nbsp;
